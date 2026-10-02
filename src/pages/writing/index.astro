@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Base title="Writing" description="Write-ups on agentic AI tooling and customer analytics.">
+  <div class="wrap">
+    <p class="eyebrow">Writing</p>
+    <h1>Write-ups</h1>
+    <p class="lede">
+      Mostly about agentic AI tooling and customer analytics. I write up what I
+      built, what broke, and what I would do differently.
+    </p>
+
+    <div style="margin-top: 2.5rem;">
+      {
+        posts.map((post) => (
+          <article class="card">
+            <h3>
+              <a href={`/writing/${post.id}/`}>{post.data.title}</a>
+            </h3>
+            <p>{post.data.description}</p>
+            <p class="post-meta" style="margin: 0;">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-GB', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </time>
+              {' · '}
+              {post.data.tags.join(' · ')}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</Base>

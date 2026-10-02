@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import { PROJECTS } from '../../data/site';
+---
+
+<Base
+  title="Projects"
+  description="Case studies in customer analytics and agentic AI tooling."
+>
+  <div class="wrap">
+    <p class="eyebrow">Projects</p>
+    <h1>Work</h1>
+    <p class="lede">
+      Each case study follows the same shape: the problem, the approach, the
+      tradeoffs, and the result. Numbers come from the actual code.
+    </p>
+
+    <div style="margin-top: 2.5rem;">
+      {
+        PROJECTS.map((p) => (
+          <article class="card">
+            <h3>
+              <a href={`/projects/${p.slug}/`}>{p.name}</a>
+            </h3>
+            <p>{p.tagline}</p>
+            <ul class="tag-row">
+              {p.stack.map((s) => (
+                <li class="tag">{s}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</Base>

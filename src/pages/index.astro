@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, BIO_SHORT, FEATURED } from '../data/site';
+---
+
+<Base>
+  <div class="wrap">
+    <section class="hero">
+      <p class="eyebrow">{SITE.role} — {SITE.location}</p>
+      <h1>I build analytics tools that hold up to being checked.</h1>
+      <p class="lede">{BIO_SHORT}</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/projects/">See the work</a>
+        <a class="btn" href="/writing/">Read the write-ups</a>
+        <a class="btn" href={`mailto:${SITE.email}`}>Email me</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Featured work</h2>
+      <p>
+        Three projects that show the same thing from different angles: customer
+        analytics that ends in an action, and AI tooling built to be verified.
+      </p>
+      <div class="project-grid">
+        {
+          FEATURED.map((p) => (
+            <article class="card">
+              <h3>
+                <a href={`/projects/${p.slug}/`}>{p.name}</a>
+              </h3>
+              <p>{p.tagline}</p>
+              <ul class="tag-row">
+                {p.stack.slice(0, 4).map((s) => (
+                  <li class="tag">{s}</li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+      <p style="margin-top: 1rem;">
+        <a href="/projects/">All projects →</a>
+      </p>
+    </section>
+
+    <section>
+      <h2>How I work</h2>
+      <p>
+        The parts I care about are the parts nobody screenshots: tests that pass
+        without an API key, prompts derived from the data instead of hardcoded,
+        output validated before it is written, and honest reporting when a method
+        does not work.
+      </p>
+      <p>
+        I write about what I build, including what broke.
+        <a href="/writing/">Read the write-ups →</a>
+      </p>
+    </section>
+  </div>
+</Base>

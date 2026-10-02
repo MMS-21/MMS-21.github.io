@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, BIO_LONG } from '../data/site';
+---
+
+<Base title="About" description="About Moaaz Magdy, Data & Business Analyst in Cairo.">
+  <div class="wrap">
+    <p class="eyebrow">About</p>
+    <h1>About me</h1>
+
+    {BIO_LONG.map((para) => <p>{para}</p>)}
+
+    <h2>What I work with</h2>
+    <ul>
+      <li><strong>Customer analytics</strong> — RFM segmentation, probabilistic CLV (BG/NBD, Gamma-Gamma), churn prediction, retention targeting</li>
+      <li><strong>AI tooling</strong> — tool-calling agent loops, quality gates, model-agnostic architecture, prompt engineering from data</li>
+      <li><strong>Business intelligence</strong> — Power BI, Tableau, stakeholder-facing dashboards</li>
+      <li><strong>Application development</strong> — Electron, React, FastAPI, TypeScript</li>
+      <li><strong>Data work</strong> — Python (pandas, scikit-learn), SQL</li>
+    </ul>
+
+    <h2>What I optimise for</h2>
+    <p>
+      Code that a stranger can verify. A test suite that runs without an API key.
+      A prompt that reads the data instead of assuming it. Output that gets
+      validated before anyone sees it, and a report that says what did not work.
+    </p>
+
+    <h2>Currently</h2>
+    <p>
+      Open to data analyst and AI tools engineering roles. Based in {SITE.location},
+      working remotely. The best way to reach me is
+      <a href={`mailto:${SITE.email}`}>email</a>.
+    </p>
+  </div>
+</Base>

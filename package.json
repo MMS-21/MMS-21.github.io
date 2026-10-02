@@ -1,0 +1,31 @@
+{
+  "name": "moaazmagdy-site",
+  "version": "1.0.0",
+  "description": "Personal site and portfolio for Moaaz Magdy — Data & Business Analyst",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MMS-21/MMS-21.github.io.git"
+  },
+  "keywords": [],
+  "author": "Moaaz Magdy",
+  "license": "MIT",
+  "homepage": "https://mm-s-21.github.io",
+  "devDependencies": {
+    "astro": "^7.3.5"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19"
+  }
+}
