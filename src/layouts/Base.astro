@@ -337,12 +337,37 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   }
 
   /* Cards */
+  /* Borderless, lifted with a soft shadow instead. */
   .card {
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    border: 0;
+    border-radius: 10px;
     padding: 1.15rem 1.25rem;
     margin-bottom: 1rem;
     background: var(--bg);
+    box-shadow:
+      0 1px 2px rgb(28 25 23 / 0.05),
+      0 4px 14px rgb(28 25 23 / 0.06);
+    transition:
+      box-shadow 0.18s ease,
+      transform 0.18s ease;
+  }
+
+  .card:hover {
+    box-shadow:
+      0 2px 4px rgb(28 25 23 / 0.06),
+      0 10px 28px rgb(28 25 23 / 0.1);
+    transform: translateY(-1px);
+  }
+
+  /* Respect users who ask for less motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .card {
+      transition: none;
+    }
+
+    .card:hover {
+      transform: none;
+    }
   }
 
   .card h3 {
@@ -373,13 +398,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     padding: 0;
   }
 
+  /* Borderless pill. The fill now carries the boundary, so it is slightly
+     deeper than --code-bg; measured at 4.56:1 against the tag text, which
+     keeps WCAG AA for the label itself. The pills are static labels rather
+     than controls, so the 3:1 non-text rule for UI boundaries does not
+     apply to them. */
   .tag {
     font-size: 0.75rem;
-    padding: 0.15rem 0.5rem;
-    border: 1px solid var(--btn-border);
+    padding: 0.2rem 0.6rem;
+    border: 0;
     border-radius: 999px;
     color: var(--muted);
-    background: var(--code-bg);
+    background: #ece5da;
     white-space: nowrap;
   }
 
