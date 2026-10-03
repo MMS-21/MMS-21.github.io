@@ -5,24 +5,8 @@ import { SITE, BIO_LONG } from '../data/site';
 
 <Base title="About" description="About Moaaz Magdy, Data & Business Analyst in Cairo.">
   <div class="wrap">
-    <div class="about-intro">
-      <figure class="about-figure">
-        <picture>
-          <source srcset="/img/stamp.webp" type="image/webp" />
-          <img
-            src="/img/stamp.webp"
-            width="300"
-            height="407"
-            alt="Vintage-style Egyptian postage stamp illustration bearing a profile portrait captioned Portrait D'MoaaZ, in cream, burgundy and sepia with arabesque ornament."
-            decoding="async"
-            loading="lazy"
-          />
-        </picture>
-      </figure>
-
-      <h1>About me</h1>
-      {BIO_LONG.map((para) => <p>{para}</p>)}
-    </div>
+    <h1>About me</h1>
+    {BIO_LONG.map((para) => <p>{para}</p>)}
 
     <h2>What I work with</h2>
     <ul>
@@ -48,70 +32,3 @@ import { SITE, BIO_LONG } from '../data/site';
     </p>
   </div>
 </Base>
-
-<style>
-  /* Stamp on the left, prose on the right. No wrapper div around the text:
-     grid areas place the figure in column 1 and every heading/paragraph in
-     column 2, so the paragraphs stay direct children of .about-intro. */
-  .about-intro {
-    display: grid;
-    grid-template-columns: 260px minmax(0, 1fr);
-    grid-template-areas:
-      "figure title"
-      "figure body";
-    column-gap: 2.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .about-figure {
-    grid-area: figure;
-    margin: 0;
-  }
-
-  .about-figure img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .about-intro > h1 {
-    grid-area: title;
-    margin: 0 0 0.75rem;
-  }
-
-  /* Consecutive paragraphs after the h1 form the body area. */
-  .about-intro > p {
-    grid-area: body;
-    max-width: none;
-  }
-
-  /* A single <p> cannot share one grid area, so give each its own row. */
-  .about-intro > p + p {
-    grid-area: unset;
-    grid-column: 2;
-    margin-top: 0;
-  }
-
-  @media (max-width: 40rem) {
-    .about-intro {
-      grid-template-columns: 1fr;
-      grid-template-areas:
-        "figure"
-        "title"
-        "body";
-      row-gap: 1.75rem;
-    }
-
-    .about-intro > p + p {
-      grid-column: 1;
-      grid-row: auto;
-      margin-top: 0.9rem;
-    }
-
-    /* Centre the stamp once it sits above the text. */
-    .about-figure {
-      max-width: 220px;
-      margin: 0 auto;
-    }
-  }
-</style>
