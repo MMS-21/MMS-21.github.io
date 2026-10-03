@@ -4,9 +4,14 @@ import { SITE } from '../data/site';
 interface Props {
   title?: string;
   description?: string;
+  hideHeader?: boolean;
 }
 
-const { title, description = SITE.description } = Astro.props;
+const {
+  title,
+  description = SITE.description,
+  hideHeader = false,
+} = Astro.props;
 const pageTitle = title ? `${title} — ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -43,24 +48,28 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <body>
     <a class="skip" href="#main">Skip to content</a>
 
-    <header class="site-header">
-      <div class="wrap header-inner">
-        <a class="brand" href="/">
-          <span class="brand-name">{SITE.name}</span>
-          <span class="brand-role">{SITE.role}</span>
-        </a>
-        <nav aria-label="Main">
-          <ul>
-            <li><a href="/projects/">Projects</a></li>
-            <li><a href="/writing/">Writing</a></li>
-            <li><a href="/about/">About</a></li>
-            <li><a href="/contact/">Contact</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    {
+      !hideHeader && (
+        <header class="site-header">
+          <div class="wrap header-inner">
+            <a class="brand" href="/">
+              <span class="brand-name">{SITE.name}</span>
+              <span class="brand-role">{SITE.role}</span>
+            </a>
+            <nav aria-label="Main">
+              <ul>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/writing/">Writing</a></li>
+                <li><a href="/about/">About</a></li>
+                <li><a href="/contact/">Contact</a></li>
+              </ul>
+            </nav>
+          </div>
+        </header>
+      )
+    }
 
-    <main id="main">
+    <main id="main" class={hideHeader ? 'flush-top' : undefined}>
       <slot />
     </main>
 
@@ -241,6 +250,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
   main {
     padding: 3rem 0 4rem;
+  }
+
+  /* Headerless pages (the home hero) opt out of the top padding so the
+     centred block starts closer to the top edge. */
+  main.flush-top {
+    padding-top: 1.5rem;
   }
 
   .lede {

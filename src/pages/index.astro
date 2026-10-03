@@ -1,30 +1,44 @@
 ---
 import Base from '../layouts/Base.astro';
 import { SITE, BIO_SHORT, FEATURED } from '../data/site';
+
+const NAV = [
+  { href: '/projects/', label: 'Projects' },
+  { href: '/writing/', label: 'Writing' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
 ---
 
-<Base>
+<Base hideHeader>
   <div class="wrap">
     <section class="hero">
+      <nav class="hero-nav" aria-label="Main">
+        {
+          NAV.map((item) => (
+            <a class="hero-nav-link" href={item.href}>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
       <picture>
         <img
           class="avatar"
           src="/img/avatar.png"
           srcset="/img/avatar-192.png 2x"
-          width="96"
-          height="96"
+          width="128"
+          height="128"
           alt=""
           decoding="async"
         />
       </picture>
-      <p class="eyebrow">{SITE.role} — {SITE.location}</p>
-      <h1>I build analytics tools that hold up to being checked.</h1>
-      <p class="lede">{BIO_SHORT}</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="/projects/">See the work</a>
-        <a class="btn" href="/writing/">Read the write-ups</a>
-        <a class="btn" href={`mailto:${SITE.email}`}>Email me</a>
-      </div>
+
+      <h1 class="hero-name">{SITE.name}</h1>
+      <p class="hero-role">{SITE.role}</p>
+      <p class="hero-location">{SITE.location}</p>
+      <p class="hero-lede">{BIO_SHORT}</p>
     </section>
 
     <section>
@@ -72,15 +86,71 @@ import { SITE, BIO_SHORT, FEATURED } from '../data/site';
 </Base>
 
 <style>
+  .hero {
+    text-align: center;
+    padding: 2.5rem 0 3rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Borderless nav links sit above the portrait. */
+  .hero-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-nav-link {
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    padding: 0.35rem 0.15rem;
+    border-bottom: 1px solid transparent;
+  }
+
+  .hero-nav-link:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
   .avatar {
     display: block;
-    width: 96px;
-    height: 96px;
+    width: 128px;
+    height: 128px;
     border-radius: 50%;
-    margin-bottom: 1.25rem;
+    margin: 0 auto 1.5rem;
     /* The source avatar has a white background; matching it to the page keeps
        the circular crop from showing a white disc on warm off-white. */
     background: var(--bg);
     object-fit: cover;
+  }
+
+  .hero-name {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.75rem, 5vw, 2.35rem);
+    letter-spacing: -0.02em;
+  }
+
+  .hero-role {
+    margin: 0 0 0.35rem;
+    font-size: 1.125rem;
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .hero-location {
+    margin: 0 0 1.5rem;
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  .hero-lede {
+    margin: 0 auto;
+    max-width: 34rem;
+    color: var(--muted);
+    font-size: 1.0625rem;
   }
 </style>
