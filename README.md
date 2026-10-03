@@ -24,7 +24,12 @@ npm run preview  # serve dist/ locally
 
 Pushes to `main` run `.github/workflows/deploy.yml`, which builds the site and
 publishes `dist/` to GitHub Pages. The live URL is
-<https://mm-s-21.github.io>.
+<https://mms-21.github.io>.
+
+The repo is `MMS-21.github.io` and the GitHub login is `MMS-21`, so GitHub
+serves the site at the login lowercased: `mms-21.github.io` — no hyphen
+between "mm" and "s". Getting this wrong silently breaks every canonical URL,
+the RSS feed, and the social preview.
 
 One-time setup in **Settings → Pages → Source: GitHub Actions**.
 

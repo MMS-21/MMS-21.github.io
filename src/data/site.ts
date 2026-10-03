@@ -3,7 +3,7 @@
 
 export const SITE = {
   name: 'Moaaz Magdy',
-  title: 'Moaaz Magdy — Data & Business Analyst',
+  title: 'Moaaz Magdy',
   description:
     'Data & Business Analyst in Cairo building agentic AI tools that turn e-commerce data into customer insights.',
   role: 'Data & Business Analyst',
