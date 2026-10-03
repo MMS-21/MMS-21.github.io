@@ -6,6 +6,17 @@ import { SITE, BIO_SHORT, FEATURED } from '../data/site';
 <Base>
   <div class="wrap">
     <section class="hero">
+      <picture>
+        <img
+          class="avatar"
+          src="/img/avatar.png"
+          srcset="/img/avatar-192.png 2x"
+          width="96"
+          height="96"
+          alt=""
+          decoding="async"
+        />
+      </picture>
       <p class="eyebrow">{SITE.role} — {SITE.location}</p>
       <h1>I build analytics tools that hold up to being checked.</h1>
       <p class="lede">{BIO_SHORT}</p>
@@ -59,3 +70,17 @@ import { SITE, BIO_SHORT, FEATURED } from '../data/site';
     </section>
   </div>
 </Base>
+
+<style>
+  .avatar {
+    display: block;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    margin-bottom: 1.25rem;
+    /* The source avatar has a white background; matching it to the page keeps
+       the circular crop from showing a white disc on warm off-white. */
+    background: var(--bg);
+    object-fit: cover;
+  }
+</style>
