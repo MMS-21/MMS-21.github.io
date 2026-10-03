@@ -5,10 +5,24 @@ import { SITE, BIO_LONG } from '../data/site';
 
 <Base title="About" description="About Moaaz Magdy, Data & Business Analyst in Cairo.">
   <div class="wrap">
-    <p class="eyebrow">About</p>
-    <h1>About me</h1>
+    <div class="about-intro">
+      <figure class="about-figure">
+        <img
+          src="/img/stamp.png"
+          srcset="/img/stamp-2x.png 2x"
+          width="300"
+          height="407"
+          alt="Vintage-style Egyptian postage stamp illustration bearing a profile portrait captioned Portrait D'MoaaZ, in cream, burgundy and sepia with arabesque ornament."
+          decoding="async"
+          loading="lazy"
+        />
+      </figure>
 
-    {BIO_LONG.map((para) => <p>{para}</p>)}
+      <div class="about-text">
+        <h1>About me</h1>
+        {BIO_LONG.map((para) => <p>{para}</p>)}
+      </div>
+    </div>
 
     <h2>What I work with</h2>
     <ul>
@@ -34,3 +48,46 @@ import { SITE, BIO_LONG } from '../data/site';
     </p>
   </div>
 </Base>
+
+<style>
+  /* Stamp on the left, text on the right. Stacks to a single column on
+     narrow screens so the text is never squeezed beside the image. */
+  .about-intro {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
+    margin-bottom: 1rem;
+  }
+
+  .about-figure {
+    margin: 0;
+  }
+
+  .about-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .about-text h1 {
+    margin-top: 0;
+  }
+
+  .about-text p {
+    max-width: none;
+  }
+
+  @media (max-width: 40rem) {
+    .about-intro {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+
+    /* Centre the stamp once it sits above the text. */
+    .about-figure {
+      max-width: 220px;
+      margin: 0 auto;
+    }
+  }
+</style>
