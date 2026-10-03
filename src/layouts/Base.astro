@@ -33,6 +33,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:site_name" content={SITE.name} />
     <meta name="twitter:card" content="summary_large_image" />
 
+    <link
+      rel="preload"
+      href="/fonts/manrope-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
@@ -91,6 +99,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 </html>
 
 <style is:global>
+  /* Self-hosted Manrope variable font. Preloaded in <head> so it starts
+     downloading before the stylesheet is parsed. swap avoids invisible text
+     if the file is slow; the system stack in font-family covers the gap. */
+  @font-face {
+    font-family: "Manrope";
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url("/fonts/manrope-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+      U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+      U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
   :root {
     /* Warm "sugary white" palette — light mode only, on purpose. No
        prefers-color-scheme override: an OS in dark mode still renders light. */
@@ -121,8 +143,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     margin: 0;
     background: var(--bg);
     color: var(--fg);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-      "Helvetica Neue", Arial, sans-serif;
+    /* Self-hosted Manrope (variable, weights 400-800 in one 24 KB file).
+       Loaded locally rather than from Google's CDN so no visitor data leaves
+       the site, which keeps the "no tracking" note in the footer honest. */
+    font-family: "Manrope", ui-sans-serif, system-ui, -apple-system,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 1.0625rem;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;

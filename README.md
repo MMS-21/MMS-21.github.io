@@ -10,6 +10,8 @@ no client-side JavaScript, no tracking or cookies.
 - Astro 7 (static output)
 - Content collections for blog posts (markdown + frontmatter)
 - `@astrojs/rss` for the writing feed
+- [Manrope](https://fonts.google.com/specimen/Manrope) (SIL Open Font License),
+  self-hosted as a variable font at `public/fonts/manrope-latin.woff2`
 
 ## Local development
 
