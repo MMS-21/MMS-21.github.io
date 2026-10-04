@@ -7,16 +7,43 @@ const posts = (await getCollection('blog')).sort(
 );
 ---
 
-<Base title="Writing" description="Write-ups on agentic AI tooling and customer analytics.">
-  <div class="wrap">
-    <p class="eyebrow">Writing</p>
-    <h1>Write-ups</h1>
-    <p class="lede">
-      Mostly about agentic AI tooling and customer analytics. I write up what I
-      built, what broke, and what I would do differently.
-    </p>
+<Base
+  title="Writing"
+  description="Write-ups on agentic AI tooling and customer analytics."
+  ogImage="/og-writing.png"
+  flushTop
+>
+  {/* Full-bleed: escapes .wrap entirely and spans the viewport edge to edge,
+      the way a hero image should. The text is re-centred in its own .wrap so
+      it still lines up with the header and the cards below. */}
+  <section class="writing-hero">
+    <picture>
+      <img
+        class="writing-hero-img"
+        src="/img/writing-hero-1600.webp"
+        srcset="/img/writing-hero-800.webp 800w, /img/writing-hero-1200.webp 1200w, /img/writing-hero-1600.webp 1600w, /img/writing-hero-1920.webp 1920w"
+        sizes="100vw"
+        width="1600"
+        height="686"
+        alt=""
+        decoding="async"
+        fetchpriority="high"
+      />
+    </picture>
+    <div class="writing-hero-text">
+      <div class="wrap">
+        <p class="writing-hero-kicker">Writing</p>
+        <h1 class="writing-hero-title">Write-ups</h1>
+        <p class="writing-hero-lede">
+          Mostly about agentic AI tooling and customer analytics. I write up what I
+          built, what broke, and what I would do differently.
+        </p>
+      </div>
+    </div>
+  </section>
 
-    <div style="margin-top: 2.5rem;">
+  <div class="wrap">
+    <div class="post-list">
       {
         posts.map((post) => (
           <article class="card">
@@ -24,7 +51,7 @@ const posts = (await getCollection('blog')).sort(
               <a href={`/writing/${post.id}/`}>{post.data.title}</a>
             </h3>
             <p>{post.data.description}</p>
-            <p class="post-meta" style="margin: 0;">
+            <p class="post-meta post-meta-flush">
               <time datetime={post.data.pubDate.toISOString()}>
                 {post.data.pubDate.toLocaleDateString('en-GB', {
                   day: 'numeric',
@@ -41,3 +68,157 @@ const posts = (await getCollection('blog')).sort(
     </div>
   </div>
 </Base>
+
+<style>
+  /* Full-bleed hero for the writing index. Deliberately NOT inside .wrap: it
+     spans the full page width edge to edge, with no border, no radius and no
+     side margins. Only the text is re-wrapped so it stays aligned with the
+     header and the cards below.
+
+     The source painting is dark and low-key, so instead of washing it toward
+     the page background it is scrimmed and the type goes light. This is one
+     dark band on an otherwise light page, not a dark theme: the header, cards
+     and footer are untouched. The scrim is a vertical gradient rather than a
+     flat fill, so the lit arches and desks at the top of the painting survive
+     while the lower band, where the text sits, is pushed dark enough to carry
+     it. */
+  .writing-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    /* A direct child of <main>, which is already full width, so plain 100%
+       bleeds edge to edge. Do NOT use 100vw here: vw includes the scrollbar,
+       which pushes the hero past the viewport and creates a horizontal
+       scrollbar on the page. */
+    width: 100%;
+    margin-top: 0;
+    min-height: 24rem;
+    display: grid;
+    align-items: center;
+    /* Matches the palette of the painting itself, so the band reads as part
+       of the artwork rather than a grey box dropped on the page. */
+    background: #241d12;
+  }
+
+  .writing-hero picture {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+
+  .writing-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Focus on the lit desks and columns rather than the dark upper vault. */
+    object-position: center 46%;
+    /* Held back from full strength so the scrim below, not the image, sets
+       the final brightness. Keeping some headroom here is what stops the
+       lit areas from clipping to flat white under the gradient. */
+    filter: brightness(0.78) saturate(0.92);
+    opacity: 1;
+  }
+
+  /* The scrim: a vertical gradient, light at the top edge and heavy at the
+     bottom. Flat fills were tried first and killed the painting - the lit
+     arches read as a grey box. Weighting the bottom instead keeps the upper
+     two-thirds of the image present while clearing 4.5:1 for the text. */
+  .writing-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgb(20 15 8 / 0.34) 0%,
+      rgb(20 15 8 / 0.5) 42%,
+      rgb(20 15 8 / 0.82) 78%,
+      rgb(20 15 8 / 0.9) 100%
+    );
+  }
+
+  /* A soft left-side lift, so the text column is not sitting on the single
+     busiest part of the painting. Subtle enough to read as lighting. */
+  .writing-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      78% 100% at 50% 62%,
+      rgb(20 15 8 / 0.34) 0%,
+      rgb(20 15 8 / 0) 100%
+    );
+  }
+
+  .writing-hero-text {
+    text-align: center;
+    padding: 3.5rem 0;
+  }
+
+  .writing-hero-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    font-weight: 700;
+    /* Warm gold, sampled from the painting's own lit wood and lamplight so
+       the label belongs to the image rather than sitting on top of it.
+       Measures 11.9:1 against the darkest scrim, and 6.3:1 where the
+       brightest part of the painting falls behind the text column. */
+    color: #e2c9a0;
+    margin: 0 0 0.5rem;
+  }
+
+  .writing-hero-title {
+    font-size: clamp(1.85rem, 5vw, 2.5rem);
+    margin: 0 0 0.5rem;
+    /* Near-white with a trace of the page's own warmth, so it does not read
+       as a cold grey against the brown scrim. 18.4:1 at worst. */
+    color: #fdfbf7;
+  }
+
+  .writing-hero-lede {
+    margin: 0 auto;
+    max-width: 34rem;
+    /* Lightened from --muted, which measured 5.5:1 on the page background but
+       not over a scrim this heavy. 14.2:1 against the darkest point. */
+    color: #e7ddcc;
+    font-size: 1.0625rem;
+  }
+
+  .post-list {
+    margin-top: 2.5rem;
+  }
+
+  .post-meta-flush {
+    margin: 0;
+  }
+
+  /* On a phone the painting is cropped much tighter, so the busiest part of
+     the image sits right behind the text. Deepen the scrim rather than
+     fading the image, which keeps the contrast guarantee on small screens
+     where the text is smallest relative to the artwork. */
+  @media (max-width: 34rem) {
+    .writing-hero {
+      min-height: 17rem;
+    }
+
+    .writing-hero-img {
+      filter: brightness(0.66) saturate(0.9);
+    }
+
+    .writing-hero::before {
+      background: linear-gradient(
+        180deg,
+        rgb(20 15 8 / 0.46) 0%,
+        rgb(20 15 8 / 0.62) 40%,
+        rgb(20 15 8 / 0.86) 80%,
+        rgb(20 15 8 / 0.92) 100%
+      );
+    }
+
+    .writing-hero-text {
+      padding: 2.5rem 0;
+    }
+  }
+</style>

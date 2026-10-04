@@ -5,15 +5,25 @@ interface Props {
   title?: string;
   description?: string;
   hideHeader?: boolean;
+  /** Drop <main>'s top padding, for a full-bleed hero that must sit flush
+      under the sticky header. Keeps the header. */
+  flushTop?: boolean;
+  /** Path to a 1200x630 social preview card. Absolute URLs only. */
+  ogImage?: string;
 }
 
 const {
   title,
   description = SITE.description,
   hideHeader = false,
+  flushTop = false,
+  ogImage = '/og.png',
 } = Astro.props;
 const pageTitle = title ? `${title} — ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+// Must be absolute: consumers resolve og:image relative to the *scraping* host,
+// not the page, and a root-relative path renders as a broken image preview.
+const ogImageUrl = new URL(ogImage, Astro.site);
 ---
 
 <!doctype html>
@@ -31,7 +41,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={pageTitle} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <link
       rel="preload"
@@ -77,7 +92,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       )
     }
 
-    <main id="main" class={hideHeader ? 'flush-top' : undefined}>
+    <main
+      id="main"
+      class={flushTop ? 'flush-hero' : hideHeader ? 'flush-top' : undefined}
+    >
       <slot />
     </main>
 
@@ -281,6 +299,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
      centred block starts closer to the top edge. */
   main.flush-top {
     padding-top: 1.5rem;
+  }
+
+  /* A full-bleed hero must meet the header with no gap at all, so this drops
+     the padding entirely rather than easing it. */
+  main.flush-hero {
+    padding-top: 0;
   }
 
   .lede {
