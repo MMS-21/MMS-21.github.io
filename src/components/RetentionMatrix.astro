@@ -1,0 +1,74 @@
+---
+const groups = [
+  { id: 'attention', name: 'Need attention', position: 'Higher risk · lower value', action: 'Test a low-cost re-engagement offer', detail: 'Use a small, measurable win-back campaign before committing a large retention budget.' },
+  { id: 'at-risk', name: 'At-risk high-value', position: 'Higher risk · higher value', action: 'Prioritize a personal win-back', detail: 'Review the customer’s history and prioritize relevant outreach. High value alone does not prove that a campaign will pay back.' },
+  { id: 'loyal', name: 'Loyal, lower-value', position: 'Lower risk · lower value', action: 'Nurture with relevant recommendations', detail: 'Keep engagement useful and proportionate to expected customer value, then measure whether it changes repeat purchasing.' },
+  { id: 'champions', name: 'Champions', position: 'Lower risk · higher value', action: 'Protect the relationship', detail: 'Maintain a good customer experience and reward loyalty. Avoid treating an active customer like a lost one.' },
+];
+---
+<section class="retention" aria-labelledby="retention-heading">
+  <h2 id="retention-heading">From a segment to a retention decision</h2>
+  <p>A web adaptation of the presentation’s prioritization matrix. Select a group to explore a possible next action.</p>
+  <p class="matrix-note">Conceptual framework: positions are illustrative, not measured customer coordinates or model thresholds.</p>
+  <div class="matrix">
+    <span class="axis-top">Higher churn risk</span>
+    <div class="quadrants" role="group" aria-label="Retention priority groups">
+      {groups.map((group, i) => (
+        <button type="button" class="quadrant" aria-pressed={i === 1 ? 'true' : 'false'} aria-controls="retention-action" data-group={group.id}>
+          <span class="group-name">{group.name}</span>
+          <span class="group-position">{group.position}</span>
+          <svg viewBox="0 0 28 20" aria-hidden="true" focusable="false"><path d="M2 10h22m-7-7 7 7-7 7" /></svg>
+        </button>
+      ))}
+    </div>
+    <div class="value-axis"><span>Lower customer value</span><span>Higher customer value</span></div>
+    <span class="axis-bottom">Lower churn risk</span>
+  </div>
+  <div id="retention-action" class="action-detail" aria-live="polite" aria-atomic="true">
+    {groups.map((group, i) => (
+      <div data-detail={group.id} hidden={i !== 1}>
+        <h3>{group.action}</h3>
+        <p>{group.detail}</p>
+      </div>
+    ))}
+  </div>
+  <noscript><p>The matrix’s suggested actions are: re-engage Need Attention, prioritize a win-back for At-risk High-value, nurture Loyal Lower-value, and protect Champions.</p></noscript>
+</section>
+<script>
+  const matrix = document.querySelector('.retention');
+  matrix?.querySelectorAll<HTMLButtonElement>('[data-group]').forEach(button => {
+    button.addEventListener('click', () => {
+      matrix.querySelectorAll('[data-group]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      matrix.querySelectorAll<HTMLElement>('[data-detail]').forEach(detail => { detail.hidden = detail.dataset.detail !== button.dataset.group; });
+    });
+  });
+</script>
+<style>
+  .retention { margin: 2.5rem 0; }
+  .matrix-note { font-size: .875rem; color: var(--muted); }
+  .matrix { margin-top: 1.5rem; }
+  .axis-top, .axis-bottom { display: block; text-align: center; font-size: .8125rem; color: var(--muted); }
+  .axis-top { margin-bottom: .75rem; }
+  .axis-bottom { margin-top: .75rem; }
+  .quadrants { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--btn-border); border: 1px solid var(--btn-border); }
+  .quadrant { position: relative; min-height: 120px; padding: 1.1rem 1rem 2rem; text-align: left; font: inherit; color: var(--fg); background: var(--bg); border: 0; cursor: pointer; }
+  .group-name { display: block; font-weight: 650; font-size: .9375rem; }
+  .group-position { display: block; font-size: .75rem; margin-top: .4rem; color: var(--muted); }
+  .quadrant svg { width: 24px; height: 18px; position: absolute; bottom: .7rem; right: 1rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .quadrant:hover { background: var(--accent-soft); }
+  .quadrant[aria-pressed="true"] { background: var(--accent); color: white; }
+  .quadrant[aria-pressed="true"] .group-position { color: #fff; }
+  .quadrant:focus-visible { z-index: 1; outline-offset: 3px; }
+  .value-axis { display: flex; justify-content: space-between; gap: 1rem; margin-top: .6rem; font-size: .75rem; color: var(--muted); }
+  .value-axis span:last-child { text-align: right; }
+  .action-detail { min-height: 145px; padding-top: 1.35rem; }
+  .action-detail h3 { margin: 0 0 .5rem; }
+  .action-detail p { margin: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .quadrant { transition: background-color 180ms ease, color 180ms ease; }
+    .quadrant svg { transition: transform 180ms cubic-bezier(.16,1,.3,1); }
+    .quadrant:hover svg, .quadrant:focus-visible svg { transform: translateX(3px); }
+    .action-detail > div:not([hidden]) { animation: action-arrives 220ms ease-out; }
+    @keyframes action-arrives { from { opacity: .45; } to { opacity: 1; } }
+  }
+</style>

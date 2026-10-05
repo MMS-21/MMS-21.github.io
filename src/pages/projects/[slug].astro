@@ -1,35 +1,117 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { PROJECTS } from '../../data/site';
+import RetentionMatrix from '../../components/RetentionMatrix.astro';
 
 export function getStaticPaths() {
   return PROJECTS.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
 }
 
 const { project } = Astro.props;
+const isEcommerce = project.slug === 'ecommerce-clv-churn';
 ---
 
 <Base title={project.name} description={project.tagline}>
   <div class="wrap">
     <article class="prose">
       <p class="eyebrow"><a href="/projects/">Projects</a></p>
-      <h1>{project.name}</h1>
+      <h1>{isEcommerce ? 'Prioritizing customer retention with value and churn risk' : project.name}</h1>
       <p class="lede">{project.tagline}</p>
 
       <ul class="tag-row" style="margin: 1.25rem 0 2rem;">
         {project.stack.map((s) => <li class="tag">{s}</li>)}
       </ul>
 
-      <h2>The problem</h2>
-      <p>{project.problem}</p>
+      {isEcommerce ? (
+        <section class="case-story" aria-labelledby="decision-heading">
+          <h2 id="decision-heading">Who should a retention team contact first?</h2>
+          <p>A limited retention budget forces a choice: protect active high-value customers, win back valuable customers who have gone quiet, or re-engage a wider low-value group. Customer counts and past spending alone cannot resolve that choice.</p>
+          <p>This project brings customer behavior, estimated future value, and churn risk into one analysis to support that prioritization.</p>
 
-      <h2>Approach</h2>
-      <ul>
-        {project.approach.map((a) => <li>{a}</li>)}
-      </ul>
+          <h2>How I approached the decision</h2>
+          <ul>
+            <li><strong>Understand the customer base.</strong> Use RFM segmentation to distinguish recent, frequent buyers from customers whose activity is fading.</li>
+            <li><strong>Estimate future value.</strong> Use BG/NBD and Gamma-Gamma models to estimate purchase frequency and monetary value, rather than treating historical spend as future potential.</li>
+            <li><strong>Evaluate future inactivity.</strong> Build churn features before a cutoff and evaluate against purchases in the following 365 days, correcting the original target-leakage issue.</li>
+          </ul>
 
-      <h2>Result</h2>
-      <p>{project.result}</p>
+          <h2>What the project delivers</h2>
+          <p>Segment summaries, customer-level value estimates, and retention target lists that make prioritization inspectable. The outputs help a team decide which customer groups deserve attention and provide customer lists for planning outreach.</p>
+          <p class="delivery-links"><a href={`${project.repo}/blob/main/reports/at_risk_high_value_customers.csv`}>Inspect the high-value win-back list →</a></p>
+        </section>
+      ) : (
+        <>
+          <h2>The problem</h2>
+          <p>{project.problem}</p>
+          <h2>Approach</h2>
+          <ul>{project.approach.map((a) => <li>{a}</li>)}</ul>
+          <h2>Result</h2>
+          <p>{project.result}</p>
+        </>
+      )}
+
+      {isEcommerce && (
+        <section class="project-evidence" aria-labelledby="evidence-heading">
+          <h2 id="evidence-heading">Where customer value concentrates</h2>
+          <p>Champions make up 22.1% of the 5,720-customer RFM base and account for 62.6% of its historical revenue. This concentration helps explain why retention priorities should differ by segment.</p>
+          <p class="chart-hint">Swipe charts to see all values, or tap to open at full size.</p>
+          <figure>
+            <a class="figure-link" href="/img/ecommerce/segment-revenue.svg" aria-label="Open customer and revenue share chart at full size">
+              <img src="/img/ecommerce/segment-revenue.svg" width="900" height="734" alt="Champions: 22.1% of customers, 62.6% of revenue. Loyal Customers: 11.8% and 12.7%. Need Attention: 25.1% and 10.8%. All nine RFM segments are shown." />
+            </a>
+            <figcaption>Historical revenue share, not predicted CLV. Named customers only; returns are excluded rather than netted. <a href="/data/ecommerce/segment-summary.csv" download>Download chart data (CSV)</a>.</figcaption>
+          </figure>
+          <h2>Predicting a future absence</h2>
+          <p>Random Forest has the highest ROC-AUC (0.796); Logistic Regression has the highest recall (0.830). The comparison makes the tradeoff visible: ranking risk and catching churners are different goals.</p>
+          <figure>
+            <a class="figure-link" href="/img/ecommerce/churn-models.svg" aria-label="Open corrected churn model comparison at full size">
+              <img src="/img/ecommerce/churn-models.svg" width="900" height="338" loading="lazy" alt="Random Forest: ROC-AUC 0.796, recall 0.776. Logistic Regression: ROC-AUC 0.788, recall 0.830. Gradient Boosting: ROC-AUC 0.783, recall 0.598." />
+            </a>
+            <figcaption>Corrected evaluation from a 4,311-customer cohort, with a stratified 30% customer test split. Features precede the cutoff; churn means no purchase in the following 365 days. These are point estimates from one split, without uncertainty intervals. <a href="/data/ecommerce/model-comparison.csv" download>Download model scores (CSV)</a>.</figcaption>
+          </figure>
+          <p class="evidence-note">These outputs demonstrate segmentation and model evaluation. They do not establish revenue saved or a measured retention-campaign uplift. <a href={`${project.repo}/tree/main/reports`}>Inspect the original reports on GitHub</a>.</p>
+          <RetentionMatrix />
+          <details class="presentation-excerpts">
+            <summary>See the original presentation visuals</summary>
+            <p>Two excerpts from the original deck: the historical segment breakdown and the conceptual retention matrix.</p>
+            <figure>
+              <a class="figure-link" href="/img/ecommerce/segment-slide.jpg" aria-label="Open original customer segment slide at full size">
+                <img src="/img/ecommerce/segment-slide.jpg" width="960" height="540" loading="lazy" alt="Original presentation slide: Champions 22.1% of customers and 62.6% of revenue; Loyal Customers 11.8% and 12.7%; Need Attention 25% and 10.8%." />
+              </a>
+              <figcaption>Slide 6 — customer segment breakdown. Rounded historical figures match the aggregate report.</figcaption>
+            </figure>
+            <figure>
+              <a class="figure-link" href="/img/ecommerce/retention-slide.jpg" aria-label="Open original retention matrix slide at full size">
+                <img src="/img/ecommerce/retention-slide.jpg" width="960" height="540" loading="lazy" alt="Original slide 23: conceptual retention strategy matrix showing Need Attention, At-risk High-value, Loyal but Low-value, and Champions." />
+              </a>
+              <figcaption>Slide 23 — conceptual strategy framework, not a plotted model result. <a href="https://github.com/MMS-21/ecommerce-clv-churn/tree/f9a6d5f4bda4e3aa71d2be4885e7bc3afa1a9613/reports/slides">View the source presentation</a>.</figcaption>
+            </figure>
+          </details>
+
+          <section class="recommendations" aria-labelledby="recommendations-heading">
+            <h2 id="recommendations-heading">Recommended next steps</h2>
+            <p>The analysis suggests three campaign hypotheses to test. Choose the audience using the customer outputs, then measure the incremental effect before scaling.</p>
+            <ol class="recommendation-list">
+              <li>
+                <h3>Protect the Champions relationship</h3>
+                <p>Champions contribute 62.6% of historical revenue. Prioritize service quality and relevant loyalty benefits; test whether a benefit improves repeat purchasing before offering it to the whole segment.</p>
+              </li>
+              <li>
+                <h3>Start a focused high-value win-back pilot</h3>
+                <p>Review the high-value customers who have gone quiet and select a manageable outreach cohort. Check recent activity, contact eligibility, and expected margin before choosing an offer. Use the exported list as a starting point, then refresh it for the campaign date.</p>
+              </li>
+              <li>
+                <h3>Keep broad re-engagement economical</h3>
+                <p>Need Attention represents 25.1% of customers but 10.8% of historical revenue. Test relevant reminders or low-cost recommendations first; avoid assuming that a blanket discount will generate profitable returns.</p>
+              </li>
+            </ol>
+            <h3>Measure the campaign, not just the model</h3>
+            <p>Randomly assign eligible customers within each target group to outreach and a no-outreach control. Define the observation window before launching, then compare repeat-purchase rates and contribution margin after offer and contact costs. Track unsubscribes as a guardrail.</p>
+            <p>For churn scoring, choose a decision threshold that fits the team’s outreach capacity and the cost of missed churners versus unnecessary contacts. Recheck performance on a later time period before operational use.</p>
+            <p class="evidence-note">These are proposed actions based on the historical analysis. Campaign lift, revenue recovered, and profitability have not been measured in this project.</p>
+          </section>
+        </section>
+      )}
 
       <h2>Source</h2>
       <p>
@@ -42,3 +124,31 @@ const { project } = Astro.props;
     </article>
   </div>
 </Base>
+
+<style>
+  .case-story { margin-top: 1.75rem; }
+  .case-story h2:first-child { margin-top: 0; }
+  .case-story li { margin-bottom: .85rem; }
+  .delivery-links { font-size: .9375rem; }
+  .recommendations { margin-top: 2.5rem; padding-top: .5rem; border-top: 1px solid var(--border); }
+  .recommendation-list { padding-left: 1.35rem; }
+  .recommendation-list li { padding-left: .25rem; margin-bottom: 1.5rem; }
+  .recommendation-list h3 { margin: 0 0 .5rem; }
+  .recommendation-list p { margin: 0; }
+  .project-evidence { margin: 2rem 0 3rem; }
+  figure { margin: 1.5rem 0 2.5rem; }
+  .figure-link { display: block; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .figure-link:hover { border-color: var(--accent); }
+  figure img { display: block; width: 100%; height: auto; }
+  figcaption { margin-top: .85rem; color: var(--muted); font-size: .875rem; line-height: 1.65; }
+  .evidence-note { color: var(--muted); font-size: .9375rem; }
+  .chart-hint { display: none; }
+  .presentation-excerpts { margin: 1.5rem 0 2.5rem; }
+  summary { cursor: pointer; font-weight: 600; color: var(--accent); padding: .75rem 0; }
+  @media (max-width: 520px) {
+    .chart-hint { display: block; color: var(--muted); font-size: .875rem; }
+    .figure-link { overflow-x: auto; }
+    figure img { width: 620px; max-width: none; }
+    .figure-link:focus-visible { outline-offset: 3px; }
+  }
+</style>
