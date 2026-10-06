@@ -1,0 +1,92 @@
+---
+import calendar from '../data/contributions.json';
+const days = calendar.weeks.flatMap((week, w) => week.contributionDays.map((day, d) => ({ ...day, w, d })));
+const peak = Math.max(...days.map(day => day.contributionCount));
+const total = days.reduce((sum, day) => sum + day.contributionCount, 0);
+const level = (count: number) => count === 0 ? 0 : count <= 3 ? 1 : count <= 10 ? 2 : count <= 25 ? 3 : 4;
+const square = (x: number, y: number) => `M${x} ${y}h9v9h-9Z`;
+---
+<section class="contributions" aria-labelledby="contributions-title">
+  <div class="skyline-heading">
+    <div><h2 id="contributions-title">A year of building</h2><p>{total.toLocaleString()} GitHub contributions · {days[0].date} to {days.at(-1)?.date}</p></div>
+    <button class="view-toggle" type="button" aria-pressed="false">Show skyline</button>
+  </div>
+  <div class="skyline-scroll">
+    <svg class="skyline" viewBox="0 0 650 260" role="group" aria-label="GitHub contribution days. Use arrow keys to inspect days." data-peak={peak}>
+      {days.map((day, i) => (
+        <g class={`day level-${level(day.contributionCount)}`} data-count={day.contributionCount} data-date={day.date} data-week={day.w} data-day={day.d} tabindex={i === days.length - 1 ? '0' : '-1'} role="button" aria-label={`${day.date}: ${day.contributionCount} contributions`}>
+          <path class="side" d={`M${day.w * 12 + 9} ${day.d * 12 + 85}h0v9h0Z`} />
+          <path class="front" d={`M${day.w * 12} ${day.d * 12 + 94}h9v0h-9Z`} />
+          <path class="roof" d={square(day.w * 12, day.d * 12 + 85)} />
+        </g>
+      ))}
+    </svg>
+  </div>
+  <div class="skyline-caption">
+    <p class="day-readout" aria-live="polite">Hover or focus a day to see its contribution count.</p>
+    <div class="legend" aria-label="Color intensity represents fewer to more contributions"><span>Less</span>{[0,1,2,3,4].map(l => <i class={`level-${l}`} />)}<span>More</span></div>
+  </div>
+  <p class="snapshot-note">GitHub activity snapshot · fetched 6 October 2026. Contributions include more than commits; activity counts do not measure work quality. <a href="https://github.com/MMS-21">View GitHub profile →</a></p>
+</section>
+<script>
+  const section = document.querySelector('.contributions');
+  if (section) {
+    const svg = section.querySelector<SVGElement>('.skyline')!;
+    const cells = Array.from(section.querySelectorAll<SVGGElement>('.day'));
+    const toggle = section.querySelector<HTMLButtonElement>('.view-toggle')!;
+    const readout = section.querySelector<HTMLElement>('.day-readout')!;
+    const peak = Number(svg.dataset.peak);
+    const poly = (points: number[][]) => `M${points.map(p => p.join(' ')).join('L')}Z`;
+    let raised = false;
+    toggle.addEventListener('click', () => {
+      raised = !raised;
+      toggle.setAttribute('aria-pressed', String(raised));
+      toggle.textContent = raised ? 'Show flat grid' : 'Show skyline';
+      cells.forEach(cell => {
+        const w = Number(cell.dataset.week), d = Number(cell.dataset.day), count = Number(cell.dataset.count);
+        const x = raised ? w * 10.5 + d * 8 + 5 : w * 12;
+        const y = raised ? 158 - w * 1.7 + d * 6 : 85 + d * 12;
+        const h = raised && count ? 4 + count / peak * 77 : 0;
+        const a = [x,y-h], b = [x+9,y-h+(raised?-1.5:0)], c = [x+9+(raised?7:0),y-h+(raised?4:9)], e = [x+(raised?7:0),y-h+(raised?5.5:9)];
+        cell.querySelector('.roof')!.setAttribute('d', poly([a,b,c,e]));
+        cell.querySelector('.front')!.setAttribute('d', poly([e,c,[c[0],c[1]+h],[e[0],e[1]+h]]));
+        cell.querySelector('.side')!.setAttribute('d', poly([b,c,[c[0],c[1]+h],[b[0],b[1]+h]]));
+      });
+    });
+    const inspect = (cell: SVGGElement) => { readout.textContent = `${cell.dataset.date} · ${cell.dataset.count} contributions`; };
+    cells.forEach((cell, index) => {
+      cell.addEventListener('pointerenter', () => inspect(cell));
+      cell.addEventListener('focus', () => inspect(cell));
+      cell.addEventListener('click', () => { cells.forEach(c => c.setAttribute('tabindex','-1')); cell.setAttribute('tabindex','0'); cell.focus(); inspect(cell); });
+      cell.addEventListener('keydown', event => {
+        const delta = ({ArrowRight:7,ArrowLeft:-7,ArrowDown:1,ArrowUp:-1} as Record<string,number>)[event.key];
+        if (delta === undefined) return;
+        event.preventDefault();
+        const next = cells[Math.max(0,Math.min(cells.length-1,index+delta))];
+        cell.setAttribute('tabindex','-1'); next.setAttribute('tabindex','0'); next.focus();
+      });
+    });
+  }
+</script>
+<style>
+  .contributions { margin-top: 2.75rem; border-top: 1px solid var(--border); padding-top: 1.75rem; }
+  .skyline-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .skyline-heading h2 { margin: 0 0 .5rem; }
+  .skyline-heading p { margin: 0; font-size: .8125rem; color: var(--muted); }
+  .view-toggle { font: inherit; font-size: .875rem; padding: .55rem .85rem; border: 1px solid var(--btn-border); border-radius: 5px; background: var(--bg); color: var(--fg); cursor: pointer; }
+  .view-toggle:hover, .view-toggle[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+  .skyline-scroll { overflow-x: auto; }
+  .skyline { display: block; width: 100%; min-width: 570px; }
+  .day { cursor: pointer; outline: none; }
+  .level-0 { --tile: #e9e2d8; } .level-1 { --tile: #b6d0dc; } .level-2 { --tile: #7da9bf; } .level-3 { --tile: #417e9c; } .level-4 { --tile: #1d5b7a; }
+  .roof { fill: var(--tile); stroke: var(--bg); stroke-width: .6; }
+  .front { fill: var(--tile); filter: brightness(.83); }
+  .side { fill: var(--tile); filter: brightness(.65); }
+  .day:hover .roof, .day:focus .roof { stroke: var(--fg); stroke-width: 1.5; }
+  .skyline-caption { display: flex; justify-content: space-between; gap: .75rem; flex-wrap: wrap; align-items: center; }
+  .day-readout { margin: 0; font-size: .8125rem; min-height: 1.5em; }
+  .legend { display: flex; gap: 4px; align-items: center; font-size: .75rem; color: var(--muted); }
+  .legend i { width: 10px; height: 10px; background: var(--tile); }
+  .snapshot-note { font-size: .75rem; color: var(--muted); margin: .85rem 0 0; }
+  @media (prefers-reduced-motion: no-preference) { .day path { transition: d 500ms cubic-bezier(.16,1,.3,1); } }
+</style>
