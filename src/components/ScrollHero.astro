@@ -8,17 +8,18 @@ const bottom = Array.from({length:30}, (_,i) => `${(100-i*100/29).toFixed(2)}% $
 const left = Array.from({length:30}, (_,i) => `${(Math.sin(i*5.3)*1.5).toFixed(2)}% ${(100-i*100/29).toFixed(2)}%`);
 const top = Array.from({length:30}, (_,i) => `${(i*100/29).toFixed(2)}% ${(Math.sin(i*4.9)*1.4).toFixed(2)}%`);
 const tornEdge = `polygon(${[...top,...torn,...bottom,...left].join(',')})`;
-const fragments = Array.from({length:12}, (_,i) => ({
-  left:(i%4)*29-7+Math.sin(i*2.3)*2, top:Math.floor(i/4)*39-8+Math.cos(i*3.7)*2,
-  x:((i%8)-3.5)*150, y:i%2 ? -480 : 480,
-  r:Math.sin(i*7.1)*9, scatter:Math.cos(i*5.3)*35,
+const fragments = Array.from({length:24}, (_,i) => ({
+  left:(i%6)*20-7+Math.sin(i*2.3)*1.5,
+  top:Math.floor(i/6)*29-9+Math.cos(i*3.7)*1.5,
+  x:Math.sin(i*2.7)*25, y:Math.cos(i*3.1)*24,
+  r:Math.sin(i*7.1)*7, scatter:Math.cos(i*5.3)*48,
 }));
 
 ---
 <a class="skip-intro" href="#featured-work">Skip introduction</a>
 <div class="paper-background" aria-hidden="true">
       <div class="paper-underlay"></div>
-      {fragments.map((piece,i)=><div class="paper-fragment" style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}px;--scatter-y:${piece.y}px;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface"></div></div>)}
+      {fragments.map((piece,i)=><div class="paper-fragment" style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}vw;--scatter-y:${piece.y}vh;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface"></div></div>)}
     </div>
 <section class="scroll-hero" aria-label="Introduction">
   <div class="hero-stage">
@@ -80,6 +81,7 @@ const fragments = Array.from({length:12}, (_,i) => ({
     const nav = hero.querySelector<HTMLElement>('.hero-nav')!;
     const background = document.querySelector<HTMLElement>('.paper-background')!;
     const papers = [...document.querySelectorAll<HTMLElement>('.work-paper')];
+    const scraps = [...background.querySelectorAll<HTMLElement>('.paper-fragment')];
     const moments = [['notebook',.18,.05],['arrow-one',.25,.045],['arrow-two',.31,.045],['lens',.37,.05],['role',.44,.04],['location',.50,.04],['question-line',.56,.045],['question-curve',.62,.045],['question-note',.68,.06]] as const;
     const clamp = (n:number) => Math.max(0,Math.min(1,n));
     const ease = (n:number) => { const t=clamp(n); return t*t*(3-2*t); };
@@ -103,8 +105,8 @@ const fragments = Array.from({length:12}, (_,i) => ({
       frame=0;
       const y=scrollY, animated=!reduced.matches;
       const p=animated?clamp(y/end):1;
-      set(background,'--assembly',ease(p/.16));
-      background.dataset.settled=String(p>=.17);
+      // Keep the same physical scraps on screen: no opacity swap or replacement image.
+      scraps.forEach((scrap,i)=>set(scrap,'--assembly',animated?ease((p-(i%6)*.006)/.15):1));
       const lift=ease((p-.12)/.08);
       set(hero,'--identity',lift);
       for (const [name,start,duration] of moments) set(hero,`--${name}`,ease((p-start)/duration));
@@ -160,10 +162,9 @@ const fragments = Array.from({length:12}, (_,i) => ({
   :global(html:has(.scroll-hero)) { overflow-x:clip; }
   :global(body:has(.scroll-hero)) { isolation:isolate; overflow-x:clip; }
   :global(main.flush-top:has(.scroll-hero)) { padding-top:0; }
-  .paper-background::after { content:""; position:absolute; inset:0; background:url(/img/paper-collage.svg) center / cover; opacity:var(--assembly); }
-  .paper-background[data-settled="true"] .paper-fragment { display:none; }
-  .paper-underlay { position:absolute; inset:0; background:#f8f5ed; opacity:var(--assembly); }
-  .paper-fragment { position:absolute; width:38%; height:48%; opacity:var(--assembly); transform:translate(calc(var(--scatter-x) * (1 - var(--assembly))),calc(var(--scatter-y) * (1 - var(--assembly)))) rotate(calc(var(--rest-r) + var(--scatter-r) * (1 - var(--assembly))));  }
+  .paper-background::after { content:""; position:absolute; inset:0; background:url('/img/paper-fibers.svg'); opacity:.5; }
+  .paper-underlay { position:absolute; inset:0; background:#fcfaf7; }
+  .paper-fragment { --assembly:1; position:absolute; width:29%; height:40%; transform:translate3d(calc(var(--scatter-x) * (1 - var(--assembly))),calc(var(--scatter-y) * (1 - var(--assembly))),0) rotate(calc(var(--rest-r) + var(--scatter-r) * (1 - var(--assembly)))) scale(calc(.58 + .42 * var(--assembly))); }
   .paper-edge { position:absolute; inset:0; background:#fffdf7; clip-path:var(--torn-edge); }
   .paper-surface { position:absolute; inset:5px 8px 11px 4px; clip-path:var(--torn-edge); background:#ede3cf; }
   .paper-fragment:nth-child(3n) .paper-surface { background-color:#f0e7d6; }
@@ -218,7 +219,7 @@ const fragments = Array.from({length:12}, (_,i) => ({
     .question-paper p { font-size:1.15rem; }
     .hero-nav { opacity:calc(var(--nav) * (1 - var(--handoff,0))); gap:clamp(14px,4vw,26px); top:24px; left:8px; right:8px; }
     .hero-nav a { font-size:1.35rem; padding-inline:4px; }
-    .paper-fragment { width:38%; }
+
   }
   @media (max-height:700px) and (prefers-reduced-motion:no-preference) {
     .hero-illustrations { top:calc(50% - 140px); transform:translateY(calc(-100px * var(--identity))); }
