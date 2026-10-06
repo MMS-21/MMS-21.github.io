@@ -5,221 +5,99 @@ import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+const readingTime = (body: string = '') => {
+  const text = body.replace(/```[\s\S]*?```/g, '').replace(/!\[[^\]]*\]\([^)]*\)/g, '').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[#*_`>]/g, '');
+  return Math.max(1, Math.ceil(text.trim().split(/\s+/).filter(Boolean).length / 200));
+};
 ---
 
-<Base
-  title="Writing"
-  description="Write-ups on agentic AI tooling and customer analytics."
-  ogImage="/og-writing.png"
-  flushTop
-  hideHeader
->
-  {/* Full-bleed: escapes .wrap entirely and spans the viewport edge to edge,
-      the way a hero image should. The text is re-centred in its own .wrap so
-      it still lines up with the header and the cards below. */}
-  <section class="writing-hero">
-    <picture>
-      <img
-        class="writing-hero-img"
-        src="/img/writing-hero-1600.webp"
-        srcset="/img/writing-hero-800.webp 800w, /img/writing-hero-1200.webp 1200w, /img/writing-hero-1600.webp 1600w, /img/writing-hero-1920.webp 1920w"
-        sizes="100vw"
-        width="1600"
-        height="686"
-        alt=""
-        decoding="async"
-        fetchpriority="high"
-      />
-    </picture>
-    <div class="writing-hero-text">
-      <div class="wrap">
-        <p class="writing-hero-kicker">Writing</p>
-        <h1 class="writing-hero-title">Write-ups</h1>
-        <p class="writing-hero-lede">
-          Mostly about agentic AI tooling and customer analytics. I write up what I
-          built, what broke, and what I would do differently.
-        </p>
-      </div>
-    </div>
-  </section>
-
+<Base title="Writing" description="What I learned building analytics and AI tools: practical write-ups on implementation, failures, and verification." ogImage="/og-writing.png">
   <div class="wrap">
-    <div class="post-list">
-      {
-        posts.map((post) => (
-          <article class="card">
-            <h3>
-              <a href={`/writing/${post.id}/`}>{post.data.title}</a>
-            </h3>
-            <p>{post.data.description}</p>
-            <p class="post-meta post-meta-flush">
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('en-GB', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                })}
-              </time>
-              {' · '}
-              {post.data.tags.join(' · ')}
-            </p>
-          </article>
-        ))
-      }
-    </div>
+    <section class="writing-intro">
+      <h1>What I learned building analytics and AI tools.</h1>
+      <p class="intro-copy">Notes from the work itself: decisions I made, things that broke, and what I would do differently next time.</p>
+      <a class="feed-link" href="/rss.xml">Follow via RSS <span aria-hidden="true">↗</span></a>
+    </section>
+
+    <section class="post-list" aria-label="Published articles">
+      {posts.map((post, index) => (
+        <article class:list={['post', { featured: index === 0 }]}>
+          {post.id === 'analytics-agent-build' && (
+            <figure class="agent-sketch">
+              <svg viewBox="0 0 640 200" role="img" aria-labelledby="agent-sketch-title">
+                <title id="agent-sketch-title">A tool-calling loop produces a draft report, then checks its quality and revises it.</title>
+                <g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path fill="var(--accent-soft)" d="M42 39 159 34 168 133 49 140Z" />
+                  <path d="m57 53 88-4 5 69-88 6Z M76 72l-8 9 9 8 m46-20 8 9-7 9 m-22-18-8 24 M74 107l55-3" />
+                  <path class="ink-route" pathLength="1" d="M177 83h74 m-9-9 10 9-10 9" />
+                  <path d="M270 40h80l21 22v79H270Z M350 40v22h21 M287 83h66 M287 95h45 M287 109h58 M287 123h37" />
+                  <path class="ink-route" pathLength="1" d="M382 83h64 m-9-9 10 9-10 9" />
+                  <path fill="var(--accent-soft)" d="m466 46 99-6 8 90-101 8Z" />
+                  <circle cx="517" cy="87" r="24" />
+                  <path class="ink-check" pathLength="1" d="m506 87 8 8 17-19" />
+                  <path class="ink-return" pathLength="1" d="M516 145v23H105v-17 m-8 8 8-9 8 9" />
+                  <path d="m578 52 9-8 m-5 21 13-2 M32 57l-10-5 M31 72l-11 2" />
+                </g>
+                <g fill="currentColor" font-family="inherit" font-size="15" text-anchor="middle">
+                  <text x="105" y="27">Tool-calling loop</text>
+                  <text x="320" y="27">Draft report</text>
+                  <text x="520" y="27">Quality check</text>
+                  <text x="312" y="191">Revise when needed</text>
+                </g>
+              </svg>
+            </figure>
+          )}
+          <div class="article-meta">
+            <span>{post.data.tags.includes('agentic-ai') ? 'Agentic AI' : post.data.tags[0] || 'Build notes'}</span>
+            <span aria-hidden="true">·</span>
+            <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}</time>
+            <span aria-hidden="true">·</span>
+            <span>About {readingTime(post.body)} min read</span>
+          </div>
+          <h2><a href={`/writing/${post.id}/`}>{post.data.title}</a></h2>
+          <p class="article-description">{post.data.description}</p>
+          <a class="read-link" href={`/writing/${post.id}/`}>Read the article <span aria-hidden="true">→</span></a>
+        </article>
+      ))}
+      {posts.length === 0 && <p>No articles published yet. In the meantime, <a href="/projects/">explore the projects</a>.</p>}
+    </section>
+    <aside class="project-note">
+      <p>Want to see the work behind the writing?</p>
+      <a href="/projects/">Explore the projects <span aria-hidden="true">→</span></a>
+    </aside>
   </div>
 </Base>
 
 <style>
-  /* Full-bleed hero for the writing index. Deliberately NOT inside .wrap: it
-     spans the full page width edge to edge, with no border, no radius and no
-     side margins. Only the text is re-wrapped so it stays aligned with the
-     header and the cards below.
-
-     The source painting is dark and low-key, so instead of washing it toward
-     the page background it is scrimmed and the type goes light. This is one
-     dark band on an otherwise light page, not a dark theme: the header, cards
-     and footer are untouched. The scrim is a vertical gradient rather than a
-     flat fill, so the lit arches and desks at the top of the painting survive
-     while the lower band, where the text sits, is pushed dark enough to carry
-     it. */
-  .writing-hero {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    /* A direct child of <main>, which is already full width, so plain 100%
-       bleeds edge to edge. Do NOT use 100vw here: vw includes the scrollbar,
-       which pushes the hero past the viewport and creates a horizontal
-       scrollbar on the page. */
-    width: 100%;
-    margin-top: 0;
-    min-height: 24rem;
-    display: grid;
-    align-items: center;
-    /* Matches the palette of the painting itself, so the band reads as part
-       of the artwork rather than a grey box dropped on the page. */
-    background: #241d12;
+  .writing-intro { padding: .5rem 0 2.75rem; }
+  .writing-intro h1 { max-width: 18ch; font-size: clamp(2.2rem, 6vw, 3.15rem); line-height: 1.14; letter-spacing: -.035em; text-wrap: balance; margin-bottom: 1rem; }
+  .intro-copy { max-width: 34rem; color: var(--muted); margin: 0 0 1.1rem; }
+  .feed-link { font-size: .875rem; }
+  .post { border-top: 1px solid var(--border); padding: 2rem 0 2.5rem; }
+  .agent-sketch { margin: 0 0 1.5rem; max-width: 38rem; color: var(--fg); }
+  .agent-sketch svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .article-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem .55rem; font-size: .8125rem; color: var(--muted); margin-bottom: 1rem; }
+  .article-meta > span:first-child { color: var(--accent); font-weight: 650; }
+  .post h2 { margin: 0 0 1rem; max-width: 31ch; font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.3; text-wrap: pretty; }
+  .post h2 a { color: var(--fg); text-decoration: none; }
+  .post h2 a:hover { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; }
+  .article-description { margin: 0 0 1.35rem; color: var(--muted); }
+  .read-link { display: inline-flex; gap: .6rem; align-items: center; font-weight: 650; text-decoration: none; padding: .3rem 0; }
+  .read-link:hover { text-decoration: underline; }
+  .project-note { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem 1.5rem; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 1.5rem; font-size: .9375rem; }
+  .project-note p { margin: 0; color: var(--muted); }
+  @media (prefers-reduced-motion: no-preference) {
+    .ink-route, .ink-check, .ink-return { stroke-dasharray: 1; animation: draw-ink 650ms cubic-bezier(.16,1,.3,1) both; }
+    .ink-check { animation-delay: 150ms; }
+    .ink-return { animation-delay: 250ms; }
+    .read-link span { transition: transform 160ms ease-out; }
+    .read-link:hover span, .read-link:focus-visible span { transform: translateX(4px); }
+    @keyframes draw-ink { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
   }
-
-  .writing-hero picture {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-  }
-
-  .writing-hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* Focus on the lit desks and columns rather than the dark upper vault. */
-    object-position: center 46%;
-    /* Held back from full strength so the scrim below, not the image, sets
-       the final brightness. Keeping some headroom here is what stops the
-       lit areas from clipping to flat white under the gradient. */
-    filter: brightness(0.78) saturate(0.92);
-    opacity: 1;
-  }
-
-  /* The scrim: a vertical gradient, light at the top edge and heavy at the
-     bottom. Flat fills were tried first and killed the painting - the lit
-     arches read as a grey box. Weighting the bottom instead keeps the upper
-     two-thirds of the image present while clearing 4.5:1 for the text. */
-  .writing-hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(
-      180deg,
-      rgb(20 15 8 / 0.34) 0%,
-      rgb(20 15 8 / 0.5) 42%,
-      rgb(20 15 8 / 0.82) 78%,
-      rgb(20 15 8 / 0.9) 100%
-    );
-  }
-
-  /* A soft left-side lift, so the text column is not sitting on the single
-     busiest part of the painting. Subtle enough to read as lighting. */
-  .writing-hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(
-      78% 100% at 50% 62%,
-      rgb(20 15 8 / 0.34) 0%,
-      rgb(20 15 8 / 0) 100%
-    );
-  }
-
-  .writing-hero-text {
-    text-align: center;
-    padding: 3.5rem 0;
-  }
-
-  .writing-hero-kicker {
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 0.72rem;
-    font-weight: 700;
-    /* Warm gold, sampled from the painting's own lit wood and lamplight so
-       the label belongs to the image rather than sitting on top of it.
-       Measures 11.9:1 against the darkest scrim, and 6.3:1 where the
-       brightest part of the painting falls behind the text column. */
-    color: #e2c9a0;
-    margin: 0 0 0.5rem;
-  }
-
-  .writing-hero-title {
-    font-size: clamp(1.85rem, 5vw, 2.5rem);
-    margin: 0 0 0.5rem;
-    /* Near-white with a trace of the page's own warmth, so it does not read
-       as a cold grey against the brown scrim. 18.4:1 at worst. */
-    color: #fdfbf7;
-  }
-
-  .writing-hero-lede {
-    margin: 0 auto;
-    max-width: 34rem;
-    /* Lightened from --muted, which measured 5.5:1 on the page background but
-       not over a scrim this heavy. 14.2:1 against the darkest point. */
-    color: #e7ddcc;
-    font-size: 1.0625rem;
-  }
-
-  .post-list {
-    margin-top: 2.5rem;
-  }
-
-  .post-meta-flush {
-    margin: 0;
-  }
-
-  /* On a phone the painting is cropped much tighter, so the busiest part of
-     the image sits right behind the text. Deepen the scrim rather than
-     fading the image, which keeps the contrast guarantee on small screens
-     where the text is smallest relative to the artwork. */
-  @media (max-width: 34rem) {
-    .writing-hero {
-      min-height: 17rem;
-    }
-
-    .writing-hero-img {
-      filter: brightness(0.66) saturate(0.9);
-    }
-
-    .writing-hero::before {
-      background: linear-gradient(
-        180deg,
-        rgb(20 15 8 / 0.46) 0%,
-        rgb(20 15 8 / 0.62) 40%,
-        rgb(20 15 8 / 0.86) 80%,
-        rgb(20 15 8 / 0.92) 100%
-      );
-    }
-
-    .writing-hero-text {
-      padding: 2.5rem 0;
-    }
+  @media (max-width: 480px) {
+    .writing-intro { padding-top: 0; padding-bottom: 2rem; }
+    .agent-sketch { margin-bottom: 1.25rem; }
+    .article-meta { gap: .3rem .4rem; }
   }
 </style>
+

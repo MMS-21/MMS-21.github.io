@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SITE, BIO_SHORT, FEATURED } from '../data/site';
+import { SITE, BIO_LEAD, BIO_DETAIL, FEATURED } from '../data/site';
 
 const NAV = [
   { href: '/projects/', label: 'Projects' },
@@ -57,9 +57,20 @@ const NAV = [
       </div>
 
       <h1 class="hero-name">{SITE.name}</h1>
-      <p class="hero-role">{SITE.role}</p>
-      <p class="hero-location">{SITE.location}</p>
-      <p class="hero-lede">{BIO_SHORT}</p>
+      <p class="hero-role">{SITE.role} <span aria-hidden="true">·</span> {SITE.location}</p>
+      <div class="bio-intro">
+        <div class="margin-note" aria-hidden="true">
+          <span>Start with the question.</span>
+          <svg viewBox="0 0 64 44" fill="none" focusable="false"><path d="M5 5c29-8 46 4 39 27m-8-7 7 9 12-5" /></svg>
+        </div>
+        <p class="bio-lead">{BIO_LEAD}</p>
+        <svg class="pencil-mark" viewBox="0 0 300 12" aria-hidden="true" focusable="false"><path d="M3 8c65-7 165-7 293-3M35 11c57-4 117-4 194-3" /></svg>
+        <p class="hero-lede">{BIO_DETAIL}</p>
+      </div>
+      <div class="hero-actions">
+        <a href="/projects/">Explore my work <span aria-hidden="true">→</span></a>
+        <a href="/about/">About me</a>
+      </div>
     </section>
 
     <section>
@@ -107,6 +118,14 @@ const NAV = [
 </Base>
 
 <style>
+  .bio-intro { max-width: 29rem; margin: 1.5rem auto 0; }
+  .margin-note { display: flex; align-items: center; justify-content: flex-end; gap: .4rem; color: var(--accent); margin-bottom: .1rem; }
+  .margin-note span { font-family: "Segoe Print", "Bradley Hand", cursive; font-size: .9375rem; transform: rotate(-4deg); }
+  .margin-note svg { width: 48px; height: 33px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .bio-lead { font-size: clamp(1.35rem, 3.5vw, 1.65rem); font-weight: 600; line-height: 1.4; letter-spacing: -.02em; text-wrap: balance; margin: 0; }
+  .pencil-mark { display: block; width: 65%; height: 12px; margin: .25rem auto 1rem; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; }
+  .hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-top: 1.35rem; font-size: .9375rem; }
+  .hero-actions a:first-child { font-weight: 650; }
   .hero-art {
     position: relative;
     max-width: 40rem;
@@ -149,8 +168,8 @@ const NAV = [
 
   .hero {
     text-align: center;
-    padding: 2.5rem 0 3rem;
-    margin-bottom: 1rem;
+    padding: 1.75rem 0 2rem;
+    margin-bottom: 0;
     border-bottom: 1px solid var(--border);
   }
 
@@ -191,16 +210,16 @@ const NAV = [
 
   .hero-name {
     margin: 0 0 0.35rem;
-    font-size: clamp(1.75rem, 5vw, 2.35rem);
+    font-size: clamp(1.65rem, 5vw, 2rem);
     letter-spacing: -0.02em;
   }
 
   .hero-role {
     margin: 0 auto 0.35rem;
     max-width: none;
-    font-size: 1.125rem;
-    color: var(--fg);
-    font-weight: 500;
+    font-size: .9375rem;
+    color: var(--muted);
+    font-weight: 400;
   }
 
   .hero-location {

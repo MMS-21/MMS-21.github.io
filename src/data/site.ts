@@ -17,9 +17,11 @@ export const SITE = {
 };
 
 /** Short bio used in the hero and meta tags. */
-export const BIO_SHORT =
-  'I build agentic AI applications that automate data analytics workflows, ' +
-  'specialising in customer analytics — RFM segmentation, CLV modelling, and churn prediction.';
+export const BIO_LEAD = 'I turn customer data into clearer business decisions.';
+export const BIO_DETAIL =
+  'Who to retain, where value sits, and what to investigate next. ' +
+  'I also build AI tools that make analysis repeatable and easier to verify.';
+export const BIO_SHORT = `${BIO_LEAD} ${BIO_DETAIL}`;
 
 export const BIO_LONG = [
   'I am a Data & Business Analyst based in Cairo, Egypt. My work sits at the intersection of customer analytics and AI tooling.',
