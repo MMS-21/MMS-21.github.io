@@ -103,7 +103,8 @@ const NAV = [
     </section>
 
     <ContributionSkyline />
-    <section>
+    <section class="work-section">
+      <div class="work-copy">
       <h2>How I work</h2>
       <p>
         The parts I care about are the parts nobody screenshots: tests that pass
@@ -115,11 +116,22 @@ const NAV = [
         I write about what I build, including what broke.
         <a href="/writing/">Read the write-ups →</a>
       </p>
+      </div>
+      <figure class="cabinet-figure">
+        <iframe src="/figures/hairline-analysis-cabinet.html?theme=light" title="Interactive analysis cabinet: drawers for Data, Analysis, and Validation" loading="lazy" width="360" height="460"></iframe>
+        <figcaption>Explore the drawers for Data, Analysis, and Validation. <a href="/figures/hairline-analysis-cabinet.html?theme=light">Open the interactive figure →</a></figcaption>
+      </figure>
     </section>
   </div>
 </Base>
 
 <style>
+  .work-section { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: center; margin-top: 2.5rem; }
+  .work-copy h2 { margin-top: 0; }
+  .cabinet-figure { margin: 0; min-width: 0; }
+  .cabinet-figure iframe { display: block; width: 100%; border: 1px solid var(--border); border-radius: 8px; background: white; }
+  .cabinet-figure figcaption { margin-top: .7rem; color: var(--muted); font-size: .8125rem; line-height: 1.6; }
+  @media (max-width: 640px) { .work-section { grid-template-columns: 1fr; } }
   .bio-intro { max-width: 29rem; margin: 1.5rem auto 0; }
   .margin-note { display: flex; align-items: center; justify-content: flex-end; gap: .4rem; color: var(--accent); margin-bottom: .1rem; }
   .margin-note span { font-family: "Segoe Print", "Bradley Hand", cursive; font-size: .9375rem; transform: rotate(-4deg); }
