@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ContributionSkyline from '../components/ContributionSkyline.astro';
+import { Mascot } from 'page-mascot';
 import { SITE, BIO_LEAD, BIO_DETAIL, FEATURED } from '../data/site';
 
 const NAV = [
@@ -44,17 +45,9 @@ const NAV = [
             <path class="draw-line connection" pathLength="1" d="M384 107c22-17 40-15 65 1 m-6-9 7 10-12 2" />
           </g>
         </svg>
-      <picture>
-        <img
-          class="avatar"
-          src="/img/avatar.png"
-          srcset="/img/avatar.png 1x, /img/avatar-256.png 2x, /img/avatar-384.png 3x"
-          width="128"
-          height="128"
-          alt=""
-          decoding="async"
-        />
-      </picture>
+        <div class="mascot-portrait">
+          <Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={200} label="Moaaz avatar" />
+        </div>
       </div>
 
       <h1 class="hero-name">{SITE.name}</h1>
@@ -145,8 +138,8 @@ const NAV = [
     pointer-events: none;
   }
 
-  .hero-art picture { position: relative; }
-  .hero-art .avatar { margin: 0; }
+  .mascot-portrait { position: relative; width: 200px; height: 200px; }
+  .mascot-portrait :global(button:focus-visible) { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 50%; }
 
   @media (prefers-reduced-motion: no-preference) {
     .draw-line {
@@ -164,7 +157,7 @@ const NAV = [
 
   @media (max-width: 480px) {
     .hero-art { height: 130px; margin-bottom: 1.25rem; }
-    .hero-art .avatar { width: 96px; height: 96px; }
+    .mascot-portrait { transform: scale(.75); }
     .hero-nav { gap: 0.4rem 1.2rem; }
   }
 
@@ -238,3 +231,4 @@ const NAV = [
     font-size: 1.0625rem;
   }
 </style>
+

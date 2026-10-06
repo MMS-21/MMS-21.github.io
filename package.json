@@ -26,6 +26,10 @@
     "esbuild@0.28.2": true
   },
   "dependencies": {
-    "@astrojs/rss": "^4.0.19"
+    "@astrojs/react": "^7.0.1",
+    "@astrojs/rss": "^4.0.19",
+    "page-mascot": "^0.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }
