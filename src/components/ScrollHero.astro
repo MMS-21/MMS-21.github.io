@@ -8,20 +8,20 @@ const bottom = Array.from({length:30}, (_,i) => `${(100-i*100/29).toFixed(2)}% $
 const left = Array.from({length:30}, (_,i) => `${(Math.sin(i*5.3)*1.5).toFixed(2)}% ${(100-i*100/29).toFixed(2)}%`);
 const top = Array.from({length:30}, (_,i) => `${(i*100/29).toFixed(2)}% ${(Math.sin(i*4.9)*1.4).toFixed(2)}%`);
 const tornEdge = `polygon(${[...top,...torn,...bottom,...left].join(',')})`;
-const fragments = Array.from({length:48}, (_,i) => ({
-  left:(i%8)*14-5+Math.sin(i*2.3)*2, top:Math.floor(i/8)*19-6+Math.cos(i*3.7)*2,
+const fragments = Array.from({length:12}, (_,i) => ({
+  left:(i%4)*29-7+Math.sin(i*2.3)*2, top:Math.floor(i/4)*39-8+Math.cos(i*3.7)*2,
   x:((i%8)-3.5)*150, y:i%2 ? -480 : 480,
   r:Math.sin(i*7.1)*9, scatter:Math.cos(i*5.3)*35,
 }));
 
 ---
 <a class="skip-intro" href="#featured-work">Skip introduction</a>
-<section class="scroll-hero" aria-label="Introduction">
-  <div class="hero-stage">
-    <div class="paper-background" aria-hidden="true">
+<div class="paper-background" aria-hidden="true">
       <div class="paper-underlay"></div>
       {fragments.map((piece,i)=><div class="paper-fragment" style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}px;--scatter-y:${piece.y}px;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface"></div></div>)}
     </div>
+<section class="scroll-hero" aria-label="Introduction">
+  <div class="hero-stage">
     <div class="hero-illustrations">
       <div class="hero-art">
         <svg class="ink-sketch" viewBox="0 0 640 180" fill="none" aria-hidden="true" focusable="false">
@@ -33,7 +33,7 @@ const fragments = Array.from({length:48}, (_,i) => ({
             <path class="draw-line" pathLength="1" d="m85 96 19-16 14 5 23-23" />
             <path d="m135 62 7-1-1 8 M30 126l-7 10 m10-6-9-3 M176 45l8-8 m-4 15 12-2" />
             </g>
-            <g class="doodle arrow-one"><path pathLength="1" d="M188 100c27 23 46 22 68 4 m-10-2 11 1-4 10" />
+            <g class="doodle arrow-one"><path pathLength="1" d="M184 100c18 17 30 20 46 12 m-10-3 11 2-5 9" />
             </g>
             <g class="doodle lens">
             <path fill="#f6eddb" d="m471 32 103 8-7 104-103-9Z" />
@@ -43,7 +43,7 @@ const fragments = Array.from({length:48}, (_,i) => ({
             <path class="draw-line check-mark" pathLength="1" d="m533 91 8 8 15-17" />
             <path d="m563 112 24 28c5 6 14-2 9-8l-26-28 M587 150c-10 12-23 16-39 12 m-83-12-11 5 m8-14-10-2 M583 54l7-10 m1 19 12-2" />
             </g>
-            <g class="doodle arrow-two"><path pathLength="1" d="M384 107c22-17 40-15 65 1 m-6-9 7 10-12 2" /></g>
+            <g class="doodle arrow-two"><path pathLength="1" d="M410 107c12-11 23-10 39 1 m-6-9 7 10-12 2" /></g>
           </g>
         </svg>
 
@@ -75,87 +75,116 @@ const fragments = Array.from({length:48}, (_,i) => ({
 <script>
   const hero = document.querySelector<HTMLElement>('.scroll-hero');
   if (hero) {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const identity = hero.querySelector<HTMLElement>('.hero-identity')!;
     const nav = hero.querySelector<HTMLElement>('.hero-nav')!;
-    const pieces = hero.querySelectorAll<HTMLElement>('.paper-fragment');
-    const moments = [
-      ['notebook',.23,.065], ['arrow-one',.31,.055], ['arrow-two',.38,.055], ['lens',.45,.065],
-      ['role',.54,.05], ['location',.61,.05], ['question-line',.68,.06],
-      ['question-curve',.76,.06], ['question-note',.84,.10],
-    ] as const;
-    const clamp = (n: number) => Math.max(0, Math.min(1, n));
-    const ease = (n: number) => 1 - Math.pow(1 - clamp(n), 3);
-    let frame = 0;
-    const render = () => {
-      frame = 0;
-      const animated = !reduced.matches;
-      hero.dataset.animated = String(animated);
-      const h = window.innerHeight;
-      const introEnd = Math.max(1,hero.offsetHeight - h);
-      const progress = animated ? clamp(-hero.getBoundingClientRect().top / introEnd) : 1;
-      hero.style.setProperty('--assembly', String(ease(progress/.20)));
-      pieces.forEach((piece,index) => piece.style.setProperty('--assembly', String(ease((progress-index*.001)/.14))));
-      const lift = ease((progress-.16)/.10);
-      hero.style.setProperty('--identity',String(lift));
-      for (const [name,start,duration] of moments) hero.style.setProperty(`--${name}`,String(ease((progress-start)/duration)));
-      hero.style.setProperty('--nav',String(ease((progress-.16)/.065)));
-      nav.inert = animated && progress < .18;
-      nav.style.visibility = progress < .16 ? 'hidden' : 'visible';
-      // Continue moving the original mascot after the introduction, until the page bottom.
-      const remaining = Math.max(1,document.documentElement.scrollHeight-h-introEnd);
-      const travel = clamp((window.scrollY-introEnd)/remaining);
-      const dock = animated ? travel*travel*(3-2*travel) : (travel>0 ? 1 : 0);
-      const mobile = window.innerWidth <= 600;
-      const endScale = .38;
-      const scale = 1-(1-endScale)*dock;
-      const baseY = h<=700 ? h/2-140-100*lift : h/2-(mobile?150:160)-(mobile?135:125)*lift;
-      const x = window.innerWidth/2 + (18+340*endScale/2-window.innerWidth/2)*dock;
-      const y = baseY+(10-baseY)*dock;
-      identity.style.position = animated || dock>0 ? 'fixed' : 'absolute';
-      identity.style.left = `${x}px`;
-      identity.style.top = `${y}px`;
-      identity.style.transform = `translateX(-50%) scale(${scale})`;
-      identity.dataset.docked = String(dock>.85);
+    const background = document.querySelector<HTMLElement>('.paper-background')!;
+    const papers = [...document.querySelectorAll<HTMLElement>('.work-paper')];
+    const moments = [['notebook',.18,.05],['arrow-one',.25,.045],['arrow-two',.31,.045],['lens',.37,.05],['role',.44,.04],['location',.50,.04],['question-line',.56,.045],['question-curve',.62,.045],['question-note',.68,.06]] as const;
+    const clamp = (n:number) => Math.max(0,Math.min(1,n));
+    const ease = (n:number) => { const t=clamp(n); return t*t*(3-2*t); };
+    let frame=0, h=0, w=0, end=1, total=1;
+    let targets:{x:number,y:number,width:number,height:number}[]=[];
+    const values = new WeakMap<HTMLElement,Map<string,string>>();
+    const set = (el:HTMLElement,key:string,value:number) => {
+      const v=value.toFixed(4); let cache=values.get(el);
+      if (!cache) { cache=new Map(); values.set(el,cache); }
+      if (cache.get(key)!==v) { el.style.setProperty(key,v); cache.set(key,v); }
     };
-    const schedule = () => { if (!frame) frame = requestAnimationFrame(render); };
-    window.addEventListener('scroll',schedule,{passive:true});
-    window.addEventListener('resize',schedule,{passive:true});
-    reduced.addEventListener('change',render);
-    new ResizeObserver(schedule).observe(document.body);
-    render();
+    const measure = () => {
+      hero.dataset.animated=String(!reduced.matches);
+      h=innerHeight; w=document.documentElement.clientWidth;
+      end=Math.max(1,hero.offsetHeight-h); total=Math.max(end+1,document.documentElement.scrollHeight-h);
+      // Offsets are layout geometry: transformed paper rectangles would feed back into the animation.
+      targets=papers.map(el=>({x:(el.offsetParent as HTMLElement).offsetLeft+el.offsetLeft+el.offsetWidth/2,y:(el.offsetParent as HTMLElement).offsetTop+el.offsetTop,width:el.offsetWidth,height:el.offsetHeight}));
+      schedule();
+    };
+    const render = () => {
+      frame=0;
+      const y=scrollY, animated=!reduced.matches;
+      const p=animated?clamp(y/end):1;
+      set(background,'--assembly',ease(p/.16));
+      background.dataset.settled=String(p>=.17);
+      const lift=ease((p-.12)/.08);
+      set(hero,'--identity',lift);
+      for (const [name,start,duration] of moments) set(hero,`--${name}`,ease((p-start)/duration));
+      const depart=animated?ease((p-.77)/.08):0;
+      set(hero,'--depart',depart);
+      const handoff=animated?ease((p-.85)/.15):1;
+      set(hero,'--handoff',animated?ease((p-.85)/.03):1);
+      set(hero,'--nav',ease((p-.12)/.05));
+      nav.inert=animated&&p<.14;
+      nav.style.visibility=p<.12?'hidden':'visible';
+      const travel=animated?clamp((y-end*.79)/(total-end*.79)):1;
+      // Get the portrait clear of the growing papers early, then finish shrinking at the page bottom.
+      const move=animated?ease((p-.79)/.19):1, shrink=ease(travel);
+      const scale=1-.52*move-.10*shrink;
+      const mobile=w<=600;
+      const baseY=h<=700?h/2-140-100*lift:h/2-(mobile?150:160)-(mobile?135:125)*lift;
+      const x=w/2+(18+340*scale/2-w/2)*move;
+      const top=baseY+(10-baseY)*move;
+      const identityTransform=animated?`translate3d(${x-170}px,${top}px,0) scale(${scale})`:'none';
+      if(identity.style.transform!==identityTransform) identity.style.transform=identityTransform;
+      identity.dataset.docked=String(travel>.85);
+      papers.forEach((paper,i)=>{
+        const target=targets[i]; if (!target) return;
+        const sourceX=w/2+(i===0?-220:220)*Math.min(1,w/640);
+        const sourceY=(h<=700?h/2-240:h/2-285)+100;
+        const t=handoff, size=.23+.77*t;
+        const dx=(sourceX-target.x)*(1-t);
+        const dy=(y+sourceY-target.y-target.height*.12)*(1-t);
+        const paperTransform=animated?`translate3d(${dx}px,${dy}px,0) scale(${size}) rotate(${(i===0?-4:3)*t}deg)`:`rotate(${i===0?-3:2}deg)`;
+        if(paper.style.transform!==paperTransform) paper.style.transform=paperTransform;
+        set(paper,'--paper-copy',ease((t-.25)/.65));
+        paper.style.opacity=String(animated?ease((p-.85)/.03):1);
+        paper.style.visibility=animated&&p<.85?'hidden':'visible';
+        paper.inert=animated&&t<.9;
+      });
+    };
+    const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
+    addEventListener('scroll',schedule,{passive:true});
+    addEventListener('resize',measure,{passive:true});
+    reduced.addEventListener('change',measure);
+    new ResizeObserver(measure).observe(document.body);
+    document.fonts.ready.then(measure);
+    measure();
   }
 </script>
 <style>
   .scroll-hero { --assembly:1; --identity:1; --role:1; --location:1; --question-line:1; --question-curve:1; --question-note:1; --notebook:1; --arrow-one:1; --arrow-two:1; --lens:1; --nav:1; position:relative; margin:0; }
   .hero-stage { position:relative; min-height:840px; height:100svh; isolation:isolate; overflow:hidden; text-align:center; }
-  .scroll-hero[data-animated="true"] { height:350svh; }
+  .scroll-hero[data-animated="true"] { height:440svh; }
   [data-animated="true"] .hero-stage { position:sticky; top:0; min-height:0; }
   @font-face { font-family:'Cormorant Garamond'; src:url('/fonts/cormorant-garamond-medium.ttf') format('truetype'); font-weight:500; font-display:swap; }
-  .paper-background { position:absolute; inset:0; z-index:-1; pointer-events:none; }
-  .paper-underlay { position:absolute; inset:0; background:#f8f5ed url('/img/paper-fibers.svg'); opacity:var(--assembly); }
-  .paper-fragment { position:absolute; width:21%; height:29%; opacity:var(--assembly); transform:translate(calc(var(--scatter-x) * (1 - var(--assembly))),calc(var(--scatter-y) * (1 - var(--assembly)))) rotate(calc(var(--rest-r) + var(--scatter-r) * (1 - var(--assembly)))); filter:drop-shadow(2px 4px 3px #66533817); }
-  .paper-edge { position:absolute; inset:0; background:#fffdf7 url('/img/paper-fibers.svg'); clip-path:var(--torn-edge); }
-  .paper-surface { position:absolute; inset:5px 8px 11px 4px; clip-path:var(--torn-edge); background:#ede3cf url('/img/paper-fibers.svg'); }
+  .paper-background { --assembly:1; position:fixed; inset:0; z-index:-1; pointer-events:none; contain:strict; }
+  :global(html:has(.scroll-hero)) { overflow-x:clip; }
+  :global(body:has(.scroll-hero)) { isolation:isolate; overflow-x:clip; }
+  :global(main.flush-top:has(.scroll-hero)) { padding-top:0; }
+  .paper-background::after { content:""; position:absolute; inset:0; background:url(/img/paper-collage.svg) center / cover; opacity:var(--assembly); }
+  .paper-background[data-settled="true"] .paper-fragment { display:none; }
+  .paper-underlay { position:absolute; inset:0; background:#f8f5ed; opacity:var(--assembly); }
+  .paper-fragment { position:absolute; width:38%; height:48%; opacity:var(--assembly); transform:translate(calc(var(--scatter-x) * (1 - var(--assembly))),calc(var(--scatter-y) * (1 - var(--assembly)))) rotate(calc(var(--rest-r) + var(--scatter-r) * (1 - var(--assembly))));  }
+  .paper-edge { position:absolute; inset:0; background:#fffdf7; clip-path:var(--torn-edge); }
+  .paper-surface { position:absolute; inset:5px 8px 11px 4px; clip-path:var(--torn-edge); background:#ede3cf; }
   .paper-fragment:nth-child(3n) .paper-surface { background-color:#f0e7d6; }
   .paper-fragment:nth-child(4n) .paper-surface { inset:10px 4px 5px 9px; background-color:#e8ddc8; }
   .hero-illustrations { position:absolute; top:calc(50% - 160px); left:0; right:0; transform:translateY(calc(-125px * var(--identity))); }
-  .hero-identity { position:absolute; top:calc(50% - 285px); left:50%; width:340px; transform:translateX(-50%); transform-origin:top center; z-index:20; pointer-events:none; }
+  .hero-identity { position:fixed; top:0; left:0; width:340px; text-align:center; transform:translate3d(calc(50vw - 170px),calc(50vh - 160px),0); transform-origin:top center; z-index:20; pointer-events:none; }
   .hero-identity[data-docked="true"] { border-radius:12px; background:#faf8f2e8; }
   .identity-art { height:200px; display:grid; place-items:center; }
   .mascot-portrait :global(button) { pointer-events:auto; }
   .hero-art { position:relative; width:min(640px,95vw); height:200px; display:grid; place-items:center; margin:auto; }
   .mascot-portrait { position:relative; width:220px; height:220px; }
   .mascot-portrait :global(button:focus-visible) { outline:2px solid var(--accent); outline-offset:2px; border-radius:50%; }
-  h1 { margin:0; font-size:clamp(2rem,5vw,2.8rem); letter-spacing:-.035em; }
+  h1 { width:100%; text-align:center; margin:0; font-size:clamp(2rem,5vw,2.8rem); letter-spacing:-.035em; }
   .ink-sketch { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
-  .doodle { transform-box:fill-box; transform-origin:center; opacity:var(--reveal); transform:translateY(calc(12px * (1 - var(--reveal)))) scale(calc(.82 + .18 * var(--reveal))); }
+  .doodle { visibility:visible; transform-box:fill-box; transform-origin:center; opacity:calc(var(--reveal) * (1 - var(--handoff,0))); transform:translateY(calc(12px * (1 - var(--reveal)))) scale(calc(.82 + .18 * var(--reveal))); }
   .notebook { --reveal:var(--notebook); clip-path:inset(calc(100% * (1 - var(--reveal))) 0 0 0); }
   .arrow-one { --reveal:var(--arrow-one); }
   .arrow-two { --reveal:var(--arrow-two); }
   .lens { --reveal:var(--lens); clip-path:inset(calc(100% * (1 - var(--reveal))) 0 0 0); }
   .arrow-one path, .arrow-two path { stroke-dasharray:1; stroke-dashoffset:calc(1 - var(--reveal)); }
-  .hero-details { position:absolute; top:calc(50% - 12px); left:24px; right:24px;  }
+  .hero-details { opacity:calc(1 - var(--depart,0)); transform:translateY(calc(-30px * var(--depart,0))); position:absolute; top:calc(50% - 12px); left:24px; right:24px;  }
   .hero-role { opacity:var(--role); transform:translateY(calc(14px * (1 - var(--role)))); color:var(--fg); font-size:1rem; font-weight:550; margin:0 auto; }
   .hero-location { opacity:var(--location); transform:translateY(calc(12px * (1 - var(--location)))); font-family:Georgia,'Times New Roman',serif; font-style:italic; color:#6b5d49; font-size:1rem; margin:2px auto 15px; }
   .bio-intro { max-width:31rem; margin:auto; }
@@ -187,9 +216,9 @@ const fragments = Array.from({length:48}, (_,i) => ({
     .question-cue { transform:translateX(-6px); }
     .question-paper { transform:translate(-6px,calc(25px * (1 - var(--question-note)))) rotate(-2deg); padding:22px 20px 18px 32px; margin-bottom:16px; }
     .question-paper p { font-size:1.15rem; }
-    .hero-nav { gap:clamp(14px,4vw,26px); top:24px; left:8px; right:8px; }
+    .hero-nav { opacity:calc(var(--nav) * (1 - var(--handoff,0))); gap:clamp(14px,4vw,26px); top:24px; left:8px; right:8px; }
     .hero-nav a { font-size:1.35rem; padding-inline:4px; }
-    .paper-fragment { width:24%; }
+    .paper-fragment { width:38%; }
   }
   @media (max-height:700px) and (prefers-reduced-motion:no-preference) {
     .hero-illustrations { top:calc(50% - 140px); transform:translateY(calc(-100px * var(--identity))); }
@@ -203,5 +232,5 @@ const fragments = Array.from({length:48}, (_,i) => ({
     .hero-location { margin-bottom:5px; }
     .hero-nav { top:12px; }
   }
-  @media (prefers-reduced-motion:reduce) { .hero-stage { height:auto; min-height:840px; } .hero-nav a span, .hero-nav a path { transition:none; } .hero-nav a:hover span, .hero-nav a:focus-visible span { transform:none; } }
+  @media (prefers-reduced-motion:reduce) { .hero-identity { position:absolute; top:155px; left:calc(50% - 170px); } .hero-stage { height:auto; min-height:840px; } .hero-nav a span, .hero-nav a path { transition:none; } .hero-nav a:hover span, .hero-nav a:focus-visible span { transform:none; } }
 </style>

@@ -8,35 +8,19 @@ import { FEATURED } from '../data/site';
 
 <Base hideHeader>
   <ScrollHero />
+  <section class="desk-scene" id="featured-work" tabindex="-1" aria-label="On my desk">
+    <article class="work-paper current-paper">
+      <span class="paper-number" aria-hidden="true">01 / ON THE DESK</span>
+      <svg class="paper-symbol" viewBox="0 0 100 85" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8h70v68H12z M18 2v78 M30 20h36 M30 28h23 M31 62V40 M31 62h40 M34 53l12-12 10 4 13-17 m-7 0h7v7"/></g></svg>
+      <div class="paper-copy"><h2>What I’m working on</h2><p class="desk-lead">A portfolio with a little more personality.</p><p>Paper, ink, and a blue-haired mascot. I’m refining this space to make the work easier to explore—and the process more visible.</p><a href="https://github.com/MMS-21/MMS-21.github.io">Follow the changes on GitHub ↗</a><span class="desk-note">Always a work in progress.</span></div>
+    </article>
+    <article class="work-paper featured-paper">
+      <span class="paper-number" aria-hidden="true">02 / SELECTED PROJECTS</span>
+      <svg class="paper-symbol" viewBox="0 0 100 85" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 5h65v68H14z M25 18h40 M25 27h24 M25 57h14"/><circle cx="66" cy="45" r="17"/><path d="m78 58 16 19 M58 45l6 6 11-13"/></g></svg>
+      <div class="paper-copy"><h2>Featured Work</h2><ul class="desk-projects">{FEATURED.map(p=><li><a href={`/projects/${p.slug}/`}>{p.name}<span aria-hidden="true">↗</span></a><p>{p.tagline}</p></li>)}</ul><a href="/projects/">All projects →</a></div>
+    </article>
+  </section>
   <div class="wrap">
-    <section id="featured-work" tabindex="-1">
-      <h2>Featured work</h2>
-      <p>
-        Three projects that show the same thing from different angles: customer
-        analytics that ends in an action, and AI tooling built to be verified.
-      </p>
-      <div class="project-grid">
-        {
-          FEATURED.map((p) => (
-            <article class="card">
-              <h3>
-                <a href={`/projects/${p.slug}/`}>{p.name}</a>
-              </h3>
-              <p>{p.tagline}</p>
-              <ul class="tag-row">
-                {p.stack.slice(0, 4).map((s) => (
-                  <li class="tag">{s}</li>
-                ))}
-              </ul>
-            </article>
-          ))
-        }
-      </div>
-      <p style="margin-top: 1rem;">
-        <a href="/projects/">All projects →</a>
-      </p>
-    </section>
-
     <ContributionSkyline />
     <section>
       <h2>How I work</h2>
@@ -53,3 +37,26 @@ import { FEATURED } from '../data/site';
     </section>
   </div>
 </Base>
+
+<style>
+  .desk-scene { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:clamp(35px,5vw,80px); max-width:1080px; margin:0 auto 100px; padding:170px 30px 90px; min-height:100svh; }
+  :global(main:has(.scroll-hero[data-animated="true"])) .desk-scene { margin-top:-100svh; }
+  .work-paper { --paper-copy:1; position:relative; align-self:start; padding:36px 38px 40px; background:#fffaf0; box-shadow:3px 12px 22px #59472920,0 1px 2px #59472925; transform-origin:center 12%; color:#30291f; }
+  .work-paper::before { content:""; position:absolute; inset:0; pointer-events:none; background:url('/img/paper-fibers.svg'); opacity:.6; }
+  .current-paper { margin-top:20px; background:#f8f1e2; }
+  .paper-number { display:block; font-size:.67rem; letter-spacing:.15em; color:#766950; opacity:var(--paper-copy); }
+  .paper-symbol { width:90px; height:80px; margin:20px 0 8px; }
+  .paper-copy { opacity:var(--paper-copy); position:relative; }
+  .work-paper h2 { font-family:'Cormorant Garamond',Georgia,serif; font-size:2.5rem; font-weight:500; margin:4px 0 22px; }
+  .work-paper p { font-size:.94rem; line-height:1.75; }
+  .work-paper .desk-lead { font-family:Georgia,serif; font-size:1.22rem; line-height:1.5; }
+  .work-paper a { font-size:.9rem; }
+  .desk-note { display:block; margin-top:36px; font-family:'Segoe Print',cursive; font-size:.9rem; transform:rotate(-3deg); color:#766950; }
+  .desk-projects { list-style:none; margin:0 0 24px; padding:0; }
+  .desk-projects li { border-top:1px solid #d7cab1; padding:15px 0; }
+  .desk-projects a { display:flex; justify-content:space-between; color:#30291f; font-weight:650; text-decoration:none; font-size:1rem; }
+  .desk-projects a:hover { color:var(--accent); }
+  .desk-projects p { margin:5px 0 0; font-size:.82rem; color:#685b47; line-height:1.6; }
+  @media(max-width:700px) { .desk-scene { grid-template-columns:1fr; gap:42px; padding:160px 28px 60px; margin-bottom:30px; } .work-paper { padding:28px; } .work-paper h2 { font-size:2.1rem; } }
+  @media(prefers-reduced-motion:reduce) { .desk-scene { margin-top:0; padding-top:70px; } }
+</style>
