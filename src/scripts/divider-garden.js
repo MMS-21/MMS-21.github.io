@@ -82,32 +82,45 @@ export function startGardens(){
  document.querySelectorAll('.flower-divider').forEach((host,index)=>{
   const canvas=host.querySelector('canvas'), ctx=canvas.getContext('2d');
   if(!ctx)return;
-  const engine=new Garden(); let width=0, start=0, visible=false;
+  const engine=new Garden(); let width=0, visible=false, branches=[], progress=0, target=0, previous=0;
+  const random=(n)=>{const v=Math.sin(n*127.1+index*311.7)*43758.5453;return v-Math.floor(v)};
   const path=(points,closed)=>{ctx.beginPath();ctx.moveTo(...points[0]);for(let i=1;i<points.length-1;i++){const p=points[i],q=points[i+1];ctx.quadraticCurveTo(...p,(p[0]+q[0])/2,(p[1]+q[1])/2)}ctx.lineTo(...points[points.length-1]);if(closed)ctx.closePath()};
   const B={fill:(p,c)=>{path(p,true);ctx.fillStyle=c;ctx.fill()},stroke:(p,c,w)=>{path(p,false);ctx.strokeStyle=c;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke()}};
-  const resize=()=>{width=host.clientWidth;const d=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(width*d);canvas.height=160*d;ctx.setTransform(d,0,0,d,0,0)};
+  const resize=()=>{
+   width=host.clientWidth;const d=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(width*d);canvas.height=160*d;ctx.setTransform(d,0,0,d,0,0);
+   const count=Math.max(7,Math.round(width/49));
+   branches=Array.from({length:count},(_,j)=>{
+    const x=24+(width-48)*(j+.2+random(j+1)*.6)/count;
+    return {x,phase:random(j+13)*6.28,length:28+random(j+29)*42,height:(j%3===0?-1:1)*(20+random(j+43)*23),radius:9+random(j+57)*12,lean:random(j+71)>.5?1:-1};
+   });
+  };
   new ResizeObserver(resize).observe(host);resize();
   function draw(now){
-   if(!start)start=now;
-   const age=reduced.matches?10000:now-start,t=age/1000;
+   const dt=Math.min(64,now-(previous||now));previous=now;
+   const rect=host.getBoundingClientRect();
+   target=Math.max(target,Math.min(1,Math.max(0,(innerHeight*.98-(rect.top+80))/(innerHeight*.38))));
+   progress=reduced.matches?1:progress+(target-progress)*(1-Math.exp(-dt/420));
+   const t=now/1000;
    ctx.clearRect(0,0,width,160);
-   const positions=width<500?[.06,.54]:index%2?[.24,.78]:[.13,.68];
-   positions.forEach((pos,j)=>{
-    const phase=index*1.7+j*2, x=width*pos, base=80;
-    const sway=reduced.matches?0:Math.sin(t*1.05+phase)*5;
-    const grow=engine.eo((age-j*380)/2100);
-    const length=width<500?73:110, height=width<500?38:47;
-    const points=Array.from({length:45},(_,k)=>{const u=k/44;return[x+length*u,base-height*Math.sin(u*Math.PI*.68)+sway*u*u]});
-    if(grow>0)engine.strokeRange(B,points,0,grow,engine.cc.blue,1.6);
-    [0.3,0.59,0.8].forEach((u,k)=>{const p=points[Math.round(u*44)];const g=engine.spr((age-600-k*240-j*380)/1000);engine.leaf(B,p[0],p[1],k%2?-.5:-2.3,19*g,.7)});
-    const tip=points[44];
-    engine.rose(B,tip[0],tip[1],width<500?13:18,Math.sin(t*.8+phase)*.12,{ph1:phase,ph2:phase+2,turns:1.9},age-1300-j*380,null);
-    // A few detached petals drift through each divider's own gutter.
-    if(age>3400&&!reduced.matches)for(let k=0;k<3;k++){
-     const cycle=((t-3.4+k*2.8+phase)%8+8)%8,u=cycle/8;
-     ctx.save();ctx.globalAlpha=Math.sin(Math.PI*u)*.7;
-     ctx.translate(tip[0]+u*55+Math.sin(cycle*2+k)*12,tip[1]+u*100);ctx.rotate(cycle*.9+k);
-     ctx.fillStyle=engine.cc.red;ctx.beginPath();ctx.ellipse(0,0,4,7,0,0,Math.PI*2);ctx.fill();ctx.restore();
+   // The whole garland unfurls along the rule before its branches flower.
+   const vine=Array.from({length:80},(_,k)=>{const u=k/79;return[u*width,80+Math.sin(u*22+index)*4]});
+   if(progress>.001)engine.strokeRange(B,vine,0,progress,engine.cc.blue,1.2);
+   branches.forEach((branch,j)=>{
+    const {x,phase,length,height,radius,lean}=branch;
+    const local=Math.max(0,Math.min(1,(progress-x/width*.65)/.35));
+    if(local<=0)return;
+    const age=local*4200;
+    const sway=reduced.matches?0:Math.sin(t*1.05+phase)*4;
+    const points=Array.from({length:32},(_,k)=>{const u=k/31;return[Math.max(radius+4,Math.min(width-radius-4,x+lean*length*u+Math.sin(u*3+phase)*6*u)),80-height*Math.sin(u*Math.PI*.68)+sway*u*u]});
+    engine.strokeRange(B,points,0,engine.eo(age/1800),engine.cc.blue,1.4);
+    [.33,.65].forEach((u,k)=>{const p=points[Math.round(u*31)];const g=engine.spr((age-600-k*220)/1000);engine.leaf(B,p[0],p[1],phase+k*2,14*g+random(j+90)*5*g,.7)});
+    const tip=points[31];
+    engine.rose(B,tip[0],tip[1],radius,phase+Math.sin(t*.8+phase)*.12,{ph1:phase,ph2:phase+2,turns:1.9},age-1700,null);
+    if(local>.95&&!reduced.matches&&j%3===0){
+     const cycle=((t+phase)%9)/9;
+     ctx.save();ctx.globalAlpha=Math.sin(Math.PI*cycle)*.65;
+     ctx.translate(tip[0]+Math.sin(cycle*8+phase)*13,tip[1]+cycle*65);ctx.rotate(cycle*7+phase);
+     ctx.fillStyle=engine.cc.red;ctx.beginPath();ctx.ellipse(0,0,3,5,0,0,Math.PI*2);ctx.fill();ctx.restore();
     }
    });
   }
