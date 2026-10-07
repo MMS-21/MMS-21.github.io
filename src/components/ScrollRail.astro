@@ -1,5 +1,5 @@
 ---
-const stops=[{id:'main',label:'Introduction'},{id:'featured-work',label:'Featured work'},{id:'about',label:'About me'},{id:'connect',label:'Get in touch'}];
+const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introduction'},{id:'featured-work',label:'Featured work'},{id:'about',label:'About me'},{id:'connect',label:'Get in touch'}];
 ---
 <nav class="scroll-rail" aria-label="Page sections">
  <div class="rail-line" aria-hidden="true"><span class="rail-fill"></span><span class="rail-light"></span></div>
@@ -30,6 +30,10 @@ const stops=[{id:'main',label:'Introduction'},{id:'featured-work',label:'Feature
    const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
    targets=links.map((link,i)=>{
     const el=document.querySelector<HTMLElement>(link.hash)!;
+    if(el.id==='hero-story'){
+     const hero=el.closest<HTMLElement>('.scroll-hero')!;
+     return reduced.matches?hero.offsetTop:hero.offsetTop+(hero.offsetHeight-innerHeight)*.62;
+    }
     // Land after the desk's paper reveals, so a section shortcut shows its content.
     const reveal=el.id==='featured-work'&&el.dataset.animated==='true'&&innerWidth>700?(el.offsetHeight-innerHeight)*.66:0;
     return i===0?0:Math.min(max,el.getBoundingClientRect().top+scrollY+reveal);
@@ -54,17 +58,17 @@ const stops=[{id:'main',label:'Introduction'},{id:'featured-work',label:'Feature
 <style>
  .scroll-rail { --progress:0; position:fixed; z-index:40; right:14px; top:50%; transform:translateY(-50%); width:44px; height:min(44svh,340px); visibility:hidden; }
  .scroll-rail[data-ready="true"] { visibility:visible; }
- .rail-line { position:absolute; left:21px; top:0; bottom:0; width:2px; background:#b5a68d; pointer-events:none; }
- .rail-fill { position:absolute; inset:0; background:#1d5b7a; transform:scaleY(var(--progress)); transform-origin:top; }
- .rail-light { position:absolute; left:-3px; top:0; width:8px; height:8px; border-radius:50%; background:#65c4ff; border:1px solid #1d5b7a; transform:translateY(calc(var(--progress) * (min(44svh,340px) - 8px))); box-shadow:0 0 7px #35a5f0,0 0 14px #35a5f060; transition:box-shadow 250ms ease,background 250ms ease; }
- [data-arrived="true"] .rail-light { background:#e5f6ff; box-shadow:0 0 6px #36aaff,0 0 16px #168deed0,0 0 26px #168dee70; }
+ .rail-line { position:absolute; left:21.5px; top:0; bottom:0; width:1px; background:#b9b5ae; pointer-events:none; }
+ .rail-fill { position:absolute; inset:0; background:#39332b; transform:scaleY(var(--progress)); transform-origin:top; }
+ .rail-light { position:absolute; z-index:2; left:-3.5px; top:-4px; width:8px; height:8px; border-radius:50%; background:#c99b51; border:1px solid #75582d; transform:translateY(calc(var(--progress) * min(44svh,340px))); box-shadow:0 0 7px #ce9b4c90,0 0 14px #ce9b4c40; transition:box-shadow 250ms ease,background 250ms ease; }
+ [data-arrived="true"] .rail-light { background:#fff1c9; box-shadow:0 0 7px #d99b36,0 0 17px #d99b36b0,0 0 27px #d99b3660; }
  .rail-stop { position:absolute; left:0; top:calc(var(--stop) * 100% - 22px); width:44px; height:44px; display:grid; place-items:center; text-decoration:none; }
- .rail-dot { width:7px; height:7px; border:1px solid #6f634f; border-radius:50%; background:#fcfaf7; transition:transform 180ms ease,border-color 180ms ease; }
- .rail-stop:hover .rail-dot,.rail-stop:focus-visible .rail-dot { transform:scale(1.5); border-color:#1d5b7a; }
- .rail-stop[aria-current] .rail-dot { border-color:#1d5b7a; }
+ .rail-dot { width:8px; height:8px; border:2px solid #fcfaf7; border-radius:50%; background:#39332b; box-shadow:0 0 0 1px #39332b20; transition:transform 180ms ease,background 180ms ease; }
+ .rail-stop:hover .rail-dot,.rail-stop:focus-visible .rail-dot { transform:scale(1.4); background:#986f35; }
+ .rail-stop[aria-current] .rail-dot { background:#986f35; }
  .rail-label { position:absolute; right:42px; white-space:nowrap; padding:5px 12px; color:#30291f; background:#fffaf0; border:1px solid #d7cab1; border-radius:3px; font-family:'Cormorant Garamond',Georgia,serif; font-size:1.12rem; opacity:0; transform:translateX(5px); pointer-events:none; transition:opacity 180ms ease,transform 180ms ease; }
  .rail-stop:hover .rail-label,.rail-stop:focus-visible .rail-label { opacity:1; transform:none; }
- @media(max-width:700px) { .scroll-rail { right:0; height:210px; } .rail-light { transform:translateY(calc(var(--progress) * 202px)); } .rail-label { font-size:1rem; } }
+ @media(max-width:700px) { .scroll-rail { right:0; height:240px; } .rail-light { transform:translateY(calc(var(--progress) * 240px)); } .rail-label { font-size:1rem; } }
  @media(prefers-reduced-motion:reduce) { .rail-label,.rail-dot,.rail-light { transition:none; } }
  @media(forced-colors:active) { .rail-light { background:Highlight; } .rail-line,.rail-fill { background:CanvasText; } }
  @media print { .scroll-rail { display:none; } }

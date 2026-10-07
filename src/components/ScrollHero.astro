@@ -21,9 +21,9 @@ const fragments = Array.from({length:24}, (_,i) => ({
       <div class="paper-underlay"></div>
       {fragments.map((piece,i)=><div class="paper-fragment" style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}vw;--scatter-y:${piece.y}vh;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface"></div></div>)}
     </div>
-<section class="scroll-hero" aria-label="Introduction">
+<section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction">
   <div class="dock-backdrop" aria-hidden="true"></div>
-  <div class="hero-stage" id="hero-story">
+  <div class="hero-stage" id="hero-story" tabindex="-1">
     <div class="hero-illustrations">
       <div class="hero-art">
         <svg class="ink-sketch" viewBox="0 0 640 180" fill="none" aria-hidden="true" focusable="false">
