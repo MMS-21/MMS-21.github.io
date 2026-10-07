@@ -87,7 +87,7 @@ export function startGardens(){
   const path=(points,closed)=>{ctx.beginPath();ctx.moveTo(...points[0]);for(let i=1;i<points.length-1;i++){const p=points[i],q=points[i+1];ctx.quadraticCurveTo(...p,(p[0]+q[0])/2,(p[1]+q[1])/2)}ctx.lineTo(...points[points.length-1]);if(closed)ctx.closePath()};
   const B={fill:(p,c)=>{path(p,true);ctx.fillStyle=c;ctx.fill()},stroke:(p,c,w)=>{path(p,false);ctx.strokeStyle=c;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke()}};
   const resize=()=>{
-   width=host.clientWidth;const d=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(width*d);canvas.height=160*d;ctx.setTransform(d,0,0,d,0,0);
+   width=host.clientWidth;const d=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(width*d);canvas.height=240*d;ctx.setTransform(d,0,0,d,0,0);
    const count=Math.max(7,Math.round(width/49));
    branches=Array.from({length:count},(_,j)=>{
     const x=24+(width-48)*(j+.2+random(j+1)*.6)/count;
@@ -101,7 +101,7 @@ export function startGardens(){
    target=Math.max(target,Math.min(1,Math.max(0,(innerHeight*.98-(rect.top+80))/(innerHeight*.38))));
    progress=reduced.matches?1:progress+(target-progress)*(1-Math.exp(-dt/420));
    const t=now/1000;
-   ctx.clearRect(0,0,width,160);
+   ctx.clearRect(0,0,width,240);
    // The whole garland unfurls along the rule before its branches flower.
    const vine=Array.from({length:80},(_,k)=>{const u=k/79;return[u*width,80+Math.sin(u*22+index)*4]});
    if(progress>.001)engine.strokeRange(B,vine,0,progress,engine.cc.blue,1.2);
@@ -116,11 +116,18 @@ export function startGardens(){
     [.33,.65].forEach((u,k)=>{const p=points[Math.round(u*31)];const g=engine.spr((age-600-k*220)/1000);engine.leaf(B,p[0],p[1],phase+k*2,14*g+random(j+90)*5*g,.7)});
     const tip=points[31];
     engine.rose(B,tip[0],tip[1],radius,phase+Math.sin(t*.8+phase)*.12,{ph1:phase,ph2:phase+2,turns:1.9},age-1700,null);
-    if(local>.95&&!reduced.matches&&j%3===0){
-     const cycle=((t+phase)%9)/9;
-     ctx.save();ctx.globalAlpha=Math.sin(Math.PI*cycle)*.65;
-     ctx.translate(tip[0]+Math.sin(cycle*8+phase)*13,tip[1]+cycle*65);ctx.rotate(cycle*7+phase);
-     ctx.fillStyle=engine.cc.red;ctx.beginPath();ctx.ellipse(0,0,3,5,0,0,Math.PI*2);ctx.fill();ctx.restore();
+    if(local>.78&&!reduced.matches){
+     // Two independent petals per bloom: release from the flower, tumble, then fade.
+     for(let k=0;k<2;k++){
+      const cycle=((t+phase*2.3+k*3.1)%(6.5+k))/(6.5+k);
+      const fade=Math.min(1,cycle*14)*Math.min(1,(1-cycle)*4);
+      const size=4+random(j*2+k+120)*3;
+      ctx.save();ctx.globalAlpha=fade*.9;
+      ctx.translate(tip[0]+Math.sin(cycle*7+phase)*18+cycle*19*lean,tip[1]+cycle*118);
+      ctx.rotate(cycle*8+phase+k);ctx.scale(.55+.45*Math.abs(Math.cos(cycle*9+phase)),1);
+      ctx.fillStyle='#91b5cc';ctx.strokeStyle='#668da6';ctx.lineWidth=.7;
+      ctx.beginPath();ctx.moveTo(0,-size);ctx.bezierCurveTo(size*1.5,-size*.6,size*1.1,size,0,size*1.4);ctx.bezierCurveTo(-size,size,-size*.8,-size*.7,0,-size);ctx.fill();ctx.stroke();ctx.restore();
+     }
     }
    });
   }
