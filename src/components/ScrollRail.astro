@@ -1,0 +1,73 @@
+---
+const stops=[{id:'main',label:'Introduction'},{id:'featured-work',label:'Featured work'},{id:'about',label:'About me'},{id:'connect',label:'Get in touch'}];
+---
+<nav class="scroll-rail" aria-label="Page sections">
+ <div class="rail-line" aria-hidden="true"><span class="rail-fill"></span><span class="rail-light"></span></div>
+ {stops.map((stop,i)=><a href={`#${stop.id}`} class="rail-stop" style={`--stop:${i/(stops.length-1)}`} aria-label={`Go to ${stop.label}`}><span class="rail-dot" aria-hidden="true"></span><span class="rail-label">{stop.label}</span></a>)}
+</nav>
+<script>
+ const rail=document.querySelector<HTMLElement>('.scroll-rail');
+ if(rail){
+  const links=[...rail.querySelectorAll<HTMLAnchorElement>('a')];
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  let targets:number[]=[],frame=0,timer:ReturnType<typeof setTimeout>,previous=-1;
+  const clamp=(n:number)=>Math.max(0,Math.min(1,n));
+  const render=()=>{
+   frame=0;
+   let index=0;
+   while(index<targets.length-2&&scrollY>targets[index+1])index++;
+   const part=clamp((scrollY-targets[index])/Math.max(1,targets[index+1]-targets[index]));
+   const progress=(index+part)/(targets.length-1);
+   rail.style.setProperty('--progress',String(progress));
+   const nearest=targets.reduce((best,t,i)=>Math.abs(t-scrollY)<Math.abs(targets[best]-scrollY)?i:best,0);
+   const arrived=Math.abs(targets[nearest]-scrollY)<24;
+   rail.dataset.arrived=String(arrived);
+   const current=arrived?nearest:index;
+   if(current!==previous){links.forEach((link,i)=>{if(i===current)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});previous=current;}
+  };
+  const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
+  const measure=()=>{
+   const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
+   targets=links.map((link,i)=>{
+    const el=document.querySelector<HTMLElement>(link.hash)!;
+    // Land after the desk's paper reveals, so a section shortcut shows its content.
+    const reveal=el.id==='featured-work'&&el.dataset.animated==='true'&&innerWidth>700?(el.offsetHeight-innerHeight)*.66:0;
+    return i===0?0:Math.min(max,el.getBoundingClientRect().top+scrollY+reveal);
+   });
+   schedule();
+  };
+  links.forEach((link,i)=>link.addEventListener('click',event=>{
+   event.preventDefault();measure();history.replaceState(null,'',link.hash);
+   scrollTo({top:targets[i],behavior:reduced.matches?'instant':'smooth'});
+   document.querySelector<HTMLElement>(link.hash)?.focus({preventScroll:true});
+  }));
+  addEventListener('scroll',()=>{
+   rail.dataset.moving='true';clearTimeout(timer);
+   timer=setTimeout(()=>{rail.dataset.moving='false';schedule();},140);schedule();
+  },{passive:true});
+  addEventListener('resize',measure,{passive:true});
+  new ResizeObserver(measure).observe(document.body);
+  document.fonts.ready.then(measure);measure();
+  rail.dataset.ready='true';document.documentElement.classList.add('has-scroll-rail');
+ }
+</script>
+<style>
+ .scroll-rail { --progress:0; position:fixed; z-index:40; right:14px; top:50%; transform:translateY(-50%); width:44px; height:min(44svh,340px); visibility:hidden; }
+ .scroll-rail[data-ready="true"] { visibility:visible; }
+ .rail-line { position:absolute; left:21px; top:0; bottom:0; width:2px; background:#b5a68d; pointer-events:none; }
+ .rail-fill { position:absolute; inset:0; background:#1d5b7a; transform:scaleY(var(--progress)); transform-origin:top; }
+ .rail-light { position:absolute; left:-3px; top:0; width:8px; height:8px; border-radius:50%; background:#65c4ff; border:1px solid #1d5b7a; transform:translateY(calc(var(--progress) * (min(44svh,340px) - 8px))); box-shadow:0 0 7px #35a5f0,0 0 14px #35a5f060; transition:box-shadow 250ms ease,background 250ms ease; }
+ [data-arrived="true"] .rail-light { background:#e5f6ff; box-shadow:0 0 6px #36aaff,0 0 16px #168deed0,0 0 26px #168dee70; }
+ .rail-stop { position:absolute; left:0; top:calc(var(--stop) * 100% - 22px); width:44px; height:44px; display:grid; place-items:center; text-decoration:none; }
+ .rail-dot { width:7px; height:7px; border:1px solid #6f634f; border-radius:50%; background:#fcfaf7; transition:transform 180ms ease,border-color 180ms ease; }
+ .rail-stop:hover .rail-dot,.rail-stop:focus-visible .rail-dot { transform:scale(1.5); border-color:#1d5b7a; }
+ .rail-stop[aria-current] .rail-dot { border-color:#1d5b7a; }
+ .rail-label { position:absolute; right:42px; white-space:nowrap; padding:5px 12px; color:#30291f; background:#fffaf0; border:1px solid #d7cab1; border-radius:3px; font-family:'Cormorant Garamond',Georgia,serif; font-size:1.12rem; opacity:0; transform:translateX(5px); pointer-events:none; transition:opacity 180ms ease,transform 180ms ease; }
+ .rail-stop:hover .rail-label,.rail-stop:focus-visible .rail-label { opacity:1; transform:none; }
+ @media(max-width:700px) { .scroll-rail { right:0; height:210px; } .rail-light { transform:translateY(calc(var(--progress) * 202px)); } .rail-label { font-size:1rem; } }
+ @media(prefers-reduced-motion:reduce) { .rail-label,.rail-dot,.rail-light { transition:none; } }
+ @media(forced-colors:active) { .rail-light { background:Highlight; } .rail-line,.rail-fill { background:CanvasText; } }
+ @media print { .scroll-rail { display:none; } }
+ :global(html.has-scroll-rail) { scrollbar-width:none; }
+ :global(html.has-scroll-rail::-webkit-scrollbar) { display:none; }
+</style>
