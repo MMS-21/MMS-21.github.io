@@ -1,7 +1,7 @@
 ---
 import { Mascot } from 'page-mascot';
 import { SITE } from '../data/site';
-const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'/about/',label:'About'},{href:'/contact/',label:'Contact'}];
+const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'#about',label:'About'},{href:'/contact/',label:'Contact'}];
 // Small scraps overlap; each exposes a white torn-paper edge beneath its sandy face.
 const torn = Array.from({length:30}, (_,i) => `${(100 + Math.sin(i*4.2)*1.7).toFixed(2)}% ${(i*100/29).toFixed(2)}%`);
 const bottom = Array.from({length:30}, (_,i) => `${(100-i*100/29).toFixed(2)}% ${(100 + Math.sin(i*3.8)*1.4).toFixed(2)}%`);
@@ -22,7 +22,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
       {fragments.map((piece,i)=><div class="paper-fragment" style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}vw;--scatter-y:${piece.y}vh;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface"></div></div>)}
     </div>
 <section class="scroll-hero" aria-label="Introduction">
-  <div class="hero-stage">
+  <div class="dock-backdrop" aria-hidden="true"></div>
+  <div class="hero-stage" id="hero-story">
     <div class="hero-illustrations">
       <div class="hero-art">
         <svg class="ink-sketch" viewBox="0 0 640 180" fill="none" aria-hidden="true" focusable="false">
@@ -52,6 +53,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
       </div>
 
     </div>
+    <a class="scroll-cue opening-cue" href="#hero-story"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
+    <a class="scroll-cue hero-end-cue" href="#featured-work"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
     <div class="hero-details">
       <p class="hero-role">Business Analyst</p>
       <p class="hero-location">{SITE.location}</p>
@@ -62,7 +65,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
         </div>
         <div class="question-paper">
           <span class="binding-holes" aria-hidden="true"></span>
-          <p>Which valuable customers are likely to leave—and who should we contact first?</p>
+          <p>Where is the process slowing down—and what can better data help us improve?</p>
         </div>
       </div>
     </div>
@@ -74,119 +77,113 @@ const fragments = Array.from({length:24}, (_,i) => ({
   </div>
   <div class="navigation-shell">
     <button class="pyramid-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="portfolio-navigation">
-      <svg viewBox="0 0 110 46" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path fill="#ddc9a5" d="M3 40 26 5 49 40Z"/><path d="m26 5 7 35H3"/><path fill="#e8d8bb" d="m43 40 19-28 19 28Z"/><path d="m62 12 5 28H43"/><path fill="#f0e4cd" d="m78 40 13-19 13 19Z"/><path d="m91 21 3 19H78"/></g></svg>
-      <span>Menu</span>
+      <svg viewBox="0 0 42 24" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21Q8 12 12 3Q17 13 22 21Z M12 3Q13 13 15 21 M19 21Q24 14 27 8Q31 16 34 21Z M27 8l2 13 M32 21q3-5 5-9l4 9Z"/></g></svg>
     </button>
     <nav class="hero-nav" id="portfolio-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}</nav>
   </div>
 </section>
 <script>
-  const hero = document.querySelector<HTMLElement>('.scroll-hero');
-  if (hero) {
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const identity = hero.querySelector<HTMLElement>('.hero-identity')!;
-    const nav = hero.querySelector<HTMLElement>('.hero-nav')!;
-    const shell = hero.querySelector<HTMLElement>('.navigation-shell')!;
-    const toggle = hero.querySelector<HTMLButtonElement>('.pyramid-toggle')!;
-    let menuOpen=false;
-    const closeMenu=(focus=false)=>{menuOpen=false; shell.dataset.open='false'; toggle.setAttribute('aria-expanded','false'); toggle.setAttribute('aria-label','Open navigation menu'); if(focus)toggle.focus(); schedule();};
-    toggle.addEventListener('click',()=>{menuOpen=!menuOpen; shell.dataset.open=String(menuOpen); toggle.setAttribute('aria-expanded',String(menuOpen)); toggle.setAttribute('aria-label',menuOpen?'Close navigation menu':'Open navigation menu'); schedule();});
-    addEventListener('keydown',e=>{if(e.key==='Escape'&&menuOpen)closeMenu(true);});
-    document.addEventListener('click',e=>{if(menuOpen&&!shell.contains(e.target as Node))closeMenu();});
-    nav.addEventListener('click',e=>{if((e.target as HTMLElement).closest('a'))closeMenu();});
-    const background = document.querySelector<HTMLElement>('.paper-background')!;
-    const papers = [...document.querySelectorAll<HTMLElement>('.work-paper')];
-    const scraps = [...background.querySelectorAll<HTMLElement>('.paper-fragment')];
-    const moments = [['notebook',.18,.05],['arrow-one',.25,.045],['arrow-two',.31,.045],['lens',.37,.05],['role',.44,.04],['location',.50,.04],['question-line',.56,.045],['question-curve',.62,.045],['question-note',.68,.06]] as const;
-    const clamp = (n:number) => Math.max(0,Math.min(1,n));
-    const ease = (n:number) => { const t=clamp(n); return t*t*(3-2*t); };
-    let frame=0, h=0, w=0, end=1, total=1, identityHeight=254, shellWidth=640;
-    let targets:{x:number,y:number,width:number,height:number}[]=[];
-    const values = new WeakMap<HTMLElement,Map<string,string>>();
-    const set = (el:HTMLElement,key:string,value:number) => {
-      const v=value.toFixed(4); let cache=values.get(el);
-      if (!cache) { cache=new Map(); values.set(el,cache); }
-      if (cache.get(key)!==v) { el.style.setProperty(key,v); cache.set(key,v); }
-    };
-    const measure = () => {
-      hero.dataset.animated=String(!reduced.matches);
-      h=innerHeight; w=document.documentElement.clientWidth;
-      identityHeight=identity.offsetHeight; shellWidth=shell.offsetWidth;
-      end=Math.max(1,hero.offsetHeight-h); total=Math.max(end+1,document.documentElement.scrollHeight-h);
-      // Offsets are layout geometry: transformed paper rectangles would feed back into the animation.
-      targets=papers.map(el=>({x:(el.offsetParent as HTMLElement).offsetLeft+el.offsetLeft+el.offsetWidth/2,y:(el.offsetParent as HTMLElement).offsetTop+el.offsetTop,width:el.offsetWidth,height:el.offsetHeight}));
-      schedule();
-    };
-    const render = () => {
-      frame=0;
-      const y=scrollY, animated=!reduced.matches;
-      const p=animated?clamp(y/end):1;
-      // Keep the same physical scraps on screen: no opacity swap or replacement image.
-      scraps.forEach((scrap,i)=>set(scrap,'--assembly',animated?ease((p-(i%6)*.006)/.15):1));
-      const lift=ease((p-.12)/.08);
+  const hero=document.querySelector<HTMLElement>('.scroll-hero');
+  if(hero){
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+    const identity=hero.querySelector<HTMLElement>('.hero-identity')!;
+    const shell=hero.querySelector<HTMLElement>('.navigation-shell')!;
+    const nav=hero.querySelector<HTMLElement>('.hero-nav')!;
+    const toggle=hero.querySelector<HTMLButtonElement>('.pyramid-toggle')!;
+    const links=[...nav.querySelectorAll<HTMLElement>('a')];
+    const background=document.querySelector<HTMLElement>('.paper-background')!;
+    const scraps=[...background.querySelectorAll<HTMLElement>('.paper-fragment')];
+    const desk=document.querySelector<HTMLElement>('.desk-scene')!;
+    const papers=[...desk.querySelectorAll<HTMLElement>('.work-paper')];
+    const openingCue=hero.querySelector<HTMLElement>('.opening-cue')!;
+    const endCue=hero.querySelector<HTMLElement>('.hero-end-cue')!;
+    const deskCue=desk.querySelector<HTMLElement>('.scroll-cue')!;
+    let open=false,frame=0,h=0,w=0,end=1,deskTop=0,deskEnd=1,identityHeight=254,shellWidth=760;
+    const clamp=(n:number)=>Math.max(0,Math.min(1,n));
+    const ease=(n:number)=>{const t=clamp(n);return t*t*(3-2*t);};
+    const ramp=(p:number,a:number,b:number)=>ease((p-a)/(b-a));
+    const cache=new WeakMap<HTMLElement,Map<string,string>>();
+    const set=(el:HTMLElement,key:string,n:number)=>{let c=cache.get(el);if(!c){c=new Map();cache.set(el,c);}const v=n.toFixed(4);if(c.get(key)!==v){el.style.setProperty(key,v);c.set(key,v);}};
+    const style=(el:HTMLElement,key:string,v:string)=>{if(el.style.getPropertyValue(key)!==v)el.style.setProperty(key,v);};
+    const close=(focus=false)=>{open=false;shell.dataset.open='false';toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation menu');if(focus)toggle.focus();schedule();};
+    toggle.addEventListener('click',()=>{open=!open;shell.dataset.open=String(open);toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');schedule();});
+    addEventListener('keydown',e=>{if(e.key==='Escape'&&open)close(true);});
+    document.addEventListener('click',e=>{if(open&&!shell.contains(e.target as Node))close();});
+    nav.addEventListener('click',e=>{if((e.target as HTMLElement).closest('a'))close();});
+    // Every interval is exclusive. Holds between chapters give the visitor time to read.
+    const moments=[
+      ['notebook',.23,.265,.80,.82],['arrow-one',.275,.305,.80,.82],
+      ['arrow-two',.315,.345,.80,.82],['lens',.355,.39,.80,.82],
+      ['role',.405,.43,.775,.795],['location',.44,.465,.75,.77],
+      ['question-line',.475,.50,.725,.745],['question-curve',.51,.535,.70,.72],
+      ['question-note',.545,.58,.675,.695],
+    ] as const;
+    const cue=(el:HTMLElement,value:number)=>{set(el,'--cue',value);el.inert=value<.8;};
+    const render=()=>{
+      frame=0; const y=scrollY,animated=!reduced.matches,p=animated?clamp(y/end):.62;
+      // The original scattered-paper geometry and assembly stay intact, behind a clean opening cover.
+      set(background,'--paper-visible',animated?ramp(p,.025,.07):1);
+      scraps.forEach((scrap,i)=>set(scrap,'--assembly',animated?ease(((p-.07)-(i%6)*.006)/.15):1));
+      const lift=animated?ramp(p,.07,.13):1;
       set(hero,'--identity',lift);
-      for (const [name,start,duration] of moments) set(hero,`--${name}`,ease((p-start)/duration));
-      const depart=animated?ease((p-.77)/.08):0;
-      set(hero,'--depart',depart);
-      const handoff=animated?ease((p-.85)/.15):1;
-      set(hero,'--handoff',animated?ease((p-.85)/.06):1);
-      set(hero,'--nav',ease((p-.12)/.05));
-
-      const travel=animated?clamp((y-end*.79)/(total-end*.79)):1;
-      // Get the portrait clear of the growing papers early, then finish shrinking at the page bottom.
-      const move=animated?ease((p-.79)/.19):1, shrink=ease(travel);
-      const scale=1-.52*move-.10*shrink;
-      const mobile=w<=600;
-      const baseY=h<=700?h/2-140-100*lift:h/2-(mobile?150:160)-(mobile?135:125)*lift;
-      const x=w/2+(18+340*scale/2-w/2)*move;
-      const top=baseY+(10-baseY)*move;
-      const identityTransform=animated?`translate3d(${x-170}px,${top}px,0) scale(${scale})`:'none';
-      if(identity.style.transform!==identityTransform) identity.style.transform=identityTransform;
-      identity.dataset.docked=String(travel>.85);
-      const collapse=animated?ease((p-.79)/.20):0;
+      for(const [name,a,b,c,d] of moments)set(hero,`--${name}`,animated?ramp(p,a,b)*(1-ramp(p,c,d)):1);
+      set(hero,'--depart',0);set(hero,'--handoff',0);
+      cue(openingCue,animated?1-ramp(p,0,.025):0);
+      cue(endCue,animated?ramp(p,.59,.61)*(1-ramp(p,.65,.675)):0);
+      const dock=animated?ramp(p,.835,.94):0,scale=1-.62*dock;
+      set(hero,'--dock',dock);
+      const mobile=w<=700;
+      const initialY=h/2-(mobile?125:140);
+      const finalHeroY=mobile?105:Math.max(90,h*.16);
+      const baseY=initialY+(finalHeroY-initialY)*lift;
+      const x=w/2+(18+340*.38/2-w/2)*dock;
+      const top=baseY+(12-baseY)*dock;
+      style(identity,'transform',`translate3d(${(x-170).toFixed(2)}px,${top.toFixed(2)}px,0) scale(${scale.toFixed(4)})`);
+      identity.dataset.docked=String(dock>.99);
+      const collapse=animated?ramp(p,.835,.94):0;
       set(shell,'--collapse',collapse);
-      set(shell,'--nav',ease((p-.12)/.05));
-      const navTop=w<=600?24:Math.min(65,Math.max(25,h*.06));
-      const shellX=(w-shellWidth)/2+(x-shellWidth/2-(w-shellWidth)/2)*collapse;
-      const shellY=navTop+(top+identityHeight*scale+14-navTop)*collapse;
-      shell.style.transform=`translate3d(${shellX}px,${shellY}px,0)`;
-      shell.dataset.collapsed=String(collapse>.98);
-      if(collapse<.8&&menuOpen)closeMenu();
-      toggle.inert=collapse<.98;
-      nav.inert=(animated&&p<.14)||(collapse>.65&&!menuOpen);
-      shell.style.visibility=p<.12?'hidden':'visible';
-
+      const navY=mobile?24:42;
+      const sx=(w-shellWidth)/2+(x-w/2)*collapse;
+      const sy=navY+(top+identityHeight*scale+8-navY)*collapse;
+      style(shell,'transform',`translate3d(${sx.toFixed(2)}px,${sy.toFixed(2)}px,0)`);
+      shell.dataset.collapsed=String(collapse>.99);
+      toggle.inert=collapse<.99;
+      if(collapse<.8&&open)close();
+      const visibleNav=animated?ramp(p,.14,.22):1;
+      set(shell,'--nav',visibleNav);
+      links.forEach((link,i)=>set(link,'--link',animated?ramp(p,.14+i*.018,.16+i*.018):1));
+      nav.inert=(visibleNav<.99)||(collapse>.2&&!open);
+      style(shell,'visibility',visibleNav===0?'hidden':'visible');
+      const desktop=w>700;
+      const q=animated?clamp((y-deskTop)/deskEnd):1;
+      set(desk,'--desk-title',desktop&&animated?ramp(q,0,.08):1);
       papers.forEach((paper,i)=>{
-        const target=targets[i]; if (!target) return;
-        const sourceX=w/2+(i===0?-220:220)*Math.min(1,w/640);
-        const sourceY=(h<=700?h/2-240:h/2-285)+100;
-        const t=handoff, size=.23+.77*t;
-        const dx=(sourceX-target.x)*(1-t);
-        const dy=(y+sourceY-target.y-target.height*.12)*(1-t);
-        const paperTransform=animated?`translate3d(${dx}px,${dy}px,0) scale(${size}) rotate(${(i===0?-4:3)*t}deg)`:`rotate(${i===0?-3:2}deg)`;
-        if(paper.style.transform!==paperTransform) paper.style.transform=paperTransform;
-        set(paper,'--paper-copy',ease((t-.25)/.65));
-        paper.style.opacity=String(animated?ease((p-.85)/.06):1);
-        paper.style.visibility=animated&&p<.85?'hidden':'visible';
-        paper.inert=animated&&t<.9;
+        const start=i===0?.13:.43,finish=i===0?.33:.63;
+        const local=desktop?q:clamp((y+h*.8-(deskTop+paper.offsetTop))/(h*.5));
+        const t=animated?(desktop?ramp(local,start,finish):ease(local)):1;
+        set(paper,'--land',t);paper.inert=t<.95;
       });
+      cue(deskCue,animated?(desktop?ramp(q,.78,.84):ramp((y+h-deskTop)/desk.offsetHeight,.88,1)):1);
     };
     const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
-    addEventListener('scroll',schedule,{passive:true});
-    addEventListener('resize',measure,{passive:true});
-    reduced.addEventListener('change',measure);
-    new ResizeObserver(measure).observe(document.body);
-    document.fonts.ready.then(measure);
-    measure();
+    const measure=()=>{
+      hero.dataset.animated=String(!reduced.matches);desk.dataset.animated=String(!reduced.matches);
+      h=innerHeight;w=document.documentElement.clientWidth;end=Math.max(1,hero.offsetHeight-h);
+      identityHeight=identity.offsetHeight;shellWidth=shell.offsetWidth;
+      deskTop=desk.offsetTop;deskEnd=Math.max(1,desk.offsetHeight-h);schedule();
+    };
+    openingCue.addEventListener('click',e=>{e.preventDefault();scrollTo({top:end*.075,behavior:reduced.matches?'instant':'smooth'});});
+    addEventListener('scroll',schedule,{passive:true});addEventListener('resize',measure,{passive:true});
+    reduced.addEventListener('change',measure);new ResizeObserver(measure).observe(document.body);document.fonts.ready.then(measure);measure();
   }
 </script>
 <style>
   .scroll-hero { --assembly:1; --identity:1; --role:1; --location:1; --question-line:1; --question-curve:1; --question-note:1; --notebook:1; --arrow-one:1; --arrow-two:1; --lens:1; --nav:1; position:relative; margin:0; }
   .hero-stage { position:relative; min-height:840px; height:100svh; isolation:isolate; overflow:hidden; text-align:center; }
-  .scroll-hero[data-animated="true"] { height:540svh; }
+  .scroll-hero[data-animated="true"] { height:880svh; }
   [data-animated="true"] .hero-stage { position:sticky; top:0; min-height:0; }
   @font-face { font-family:'Cormorant Garamond'; src:url('/fonts/cormorant-garamond-medium.ttf') format('truetype'); font-weight:500; font-display:swap; }
-  .paper-background { --assembly:1; position:fixed; inset:0; z-index:-1; pointer-events:none; contain:strict; }
+  .paper-background { --assembly:1; position:fixed; inset:0; z-index:-1; pointer-events:none; contain:strict; opacity:var(--paper-visible,0); }
   :global(html:has(.scroll-hero)) { overflow-x:clip; }
   :global(body:has(.scroll-hero)) { isolation:isolate; overflow-x:clip; }
   :global(main.flush-top:has(.scroll-hero)) { padding-top:0; }
@@ -199,7 +196,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .paper-fragment:nth-child(4n) .paper-surface { inset:10px 4px 5px 9px; background-color:#e8ddc8; }
   .hero-illustrations { position:absolute; top:calc(50% - 160px); left:0; right:0; transform:translateY(calc(-125px * var(--identity))); }
   .hero-identity { position:fixed; top:0; left:0; width:340px; text-align:center; transform:translate3d(calc(50vw - 170px),calc(50vh - 160px),0); transform-origin:top center; z-index:20; pointer-events:none; }
-  .hero-identity[data-docked="true"] { border-radius:12px; background:#faf8f2e8; }
+  .hero-identity[data-docked="true"] { background:transparent; }
   .identity-art { height:200px; display:grid; place-items:center; }
   .mascot-portrait :global(button) { pointer-events:auto; }
   .hero-art { position:relative; width:min(640px,95vw); height:200px; display:grid; place-items:center; margin:auto; }
@@ -223,7 +220,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .question-paper { opacity:var(--question-note); position:relative; max-width:350px; margin:0 auto 20px; padding:25px 26px 18px 38px; background:#fffaf0 url('/img/paper-fibers.svg'); text-align:left; transform:translate(-24px,calc(25px * (1 - var(--question-note)))) rotate(calc(-2deg - 6deg * (1 - var(--question-note)))); filter:drop-shadow(2px 5px 5px #57402018); clip-path:polygon(0 0,100% 0,99.4% 15%,100% 29%,99.2% 43%,100% 58%,99.5% 76%,100% 100%,97% 98%,94% 100%,91% 98.5%,88% 100%,84% 98.6%,81% 100%,77% 98%,73% 100%,69% 98.5%,65% 100%,61% 98%,56% 100%,52% 98.5%,47% 100%,43% 98%,38% 100%,34% 98.6%,29% 100%,25% 98%,20% 100%,16% 98.5%,11% 100%,7% 98%,3% 100%,0 99%); }
   .question-paper p { font-family:Georgia,'Times New Roman',serif; font-size:1.25rem; line-height:1.45; color:#30291f; margin:0; }
   .binding-holes { position:absolute; top:0; bottom:0; left:9px; width:10px; background:radial-gradient(circle,#d2c3a8 3px,transparent 3.5px) center 10px / 10px 22px repeat-y; }
-  .hero-nav { position:absolute; top:0; left:20px; right:20px; display:flex; justify-content:center; flex-wrap:wrap; gap:clamp(32px,5vw,85px); opacity:calc(var(--nav) * (1 - var(--collapse,0))); transform:translateY(calc(12px * (1 - var(--nav)))) scale(calc(1 - .6 * var(--collapse,0))); }
+  .hero-nav { position:absolute; top:0; left:20px; right:20px; display:flex; justify-content:center; flex-wrap:nowrap; gap:clamp(20px,4vw,64px); opacity:calc(var(--nav) * (1 - var(--collapse,0))); transform:translateY(calc(12px * (1 - var(--nav)))) scale(calc(1 - .6 * var(--collapse,0))); }
   .hero-nav a { position:relative; color:#342b20; text-decoration:none; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:1.65rem; line-height:1.2; padding:10px 8px 16px; }
   .hero-nav a span { display:inline-block; transition:transform 220ms cubic-bezier(.16,1,.3,1),color 220ms; }
   .hero-nav a svg { position:absolute; left:5%; bottom:5px; width:90%; height:9px; stroke:#79613e; stroke-width:1.5; stroke-linecap:round; }
@@ -231,16 +228,16 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .hero-nav a:hover span, .hero-nav a:focus-visible span { transform:translateY(-3px) rotate(-3deg); color:#705832; }
   .hero-nav a:hover path, .hero-nav a:focus-visible path { stroke-dashoffset:0; }
   .hero-nav a:focus-visible { outline:1px solid #79613e; outline-offset:4px; border-radius:4px; }
-  .navigation-shell { --collapse:0; --nav:1; position:fixed; top:0; left:0; width:640px; max-width:calc(100% - 32px); transform:translate3d(calc(50vw - 320px),50px,0); z-index:30; pointer-events:none; }
+  .navigation-shell { --collapse:0; --nav:1; position:fixed; top:0; left:0; width:760px; max-width:calc(100% - 32px); transform:translate3d(calc(50vw - 320px),50px,0); z-index:30; pointer-events:none; }
   .hero-nav a { pointer-events:auto; }
   .navigation-shell[data-collapsed="true"] .hero-nav { pointer-events:none; }
   .navigation-shell[data-collapsed="true"] .hero-nav a { pointer-events:none; }
-  .pyramid-toggle { position:absolute; top:0; left:50%; transform:translateX(-50%) scale(calc(.7 + .3 * var(--collapse))); opacity:var(--collapse); border:0; background:transparent; color:#57472f; padding:6px 10px; min-height:54px; cursor:pointer; display:flex; align-items:center; flex-direction:column; gap:0; pointer-events:none; }
-  .pyramid-toggle svg { width:86px; height:37px; transition:transform 450ms ease; }
+  .pyramid-toggle { position:absolute; top:0; left:50%; transform:translateX(-50%) scale(calc(.7 + .3 * var(--collapse))); opacity:var(--collapse); border:0; background:transparent; color:#57472f; padding:6px 10px; min-height:44px; min-width:44px; cursor:pointer; display:flex; align-items:center; flex-direction:column; gap:0; pointer-events:none; }
+  .pyramid-toggle svg { width:34px; height:25px; transition:transform 450ms ease; }
   .pyramid-toggle span { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.15rem; }
   .pyramid-toggle:hover svg { transform:translateY(-4px); }
   .navigation-shell[data-collapsed="true"] .pyramid-toggle { pointer-events:auto; }
-  .navigation-shell[data-open="true"] .hero-nav { top:78px; left:50%; right:auto; width:160px; padding:14px; gap:0; flex-direction:column; background:#fffaf0; box-shadow:2px 8px 22px #57402025; opacity:1; transform:translateX(-50%); pointer-events:auto; border-radius:2px; animation:menu-panel-in 450ms cubic-bezier(.16,1,.3,1); }
+  .navigation-shell[data-open="true"] .hero-nav { top:48px; left:50%; right:auto; width:160px; padding:14px; gap:0; flex-direction:column; background:#fffaf0; box-shadow:2px 8px 22px #57402025; opacity:1; transform:translateX(-50%); pointer-events:auto; border-radius:2px; animation:menu-panel-in 450ms cubic-bezier(.16,1,.3,1); }
   .navigation-shell[data-open="true"] .hero-nav a { pointer-events:auto; font-size:1.45rem; padding:10px 16px; text-align:left; animation:menu-link-in 420ms both; }
   .navigation-shell[data-open="true"] .hero-nav a:nth-child(2) { animation-delay:50ms; }
   .navigation-shell[data-open="true"] .hero-nav a:nth-child(3) { animation-delay:100ms; }
@@ -279,4 +276,18 @@ const fragments = Array.from({length:24}, (_,i) => ({
     .hero-nav { top:0; }
   }
   @media (prefers-reduced-motion:reduce) { .hero-identity { position:absolute; top:155px; left:calc(50% - 170px); } .hero-stage { height:auto; min-height:840px; } .hero-nav a span, .hero-nav a path { transition:none; } .hero-nav a:hover span, .hero-nav a:focus-visible span { transform:none; } }
+
+  .dock-backdrop { display:none; }
+  /* One coordinate system for the portrait, art, and supporting copy. */
+  .hero-illustrations { top:max(90px,16vh); transform:none; }
+  .hero-details { top:calc(max(90px,16vh) + 260px); transform:none; opacity:1; }
+  .hero-nav a { white-space:nowrap; flex-shrink:0; opacity:var(--link,1); transform:translateX(calc(-14px * (1 - var(--link,1)))); }
+  .hero-nav { gap:clamp(20px,4vw,64px); flex-wrap:nowrap; }
+  .scroll-cue { --cue:1; position:absolute; left:50%; bottom:28px; transform:translateX(-50%); display:flex; align-items:center; flex-direction:column; color:#57472f; text-decoration:none; font-family:'Cormorant Garamond',Georgia,serif; font-size:1.15rem; opacity:var(--cue); }
+  .scroll-cue svg { width:28px; height:38px; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; animation:scroll-nudge 2.4s ease-in-out infinite; }
+  .opening-cue { z-index:22; }
+  @keyframes scroll-nudge { 0%,100% { transform:translateY(0) rotate(-4deg); } 50% { transform:translateY(6px) rotate(3deg); } }
+  @media(max-width:700px) { .dock-backdrop { display:block; position:fixed; top:0; left:0; width:160px; height:154px; z-index:19; pointer-events:none; background:#faf6ecf5; border-radius:0 0 12px 0; opacity:var(--dock,0); } .hero-illustrations { top:105px; transform:none; } .hero-details { top:315px; } .hero-nav { gap:clamp(10px,3vw,22px); left:0; right:0; } .hero-nav a { font-size:1.22rem; padding-inline:3px; } .question-paper { max-width:310px; } .hero-role { font-size:.95rem; } }
+  @media(max-height:700px) and (min-width:701px) { .hero-illustrations { top:90px; } .hero-details { top:285px; } }
+  @media(prefers-reduced-motion:reduce) { .scroll-cue svg { animation:none; } .opening-cue,.hero-end-cue { display:none; } .paper-background { --paper-visible:1; } }
 </style>
