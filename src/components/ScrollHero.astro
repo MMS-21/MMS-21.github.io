@@ -1,4 +1,5 @@
 ---
+import PyramidIcon from './PyramidIcon.astro';
 import { Mascot } from 'page-mascot';
 import { SITE } from '../data/site';
 const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'#about',label:'About'},{href:'/contact/',label:'Contact'}];
@@ -77,12 +78,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   </div>
   <div class="navigation-shell">
     <button class="pyramid-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="portfolio-navigation">
-      <svg class="stepped-pyramid" viewBox="0 0 100 104" preserveAspectRatio="none" aria-hidden="true"><g fill="currentColor" stroke="#faf6ec" stroke-width="1.1" stroke-linejoin="round">
-       <g class="pyramid-tier"><path d="M50 3 28 36 50 45 72 36Z"/><path d="M50 3v42" fill="none"/></g>
-       <g class="pyramid-tier"><path d="m26 39 24 10 24-10 9 17-33 14-33-14Z"/><path d="m26 39 24 10 24-10 M50 49v21" fill="none"/></g>
-       <g class="pyramid-tier"><path d="m16 59 34 15 34-15 8 15-42 18L8 74Z"/><path d="m16 59 34 15 34-15 M50 74v18" fill="none"/></g>
-       <g class="pyramid-tier"><path d="m8 78 42 18 42-18 7 13-49 21L1 91Z"/><path d="m8 78 42 18 42-18 M50 96v16" fill="none"/></g>
-      </g></svg>
+      <PyramidIcon />
       <svg class="pyramid-underline" viewBox="0 0 100 9" fill="none" aria-hidden="true"><path d="M2 6Q43 0 98 4M14 8Q53 3 86 6"/></svg>
     </button>
     <nav class="hero-nav" id="portfolio-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}</nav>
@@ -250,10 +246,10 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .navigation-shell[data-collapsed="true"] .hero-nav { pointer-events:none; }
   .navigation-shell[data-collapsed="true"] .hero-nav a { pointer-events:none; }
   .pyramid-toggle { position:absolute; top:0; left:50%; transform:translateX(-50%); opacity:var(--collapse); border:0; background:transparent; color:#292522; padding:2px 6px; min-height:44px; min-width:44px; cursor:pointer; display:flex; align-items:center; flex-direction:column; gap:3px; pointer-events:none; }
-  .pyramid-toggle .stepped-pyramid { width:38px; height:29px; overflow:visible; transition:transform 350ms ease,color 350ms ease; }
+  .pyramid-toggle :global(.stepped-pyramid) { width:38px; height:29px; overflow:visible; transition:transform 350ms ease,color 350ms ease; }
   .pyramid-toggle .pyramid-underline { width:40px; height:6px; stroke:#79613e; stroke-width:1.5; stroke-linecap:round; }
   .pyramid-toggle span { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.15rem; }
-  .pyramid-toggle:hover .stepped-pyramid,.pyramid-toggle:focus-visible .stepped-pyramid { transform:translateY(-2px) scale(1.06); color:#79613e; }
+  .pyramid-toggle:hover :global(.stepped-pyramid),.pyramid-toggle:focus-visible :global(.stepped-pyramid) { transform:translateY(-2px) scale(1.06); color:#79613e; }
   .pyramid-toggle .pyramid-underline { transition:transform 350ms ease; }
   .pyramid-toggle:hover .pyramid-underline,.pyramid-toggle:focus-visible .pyramid-underline { transform:scaleX(1.12); }
   .navigation-shell[data-collapsed="true"] .pyramid-toggle { pointer-events:auto; }

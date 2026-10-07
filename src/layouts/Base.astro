@@ -1,4 +1,5 @@
 ---
+import PortfolioHeader from '../components/PortfolioHeader.astro';
 import { SITE } from '../data/site';
 
 interface Props {
@@ -70,29 +71,10 @@ const ogImageUrl = new URL(ogImage, Astro.site);
     />
     <meta name="author" content={SITE.name} />
   </head>
-  <body>
+  <body class:list={{'has-portfolio-header':!hideHeader}}>
     <a class="skip" href="#main">Skip to content</a>
 
-    {
-      !hideHeader && (
-        <header class="site-header">
-          <div class="wrap header-inner">
-            <a class="brand" href="/">
-              <span class="brand-name">{SITE.name}</span>
-              <span class="brand-role">{SITE.role}</span>
-            </a>
-            <nav aria-label="Main">
-              <ul>
-                <li><a href="/projects/">Projects</a></li>
-                <li><a href="/writing/">Writing</a></li>
-                <li><a href="/about/">About</a></li>
-                <li><a href="/contact/">Contact</a></li>
-              </ul>
-            </nav>
-          </div>
-        </header>
-      )
-    }
+    {!hideHeader && <PortfolioHeader />}
 
     <main
       id="main"
