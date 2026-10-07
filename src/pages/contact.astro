@@ -1,32 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SITE } from '../data/site';
+import ContactForm from '../components/ContactForm.astro';
 ---
-
 <Base title="Contact" description="Get in touch with Moaaz Magdy.">
-  <div class="wrap">
-    <p class="eyebrow">Contact</p>
-    <h1>Get in touch</h1>
-    <p class="lede">
-      Open to data analyst and AI tools engineering roles, and to collaborations
-      on open-source analytics tooling.
-    </p>
-
-    <h2>Email</h2>
-    <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
-
-    <h2>Elsewhere</h2>
-    <ul>
-      <li><a href={SITE.links.github} rel="me noopener">GitHub</a> — source for every project on this site</li>
-      <li><a href={SITE.links.linkedin} rel="me noopener">LinkedIn</a> — professional history</li>
-      <li><a href={SITE.links.kaggle} rel="me noopener">Kaggle</a> — notebooks</li>
-    </ul>
-
-    <h2>What helps</h2>
-    <p>
-      Include the problem, the data you have, and what you have already tried.
-      If you are hiring, the role and the team matter more to me than the
-      company name.
-    </p>
-  </div>
+ <ContactForm />
 </Base>
+<style is:global>
+ body:not(:has(.scroll-hero)) .contact-section { padding:30px 24px 60px; background:transparent; border:0; }
+</style>

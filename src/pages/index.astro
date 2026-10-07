@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import ScrollHero from '../components/ScrollHero.astro';
 import AboutTimeline from '../components/AboutTimeline.astro';
 import ScrollRail from '../components/ScrollRail.astro';
+import ContactForm from '../components/ContactForm.astro';
 const projects=[{slug:'analytics-agent',title:'From raw data to a useful report',detail:'An analytics assistant that checks its work before writing the report.'},{slug:'ai-tell',title:'A closer look at AI-written documents',detail:'A desktop tool for examining authorship signals and document provenance.'},{slug:'ecommerce-clv-churn',title:'Who needs attention first?',detail:'A customer analytics case study, developed from a real project experience.'}];
 
 ---
@@ -28,6 +29,7 @@ const projects=[{slug:'analytics-agent',title:'From raw data to a useful report'
     </div>
   </section>
   <AboutTimeline />
+  <ContactForm />
   <ScrollRail />
 </Base>
 

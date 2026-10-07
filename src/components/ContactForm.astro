@@ -1,0 +1,72 @@
+---
+import { SITE } from '../data/site';
+---
+<section class="contact-section" id="connect" tabindex="-1" aria-labelledby="contact-heading">
+ <div class="contact-layout">
+  <header class="contact-intro">
+   <svg class="letter-sketch" viewBox="0 0 120 90" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 28 92-8 5 57-92 8z M13 29l49 30 42-38 M18 82l30-34 M108 75 77 45 M39 17l-3-9 M64 12l2-10 M87 13l7-8"/></g></svg>
+   <h2 id="contact-heading">Get in touch</h2>
+   <p>Have a business problem to untangle, a role in mind, or something interesting to build?</p><p>Tell me a little about it.</p>
+   <a class="direct-email" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+   <div class="contact-links"><a href={SITE.links.linkedin}>LinkedIn ↗</a><a href={SITE.links.github}>GitHub ↗</a></div>
+  </header>
+  <form class="contact-form" action={`mailto:${SITE.email}`} method="get" data-recipient={SITE.email}>
+   <div class="field-pair">
+    <div class="field"><label for="contact-name">Name</label><input id="contact-name" name="name" autocomplete="name" placeholder="Your name" maxlength="100" required /></div>
+    <div class="field"><label for="contact-email">Email</label><input id="contact-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" maxlength="254" required /></div>
+   </div>
+   <div class="field"><label for="contact-subject">Subject</label><input id="contact-subject" name="subject" placeholder="What would you like to talk about?" maxlength="150" required /></div>
+   <div class="field"><div class="message-label"><label for="contact-message">Message</label><span class="character-count" aria-hidden="true">0 / 1000</span></div><textarea id="contact-message" name="body" placeholder="A little context is a great place to start…" rows="5" maxlength="1000" aria-describedby="contact-hint" required></textarea></div>
+   <p id="contact-hint" class="contact-hint">Opens a draft in your email app. You review it and press send there.</p>
+   <button class="contact-submit" type="submit"><span>Prepare email</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></button>
+   <p class="contact-status" role="status" aria-live="polite"></p>
+  </form>
+ </div>
+</section>
+<script>
+ document.querySelectorAll<HTMLFormElement>('.contact-form').forEach(form=>{
+  const message=form.querySelector<HTMLTextAreaElement>('textarea')!;
+  const count=form.querySelector<HTMLElement>('.character-count')!;
+  const status=form.querySelector<HTMLElement>('.contact-status')!;
+  message.addEventListener('input',()=>{count.textContent=`${message.value.length} / 1000`;});
+  form.addEventListener('submit',event=>{
+   event.preventDefault();
+   const fields=new FormData(form);
+   const name=String(fields.get('name')||'').trim(),email=String(fields.get('email')||'').trim();
+   const subject=String(fields.get('subject')||'').trim(),body=message.value.trim();
+   if(!name||!subject||!body){status.textContent='Please add your name, a subject, and a message.';return;}
+   const content=`${body}\n\nFrom: ${name}\nReply to: ${email}`;
+   location.href=`mailto:${form.dataset.recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(content)}`;
+   status.textContent='Your email app should open with the draft. Nothing has been sent yet. If it does not open, use the email link or copy your message.';
+  });
+ });
+</script>
+<style>
+ .contact-section { position:relative; padding:100px 70px 100px 185px; background:#faf6ecf2; border-top:1px solid #d7cab1; }
+ .contact-layout { display:grid; grid-template-columns:.85fr 1.15fr; gap:70px; max-width:1060px; margin:auto; align-items:start; }
+ .letter-sketch { width:100px; height:75px; color:#79613e; margin-bottom:24px; transform:rotate(-5deg); }
+ .contact-intro h2 { margin:0 0 20px; font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.8rem,4vw,3.8rem); font-weight:500; }
+ .contact-intro p { color:#685b47; font-size:.95rem; line-height:1.85; max-width:32ch; }
+ .direct-email { display:inline-block; margin-top:16px; color:#57472f; font-size:.87rem; overflow-wrap:anywhere; }
+ .contact-links { display:flex; gap:24px; margin-top:20px; font-size:.85rem; }
+ .contact-links a { color:#57472f; }
+ .contact-form { padding:32px; background:#fffcf5; border:1px solid #d7cab1; border-radius:8px; box-shadow:3px 9px 24px #5947290c; }
+ .field-pair { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+ .field { margin-bottom:22px; min-width:0; }
+ label { display:block; color:#39332b; font-size:.83rem; font-weight:600; margin-bottom:8px; }
+ input,textarea { width:100%; min-height:46px; border:1px solid #b9ad99; border-radius:5px; background:#fffefb; color:#30291f; font:inherit; font-size:.88rem; padding:11px 12px; transition:border-color 160ms ease; }
+ input::placeholder,textarea::placeholder { color:#796f60; }
+ input:focus,textarea:focus { outline:2px solid #986f35; outline-offset:2px; border-color:#986f35; }
+ textarea { resize:vertical; min-height:145px; line-height:1.7; }
+ .message-label { display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+ .character-count { font-size:.72rem; font-variant-numeric:tabular-nums; color:#796f60; }
+ .contact-hint { color:#685b47; font-size:.76rem; line-height:1.6; margin:-6px 0 20px; }
+ .contact-submit { display:flex; align-items:center; justify-content:center; gap:14px; width:100%; min-height:48px; border:1px solid #39332b; border-radius:5px; background:#39332b; color:#fffaf0; font:inherit; font-size:.88rem; cursor:pointer; transition:background 180ms ease; }
+ .contact-submit:hover { background:#57472f; }
+ .contact-submit svg { width:19px; height:19px; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+ .contact-status { color:#57472f; font-size:.8rem; line-height:1.7; margin:16px 0 0; }
+ .contact-status:empty { display:none; }
+ @media(max-width:1000px) { .contact-layout { grid-template-columns:1fr; gap:38px; max-width:570px; } .contact-intro p { max-width:45ch; } }
+ @media(max-width:700px) { .contact-section { padding:165px 42px 65px 24px; } .contact-layout { gap:30px; } .contact-form { padding:22px 18px; } .field-pair { grid-template-columns:1fr; gap:0; } .letter-sketch { width:78px; height:58px; margin-bottom:18px; } }
+ @media(prefers-reduced-motion:reduce) { input,textarea,.contact-submit { transition:none; } }
+</style>
