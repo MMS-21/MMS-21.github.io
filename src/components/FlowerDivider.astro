@@ -1,0 +1,43 @@
+---
+interface Props { variant?: number }
+const {variant=0}=Astro.props;
+const positions=variant%2===0?[.16,.72]:[.31,.86];
+---
+<div class="flower-divider" aria-hidden="true">
+ <span class="divider-rule"></span>
+ {positions.map((position,i)=><svg class="flower-sprig" style={`--position:${position*100}%;--delay:${i*240}ms;--tilt:${(variant+i)%2?'-8deg':'7deg'}`} viewBox="0 0 160 100" fill="none">
+  <g class="vine" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+   <path pathLength="1" d="M4 59c22 0 34-1 51-11 15-9 21-25 26-35M54 49c19 8 37 12 57 10 20-2 34-10 43-6M70 32c-14 1-22-7-22-17 13 0 23 7 22 17ZM89 55c-1 12-12 20-25 20 3-12 12-20 25-20ZM115 58c0-12 10-20 22-22-1 12-10 20-22 22Z"/>
+   <path pathLength="1" d="M107 58c0 13 5 22 10 27M29 56c-3-8-10-12-18-10 3 8 10 11 18 10Z"/>
+  </g>
+  <g class="bloom" style="--bloom-delay:420ms" transform="translate(83 17)">
+   <path class="petals" d="M0-6C-10-24-24-11-13-2c-20 0-17 18-3 15-7 16 10 22 15 8 9 16 24 3 13-6 19-1 19-20 3-18C22-17 8-24 0-6Z"/>
+   <path class="flower-ink" d="M-8 3c2-11 18-10 17 0-1 10-18 9-16 0 1-5 10-6 11-1 1 4-5 7-7 3M-15-2l7 5m20 12-7-9M0-6l2 5"/>
+  </g>
+  <g class="bloom small-bloom" style="--bloom-delay:700ms" transform="translate(118 85) scale(.55)">
+   <path class="petals" d="M0-6C-10-24-24-11-13-2c-20 0-17 18-3 15-7 16 10 22 15 8 9 16 24 3 13-6 19-1 19-20 3-18C22-17 8-24 0-6Z"/>
+   <path class="flower-ink" d="M-8 3c2-11 18-10 17 0-1 10-18 9-16 0 1-5 10-6 11-1 1 4-5 7-7 3"/>
+  </g>
+ </svg>)}
+</div>
+<script>
+ const dividers=[...document.querySelectorAll<HTMLElement>('.flower-divider')];
+ if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver' in window){
+  const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){(entry.target as HTMLElement).dataset.grown='true';observer.unobserve(entry.target);}});},{threshold:.4});
+  dividers.forEach(divider=>{divider.dataset.animated='true';observer.observe(divider);});
+ }
+</script>
+<style>
+ .flower-divider{position:absolute;top:-31px;left:0;right:0;height:64px;pointer-events:none;color:#8a795b}
+ .divider-rule{position:absolute;top:31px;left:0;right:0;height:1px;background:#d5c9b4}
+ .flower-sprig{position:absolute;left:var(--position);top:-1px;width:135px;height:84px;transform:translateX(-50%) rotate(var(--tilt));overflow:visible}
+ .petals{fill:#dce5eb;stroke:#637f90;stroke-width:1.1;stroke-linejoin:round}
+ .flower-ink{stroke:#637f90;stroke-width:1;stroke-linecap:round;fill:none}
+ .bloom{transform-box:fill-box;transform-origin:center}
+ [data-animated=true] .vine path{stroke-dasharray:1;stroke-dashoffset:1}
+ [data-animated=true] .bloom{opacity:0;scale:.12}
+ [data-grown=true] .vine path{stroke-dashoffset:0;transition:stroke-dashoffset 1500ms cubic-bezier(.16,1,.3,1) var(--delay)}
+ [data-grown=true] .bloom{opacity:1;scale:1;transition:scale 1100ms cubic-bezier(.16,1,.3,1) calc(var(--delay) + var(--bloom-delay)),opacity 650ms ease calc(var(--delay) + var(--bloom-delay))}
+ @media(max-width:600px){.flower-sprig{width:95px;height:60px;top:8px}.small-bloom{display:none}}
+ @media(prefers-reduced-motion:reduce){.vine path,.bloom{transition:none!important}}
+</style>
