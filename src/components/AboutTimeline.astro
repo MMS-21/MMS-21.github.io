@@ -1,17 +1,17 @@
 ---
 // Dates and experience are grounded in Moaaz's final résumé, supplied 7 October 2026.
 const milestones=[
- {date:'2017 — 2022',title:'Business before the dashboard',place:'Sadat Academy for Management Sciences',body:'A degree in International Business Management gave me the foundation to understand how organisations work—not only how their numbers look.'},
- {date:'Summer 2020',title:'Learning at the front desk',place:'Qatar National Bank · Customer Service Intern',body:'My first banking internship introduced me to financial documentation, compliance, and the everyday processes behind customer service.'},
- {date:'Summer 2021',title:'Accuracy under pressure',place:'Banque Misr · Customer Service Intern',body:'Supporting customer inquiries, account verification, and transaction processes showed me why clear information and reliable procedures matter.'},
- {date:'December 2024 — present',title:'Working where the data starts',place:'Al-Amal Trade & Distribution · Business Analyst',body:'I reconcile financial, inventory, and logistics records, validate inconsistencies, and automate recurring Excel reports across departments.'},
- {date:'December 2024 — present',title:'Different businesses. Better questions.',place:'Freelance Data Analyst',body:'Sales and HR dashboards help small businesses explore product performance, revenue trends, retention, and workforce patterns. Reporting automation makes that work repeatable.'},
- {date:'November 2025 — August 2026',title:'Building on the business foundation',place:'Digital Egypt Builders Initiative · Business Analytics',body:'Dedicated business analytics training expanded my toolkit. Today, my interests connect operational analysis, clear dashboards, and practical automation.'},
+ {date:'2017 — 2022',title:'Understanding how businesses work',place:'Sadat Academy for Management Sciences',body:'Studied International Business Management, building a foundation in how organisations operate and how business decisions connect across functions.'},
+ {date:'Summer 2020',title:'Seeing banking from the front line',place:'Qatar National Bank · Customer Service Intern',body:'Supported front-desk operations and customer requests, gaining practical exposure to financial documentation, compliance, and service processes.'},
+ {date:'Summer 2021',title:'Making accuracy part of the job',place:'Banque Misr · Customer Service Intern',body:'Handled customer inquiries and supported account verification and transactions. Working in a busy branch reinforced the value of accurate information and consistent procedures.'},
+ {date:'December 2024 — present',title:'Turning operational data into clearer decisions',place:'Al-Amal Trade & Distribution · Business Analyst',body:'Reconcile 1,000+ financial, inventory, and logistics records each month. Built and automated more than 10 recurring reports to help teams spot discrepancies and track performance.'},
+ {date:'December 2024 — present',title:'Helping businesses see what needs attention',place:'Freelance Data Analyst',body:'Build sales and HR dashboards that make revenue trends, product performance, and workforce patterns easier to explore. Automate recurring reporting to reduce manual work.'},
+ {date:'November 2025 — August 2026',title:'Bringing business and analytics together',place:'Digital Egypt Builders Initiative · Business Analytics',body:'Completed the Business Analytics Program, extending my business foundation with analytical training. My work now spans operational reporting, dashboards, and practical automation.'},
 ];
 ---
 <section class="about-timeline" id="about" aria-labelledby="about-heading" tabindex="-1">
  <div class="timeline-stage">
-  <header class="timeline-heading"><h2 id="about-heading">A little about me</h2><p>Business understanding, shaped by hands-on work.</p></header>
+  <header class="timeline-heading"><h2 id="about-heading">A little about me</h2><p>From business fundamentals to practical analysis and better reporting.</p></header>
   <div class="timeline-window" tabindex="0" aria-label="Experience timeline. Scroll down to follow the milestones, or use the previous and next buttons.">
    <div class="timeline-track">
     <div class="timeline-rail" aria-hidden="true"></div>
@@ -29,11 +29,11 @@ const milestones=[
   const windowEl=timeline.querySelector<HTMLElement>('.timeline-window')!;
   const milestones=[...timeline.querySelectorAll<HTMLElement>('.milestone')];
   const buttons=[...timeline.querySelectorAll<HTMLButtonElement>('button')];
-  let frame=0,top=0,range=1,travel=0,active=0;
+  let frame=0,top=0,range=1,travel=0,active=0,settle=0;
   const clamp=(n:number)=>Math.max(0,Math.min(1,n));
   const render=()=>{
    frame=0;const animated=!reduced.matches&&innerWidth>700;
-   const progress=animated?clamp((scrollY-top)/range):0;
+   const progress=animated?clamp((scrollY-top-settle)/range):0;
    track.style.transform=animated?`translate3d(${-progress*travel}px,0,0)`:'none';
    active=Math.round(progress*(milestones.length-1));
    milestones.forEach((m,i)=>{const visible=!animated||progress>=Math.max(0,(i-.8)/(milestones.length-1));m.dataset.visible=String(visible);});
@@ -41,9 +41,9 @@ const milestones=[
    buttons[1].disabled=animated?active===milestones.length-1:windowEl.scrollLeft>=windowEl.scrollWidth-windowEl.clientWidth-2;
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
-  const measure=()=>{timeline.dataset.animated=String(!reduced.matches&&innerWidth>700);top=timeline.offsetTop;range=Math.max(1,timeline.offsetHeight-innerHeight);travel=Math.max(0,track.scrollWidth-windowEl.clientWidth);schedule();};
+  const measure=()=>{timeline.dataset.animated=String(!reduced.matches&&innerWidth>700);top=timeline.offsetTop;settle=innerHeight*.65;range=Math.max(1,timeline.offsetHeight-innerHeight-settle);travel=Math.max(0,track.scrollWidth-windowEl.clientWidth);schedule();};
   const advance=(direction:number)=>{
-   if(timeline.dataset.animated==='true'){const next=Math.max(0,Math.min(milestones.length-1,active+direction));scrollTo({top:top+range*next/(milestones.length-1),behavior:'smooth'});}
+   if(timeline.dataset.animated==='true'){const next=Math.max(0,Math.min(milestones.length-1,active+direction));scrollTo({top:top+settle+range*next/(milestones.length-1),behavior:'smooth'});}
    else windowEl.scrollBy({left:direction*windowEl.clientWidth*.8,behavior:reduced.matches?'instant':'smooth'});
   };
   buttons[0].addEventListener('click',()=>advance(-1));buttons[1].addEventListener('click',()=>advance(1));
@@ -53,16 +53,16 @@ const milestones=[
 </script>
 <style>
  .about-timeline { position:relative; background:#faf6eced; border-top:1px solid #d7cab1; }
- .about-timeline[data-animated="true"] { height:350svh; }
- .timeline-stage { padding:70px max(40px,calc((100vw - 1080px)/2)) 30px; overflow:hidden; }
- [data-animated="true"] .timeline-stage { position:sticky; top:0; height:100svh; padding-left:max(185px,calc((100vw - 1080px)/2)); }
+ .about-timeline[data-animated="true"] { height:415svh; }
+ .timeline-stage { padding:40px max(36px,calc((100vw - 1380px)/2)) 20px; overflow:hidden; }
+ [data-animated="true"] .timeline-stage { position:sticky; top:0; height:100svh; padding-left:max(180px,calc((100vw - 1380px)/2)); }
  .timeline-heading h2 { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.5rem,4vw,3.8rem); font-weight:500; margin:0; }
  .timeline-heading p { color:#685b47; font-size:.94rem; margin:10px 0 0; }
  .timeline-window { position:relative; overflow-x:auto; margin-top:24px; scrollbar-color:#b8a98f transparent; }
  [data-animated="true"] .timeline-window { overflow:hidden; }
- .timeline-track { display:flex; position:relative; width:max-content; height:560px; gap:60px; padding:0 40px 0 4px; }
+ .timeline-track { display:flex; position:relative; width:max-content; height:clamp(470px,calc(100svh - 270px),720px); gap:80px; padding:0 80px 0 140px; }
  .timeline-rail { position:absolute; top:50%; left:0; right:0; height:1px; background:#b8a98f; }
- .milestone { position:relative; width:300px; flex-shrink:0; }
+ .milestone { position:relative; width:340px; flex-shrink:0; }
  .milestone-dot { position:absolute; top:calc(50% - 5px); left:0; width:11px; height:11px; border-radius:50%; border:2px solid #1d5b7a; background:#faf6ec; }
  .milestone-stem { position:absolute; top:50%; left:5px; width:1px; height:34px; background:#1d5b7a; transform-origin:top; transform:scaleY(0); transition:transform 600ms cubic-bezier(.16,1,.3,1); }
  .above .milestone-stem { top:calc(50% - 34px); transform-origin:bottom; }
@@ -71,15 +71,15 @@ const milestones=[
  [data-visible="true"] .milestone-copy { opacity:1; transform:none; }
  [data-visible="true"] .milestone-stem { transform:scaleY(1); }
  .milestone-date { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.16rem; color:#1d5b7a; margin:0 0 8px; }
- .milestone h3 { font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:1.9rem; line-height:1.1; margin:0 0 10px; }
+ .milestone h3 { font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:2.05rem; line-height:1.1; margin:0 0 10px; }
  .milestone .milestone-place { font-size:.74rem; color:#57472f; font-weight:650; margin:0 0 9px; }
- .milestone-copy>p:last-child { font-size:.82rem; color:#685b47; line-height:1.7; margin:0; }
+ .milestone-copy>p:last-child { font-size:.88rem; color:#685b47; line-height:1.7; margin:0; }
  .timeline-footer { display:flex; align-items:center; justify-content:space-between; gap:24px; font-size:.82rem; color:#685b47; padding-top:12px; }
  .timeline-controls { display:flex; gap:10px; }
  .timeline-controls button { width:44px; height:40px; background:transparent; border:1px solid #b8a98f; color:#57472f; border-radius:50%; font-size:1.2rem; cursor:pointer; }
  .timeline-controls button:hover { background:#eee4d2; }
  .timeline-controls button:disabled { opacity:.35; cursor:default; }
- @media(max-height:800px) and (min-width:701px) { .timeline-stage { padding-top:38px; } .timeline-track { height:470px; } .milestone { width:290px; } .milestone h3 { font-size:1.65rem; } .milestone-copy>p:last-child { font-size:.78rem; } }
+ @media(max-height:800px) and (min-width:701px) { .timeline-stage { padding-top:38px; } .timeline-track { height:calc(100svh - 250px); min-height:390px; } .milestone { width:320px; } .milestone h3 { font-size:1.65rem; } .milestone-copy>p:last-child { font-size:.78rem; } }
  @media(max-width:700px) { .timeline-stage { padding:160px 28px 50px; } .timeline-window { overflow:visible; } .timeline-track { width:auto; height:auto; display:block; padding:0 0 0 24px; } .timeline-rail { top:0; bottom:0; left:4px; width:1px; height:auto; } .milestone { width:auto; margin:45px 0; } .milestone-dot { top:8px; left:-25px; } .milestone-stem { display:none; } .milestone-copy,.above .milestone-copy { position:static; opacity:1; transform:none; } .timeline-controls { display:none; } .timeline-footer { margin-top:40px; } .milestone h3 { font-size:1.9rem; } }
  @media(prefers-reduced-motion:reduce) { .milestone-copy,.above .milestone-copy { opacity:1; transform:none; transition:none; } .milestone-stem { transform:none; transition:none; } }
 </style>
