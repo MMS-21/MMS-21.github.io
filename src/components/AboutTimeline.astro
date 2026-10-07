@@ -1,21 +1,27 @@
 ---
 // Dates and experience are grounded in Moaaz's final résumé, supplied 7 October 2026.
 const milestones=[
- {date:'2017 — 2022',title:'Understanding how businesses work',place:'Sadat Academy for Management Sciences',body:'Studied International Business Management, building a foundation in how organisations operate and how business decisions connect across functions.'},
- {date:'Summer 2020',title:'Seeing banking from the front line',place:'Qatar National Bank · Customer Service Intern',body:'Supported front-desk operations and customer requests, gaining practical exposure to financial documentation, compliance, and service processes.'},
- {date:'Summer 2021',title:'Making accuracy part of the job',place:'Banque Misr · Customer Service Intern',body:'Handled customer inquiries and supported account verification and transactions. Working in a busy branch reinforced the value of accurate information and consistent procedures.'},
- {date:'December 2024 — present',title:'Turning operational data into clearer decisions',place:'Al-Amal Trade & Distribution · Business Analyst',body:'Reconcile 1,000+ financial, inventory, and logistics records each month. Built and automated more than 10 recurring reports to help teams spot discrepancies and track performance.'},
- {date:'December 2024 — present',title:'Helping businesses see what needs attention',place:'Freelance Data Analyst',body:'Build sales and HR dashboards that make revenue trends, product performance, and workforce patterns easier to explore. Automate recurring reporting to reduce manual work.'},
- {date:'November 2025 — August 2026',title:'Bringing business and analytics together',place:'Digital Egypt Builders Initiative · Business Analytics',body:'Completed the Business Analytics Program, extending my business foundation with analytical training. My work now spans operational reporting, dashboards, and practical automation.'},
+ {date:'2017 — 2022',title:'Building a business foundation',place:'Sadat Academy for Management Sciences',body:'Studied International Business Management, learning how organisations operate and how decisions connect across teams.',highlight:false},
+ {date:'Around 2018',title:'Giving back to my school community',place:'Volunteering',body:'Helped raise awareness of the health risks of smoking at my former high school.',highlight:true},
+ {date:'2020 — 2021',title:'Learning where service meets accuracy',place:'QNB · Summer 2020 / Banque Misr · Summer 2021',body:'Customer service internships offered a first look at banking operations, customer requests, and the care required when handling financial information.',highlight:false},
+ {date:'April 2022',title:'Taking the first step into data',place:'Egypt FWD · Udacity',body:'Completed the Data Analysis Challenger track.',highlight:true,url:'https://www.udacity.com/certificate/e/f7342794-c0eb-11ec-962d-83088c833500'},
+ {date:'August 2022',title:'Building an analytical toolkit',place:'Google · Coursera',body:'Earned the Google Data Analytics Professional Certificate.',highlight:true,url:'https://www.credly.com/badges/6b1e0514-119d-40bb-9cba-1c76e12a9f17/public_url'},
+ {date:'October 2022',title:'Going deeper into analysis',place:'Egypt FWD · Udacity',body:'Completed the Advanced Data Analysis Nanodegree.',highlight:true,url:'https://www.udacity.com/certificate/e/73c44122-2a41-11ed-a5cd-c77bfc64b77e'},
+ {date:'2023 — 2024',title:'A chapter of service',place:'Military service',body:'Completed my military service before returning to professional work and further training.',highlight:false},
+ {date:'December 2024 — present',title:'Making everyday data useful',place:'Al-Amal Trade & Distribution · Business Analyst',body:'Reconcile 1,000+ financial, inventory, and logistics records each month. Built 10+ recurring reports. Alongside this role, freelance work includes sales and HR dashboards and reporting automation.',highlight:false},
+ {date:'18 March 2025',title:'Putting analysis into practice',place:'Sprints · Data Analytics and Visualization Bootcamp',body:'Completed the bootcamp after joining in late 2024.',highlight:true},
+ {date:'November 2025 — August 2026',title:'Connecting business questions with analysis',place:'Digital Egypt Builders Initiative · Business Analytics',body:'Completed the Business Analytics Program, extending my business background through further analytical training.',highlight:false},
+ {date:'September 2026 — present',title:'Exploring the skills behind a good career match',place:'Mattlob · Collaboration',body:'Collaborating on practical career-readiness activities, including role matching, CV review, and workplace skills.',highlight:false},
+ {date:'30 September 2026',title:'Shipping a tool of my own',place:'ai-tell · First public release',body:'Released a desktop tool for exploring document authorship signals.',highlight:true,url:'https://github.com/MMS-21/ai-tell/releases/tag/v0.1.0'},
 ];
 ---
 <section class="about-timeline" id="about" aria-labelledby="about-heading" tabindex="-1">
  <div class="timeline-stage">
-  <header class="timeline-heading"><h2 id="about-heading">A little about me</h2><p>From business fundamentals to practical analysis and better reporting.</p></header>
+  <header class="timeline-heading"><h2 id="about-heading">The path so far</h2><p>Business studies, practical experience, and a growing interest in building useful tools.</p></header>
   <div class="timeline-window" tabindex="0" aria-label="Experience timeline. Scroll down to follow the milestones, or use the previous and next buttons.">
    <div class="timeline-track">
     <div class="timeline-rail" aria-hidden="true"></div>
-    {milestones.map((m,i)=><article class:list={['milestone',{'above':i%2===0}]}><button type="button" class="milestone-dot" aria-label={`Go to ${m.date}: ${m.title}`} title={`${m.date} · ${m.title}`}></button><span class="milestone-stem" aria-hidden="true"></span><div class="milestone-copy"><p class="milestone-date">{m.date}</p><h3>{m.title}</h3><p class="milestone-place">{m.place}</p><p>{m.body}</p></div></article>)}
+    {milestones.map((m,i)=><article class:list={['milestone',{'above':i%2===0,'highlight':m.highlight}]}><button type="button" class="milestone-dot" aria-label={`Go to ${m.date}: ${m.title}`} title={`${m.date} · ${m.title}`}></button><span class="milestone-stem" aria-hidden="true"></span><div class="milestone-copy"><p class="milestone-date">{m.date}</p><h3>{m.title}</h3><p class="milestone-place">{m.place}</p><p>{m.body}</p>{m.url && <a class="milestone-proof" href={m.url} target="_blank" rel="noopener noreferrer">{m.url.includes('github') ? 'View release ↗' : 'View credential ↗'}</a>}</div></article>)}
    </div>
   </div>
   <div class="timeline-footer"><span>2017 — 2026</span><div class="timeline-controls"><button type="button" aria-label="Previous experience milestone">←</button><button type="button" aria-label="Next experience milestone">→</button></div><a href="/about/">More about me ↗</a></div>
@@ -36,20 +42,21 @@ const milestones=[
    frame=0;const animated=!reduced.matches&&innerWidth>700;
    const progress=animated?clamp((scrollY-top-settle)/range):0;
    track.style.transform=animated?`translate3d(${-progress*travel}px,0,0)`:'none';
-   active=Math.round(progress*(milestones.length-1));
+   const position=animated?progress*travel:windowEl.scrollLeft;
+   active=milestones.reduce((best,m,i)=>Math.abs(m.offsetLeft-140-position)<Math.abs(milestones[best].offsetLeft-140-position)?i:best,0);
    points.forEach((point,i)=>{if(i===active)point.setAttribute('aria-current','step');else point.removeAttribute('aria-current');});
-   milestones.forEach((m,i)=>{const visible=!animated||progress>=Math.max(0,(i-.8)/(milestones.length-1));m.dataset.visible=String(visible);});
+   milestones.forEach((m,i)=>{const visible=!animated||progress*travel>=Math.max(0,m.offsetLeft-140-windowEl.clientWidth*.65);m.dataset.visible=String(visible);});
    buttons[0].disabled=animated?active===0:windowEl.scrollLeft<=0;
    buttons[1].disabled=animated?active===milestones.length-1:windowEl.scrollLeft>=windowEl.scrollWidth-windowEl.clientWidth-2;
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
-  const measure=()=>{timeline.dataset.animated=String(!reduced.matches&&innerWidth>700);top=timeline.offsetTop;settle=innerHeight*.65;range=Math.max(1,timeline.offsetHeight-innerHeight-settle);travel=Math.max(0,track.scrollWidth-windowEl.clientWidth);schedule();};
+  const measure=()=>{timeline.dataset.animated=String(!reduced.matches&&innerWidth>700);top=timeline.offsetTop;settle=innerHeight*.65;range=Math.max(1,timeline.offsetHeight-innerHeight-settle);travel=Math.max(0,milestones[milestones.length-1].offsetLeft-140);track.style.paddingRight=innerWidth>700?`${Math.max(80,windowEl.clientWidth-milestones[milestones.length-1].offsetWidth-140)}px`:'0px';schedule();};
   const advance=(direction:number)=>{
-   if(timeline.dataset.animated==='true'){const next=Math.max(0,Math.min(milestones.length-1,active+direction));scrollTo({top:top+settle+range*next/(milestones.length-1),behavior:'smooth'});}
+   if(timeline.dataset.animated==='true'){const next=Math.max(0,Math.min(milestones.length-1,active+direction));scrollTo({top:top+settle+range*(milestones[next].offsetLeft-140)/Math.max(1,travel),behavior:'smooth'});}
    else windowEl.scrollBy({left:direction*windowEl.clientWidth*.8,behavior:reduced.matches?'instant':'smooth'});
   };
   points.forEach((point,i)=>point.addEventListener('click',()=>{
-   if(timeline.dataset.animated==='true')scrollTo({top:top+settle+range*i/(milestones.length-1),behavior:'smooth'});
+   if(timeline.dataset.animated==='true')scrollTo({top:top+settle+range*(milestones[i].offsetLeft-140)/Math.max(1,travel),behavior:'smooth'});
    else if(innerWidth<=700)milestones[i].scrollIntoView({block:'center',behavior:reduced.matches?'instant':'smooth'});
    else windowEl.scrollTo({left:Math.max(0,milestones[i].offsetLeft-140),behavior:reduced.matches?'instant':'smooth'});
   }));
@@ -60,7 +67,7 @@ const milestones=[
 </script>
 <style>
  .about-timeline { position:relative; background:#faf6eced; border-top:1px solid #d7cab1; }
- .about-timeline[data-animated="true"] { height:415svh; }
+ .about-timeline[data-animated="true"] { height:640svh; }
  .timeline-stage { padding:40px max(36px,calc((100vw - 1380px)/2)) 20px; overflow:hidden; }
  [data-animated="true"] .timeline-stage { position:sticky; top:0; height:100svh; padding-left:max(180px,calc((100vw - 1380px)/2)); }
  .timeline-heading h2 { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.5rem,4vw,3.8rem); font-weight:500; margin:0; }
@@ -68,29 +75,35 @@ const milestones=[
  .timeline-window { position:relative; overflow-x:auto; margin-top:24px; scrollbar-color:#b8a98f transparent; }
  [data-animated="true"] .timeline-window { overflow:hidden; }
  .timeline-track { display:flex; position:relative; width:max-content; height:clamp(470px,calc(100svh - 270px),720px); gap:80px; padding:0 80px 0 140px; }
- .timeline-rail { position:absolute; top:50%; left:0; right:0; height:1px; background:#b8a98f; }
+ .timeline-rail { position:absolute; top:50%; left:0; right:0; height:1px; background:#48433c; }
  .milestone { position:relative; width:340px; flex-shrink:0; }
  .milestone-dot { position:absolute; z-index:2; top:calc(50% - 22px); left:-16px; width:44px; height:44px; padding:0; border:0; background:transparent; cursor:pointer; border-radius:50%; }
- .milestone-dot::after { content:''; position:absolute; top:17px; left:16px; width:11px; height:11px; border-radius:50%; border:2px solid #1d5b7a; background:#faf6ec; transition:transform 180ms ease,background 180ms ease; }
+ .milestone-dot::after { content:''; position:absolute; top:17px; left:16px; width:11px; height:11px; border-radius:50%; border:2px solid #8c692d; background:#faf6ec; transition:transform 180ms ease,background 180ms ease; }
  .milestone-dot:hover::after,.milestone-dot:focus-visible::after { transform:scale(1.35); background:#dceaf0; }
- .milestone-dot[aria-current]::after { background:#1d5b7a; }
+ .milestone-dot[aria-current]::after { background:#8c692d; }
  @media(max-width:700px) { .milestone .milestone-dot { top:-9px; left:-41px; } }
- .milestone-stem { position:absolute; top:50%; left:5px; width:1px; height:34px; background:#1d5b7a; transform-origin:top; transform:scaleY(0); transition:transform 600ms cubic-bezier(.16,1,.3,1); }
+ .milestone-stem { position:absolute; top:50%; left:5px; width:1px; height:34px; background:#8c692d; transform-origin:top; transform:scaleY(0); transition:transform 600ms cubic-bezier(.16,1,.3,1); }
  .above .milestone-stem { top:calc(50% - 34px); transform-origin:bottom; }
  .milestone-copy { position:absolute; top:calc(50% + 44px); opacity:0; transform:translateY(12px); transition:opacity 650ms ease,transform 650ms cubic-bezier(.16,1,.3,1); }
  .above .milestone-copy { top:auto; bottom:calc(50% + 44px); transform:translateY(-12px); }
  [data-visible="true"] .milestone-copy { opacity:1; transform:none; }
  [data-visible="true"] .milestone-stem { transform:scaleY(1); }
- .milestone-date { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.16rem; color:#1d5b7a; margin:0 0 8px; }
+ .milestone-date { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.16rem; color:#8c692d; margin:0 0 8px; }
  .milestone h3 { font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:2.05rem; line-height:1.1; margin:0 0 10px; }
  .milestone .milestone-place { font-size:.74rem; color:#57472f; font-weight:650; margin:0 0 9px; }
- .milestone-copy>p:last-child { font-size:.88rem; color:#685b47; line-height:1.7; margin:0; }
+ .milestone-copy>p:not(.milestone-date):not(.milestone-place) { font-size:.88rem; color:#685b47; line-height:1.7; margin:0; }
+ .highlight { width:250px; }
+ .highlight h3 { font-size:1.55rem; }
+ .highlight .milestone-dot::after { width:8px; height:8px; top:18px; left:17px; border-width:1px; }
+ .milestone-dot[aria-current]::after { box-shadow:0 0 12px #b38b4b66; }
+ .milestone-proof { display:inline-block; margin-top:10px; font-size:.8rem; color:#795a2c; text-underline-offset:4px; }
+ .milestone-dot:focus-visible { outline:2px solid #8c692d; outline-offset:2px; }
  .timeline-footer { display:flex; align-items:center; justify-content:space-between; gap:24px; font-size:.82rem; color:#685b47; padding-top:12px; }
  .timeline-controls { display:flex; gap:10px; }
  .timeline-controls button { width:44px; height:40px; background:transparent; border:1px solid #b8a98f; color:#57472f; border-radius:50%; font-size:1.2rem; cursor:pointer; }
  .timeline-controls button:hover { background:#eee4d2; }
  .timeline-controls button:disabled { opacity:.35; cursor:default; }
- @media(max-height:800px) and (min-width:701px) { .timeline-stage { padding-top:38px; } .timeline-track { height:calc(100svh - 250px); min-height:390px; } .milestone { width:320px; } .milestone h3 { font-size:1.65rem; } .milestone-copy>p:last-child { font-size:.78rem; } }
- @media(max-width:700px) { .timeline-stage { padding:160px 28px 50px; } .timeline-window { overflow:visible; } .timeline-track { width:auto; height:auto; display:block; padding:0 0 0 24px; } .timeline-rail { top:0; bottom:0; left:4px; width:1px; height:auto; } .milestone { width:auto; margin:45px 0; } .milestone-dot { top:8px; left:-25px; } .milestone-stem { display:none; } .milestone-copy,.above .milestone-copy { position:static; opacity:1; transform:none; } .timeline-controls { display:none; } .timeline-footer { margin-top:40px; } .milestone h3 { font-size:1.9rem; } }
+ @media(max-height:800px) and (min-width:701px) { .timeline-stage { padding-top:38px; } .timeline-track { height:calc(100svh - 250px); min-height:390px; } .milestone { width:320px; } .milestone.highlight { width:250px; } .milestone h3 { font-size:1.65rem; } .milestone-copy>p:not(.milestone-date):not(.milestone-place) { font-size:.78rem; } }
+ @media(max-width:700px) { .timeline-stage { padding:160px 28px 50px; } .timeline-window { overflow:visible; } .timeline-track { width:auto; height:auto; display:block; padding:0 0 0 24px; } .timeline-rail { top:0; bottom:0; left:4px; width:1px; height:auto; } .milestone { width:auto; margin:45px 0; } .highlight { margin-left:18px; padding:16px; border-left:1px solid #d7cab1; } .highlight .milestone-dot { left:-59px; top:7px; } .milestone-dot { top:8px; left:-25px; } .milestone-stem { display:none; } .milestone-copy,.above .milestone-copy { position:static; opacity:1; transform:none; } .timeline-controls { display:none; } .timeline-footer { margin-top:40px; } .milestone h3 { font-size:1.9rem; } }
  @media(prefers-reduced-motion:reduce) { .milestone-copy,.above .milestone-copy { opacity:1; transform:none; transition:none; } .milestone-stem { transform:none; transition:none; } }
 </style>
