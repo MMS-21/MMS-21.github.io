@@ -42,26 +42,26 @@ const milestones=[
    frame=0;const animated=!reduced.matches&&innerWidth>700;
    const progress=animated?clamp((scrollY-top-settle)/range):0;
    track.style.transform=animated?`translate3d(${-progress*travel}px,0,0)`:'none';
-   const position=animated?progress*travel:windowEl.scrollLeft;
+   const position=animated?progress*Math.max(0,milestones[milestones.length-1].offsetLeft-140):windowEl.scrollLeft;
    active=milestones.reduce((best,m,i)=>Math.abs(m.offsetLeft-140-position)<Math.abs(milestones[best].offsetLeft-140-position)?i:best,0);
    points.forEach((point,i)=>{if(i===active)point.setAttribute('aria-current','step');else point.removeAttribute('aria-current');});
-   milestones.forEach((m,i)=>{const visible=!animated||progress*travel>=Math.max(0,m.offsetLeft-140-windowEl.clientWidth*.65);m.dataset.visible=String(visible);});
+   milestones.forEach((m,i)=>{const visible=!animated||position>=Math.max(0,m.offsetLeft-140-windowEl.clientWidth*.65);m.dataset.visible=String(visible);});
    buttons[0].disabled=animated?active===0:windowEl.scrollLeft<=0;
    buttons[1].disabled=animated?active===milestones.length-1:windowEl.scrollLeft>=windowEl.scrollWidth-windowEl.clientWidth-2;
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
-  const measure=()=>{timeline.dataset.animated=String(!reduced.matches&&innerWidth>700);top=timeline.offsetTop;settle=innerHeight*.65;range=Math.max(1,timeline.offsetHeight-innerHeight-settle);travel=Math.max(0,milestones[milestones.length-1].offsetLeft-140);track.style.paddingRight=innerWidth>700?`${Math.max(80,windowEl.clientWidth-milestones[milestones.length-1].offsetWidth-140)}px`:'0px';schedule();};
+  const measure=()=>{timeline.dataset.animated=String(!reduced.matches&&innerWidth>700);top=timeline.offsetTop;settle=innerHeight*.65;range=Math.max(1,timeline.offsetHeight-innerHeight-settle);track.style.paddingRight=innerWidth>700?'80px':'0px';travel=Math.max(0,track.scrollWidth-windowEl.clientWidth);schedule();};
   const advance=(direction:number)=>{
-   if(timeline.dataset.animated==='true'){const next=Math.max(0,Math.min(milestones.length-1,active+direction));scrollTo({top:top+settle+range*(milestones[next].offsetLeft-140)/Math.max(1,travel),behavior:'smooth'});}
+   if(timeline.dataset.animated==='true'){const next=Math.max(0,Math.min(milestones.length-1,active+direction));scrollTo({top:top+settle+range*(milestones[next].offsetLeft-140)/Math.max(1,milestones[milestones.length-1].offsetLeft-140),behavior:'smooth'});}
    else windowEl.scrollBy({left:direction*windowEl.clientWidth*.8,behavior:reduced.matches?'instant':'smooth'});
   };
   points.forEach((point,i)=>point.addEventListener('click',()=>{
-   if(timeline.dataset.animated==='true')scrollTo({top:top+settle+range*(milestones[i].offsetLeft-140)/Math.max(1,travel),behavior:'smooth'});
+   if(timeline.dataset.animated==='true')scrollTo({top:top+settle+range*(milestones[i].offsetLeft-140)/Math.max(1,milestones[milestones.length-1].offsetLeft-140),behavior:'smooth'});
    else if(innerWidth<=700)milestones[i].scrollIntoView({block:'center',behavior:reduced.matches?'instant':'smooth'});
    else windowEl.scrollTo({left:Math.max(0,milestones[i].offsetLeft-140),behavior:reduced.matches?'instant':'smooth'});
   }));
   buttons[0].addEventListener('click',()=>advance(-1));buttons[1].addEventListener('click',()=>advance(1));
-  windowEl.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();advance(e.key==='ArrowRight'?1:-1);}});
+  windowEl.addEventListener('keydown',e=>{if(e.key==='Home'||e.key==='End'){e.preventDefault();points[e.key==='Home'?0:points.length-1].click();return;}if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();advance(e.key==='ArrowRight'?1:-1);}});
   windowEl.addEventListener('scroll',schedule,{passive:true});addEventListener('scroll',schedule,{passive:true});addEventListener('resize',measure,{passive:true});reduced.addEventListener('change',measure);document.fonts.ready.then(measure);measure();
  }
 </script>
@@ -122,3 +122,4 @@ const milestones=[
  @media(max-width:700px) { .highlight .milestone-copy,.highlight.above .milestone-copy { position:static; } .milestone.highlight { margin-top:30px; margin-bottom:30px; padding:10px 14px; } }
  @media(prefers-reduced-motion:reduce) { .milestone-copy,.above .milestone-copy { opacity:1; transform:none; transition:none; } .milestone-stem { transform:none; transition:none; } }
 </style>
+
