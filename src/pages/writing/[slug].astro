@@ -1,73 +1,32 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-
-export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((post) => ({
-    // Astro's glob loader keys entries by `id`, not `slug`.
-    params: { slug: post.id },
-    props: { post },
-  }));
-}
-
-const { post } = Astro.props;
-const { Content } = await render(post);
+export async function getStaticPaths(){return(await getCollection('blog')).map(post=>({params:{slug:post.id},props:{post}}))}
+const {post}=Astro.props;
+const {Content,headings}=await render(post);
+const contents=headings.filter(h=>h.depth===2);
+const minutes=Math.max(1,Math.ceil((post.body||'').split(/\s+/).length/200));
 ---
-
-<Base title={post.data.title} description={post.data.description} hideHeader>
-  <div class="wrap">
-    <article class="prose">
-      <p class="eyebrow">
-        <a href="/writing/">Writing</a>
-      </p>
-      <h1>{post.data.title}</h1>
-      <p class="post-meta">
-        <time datetime={post.data.pubDate.toISOString()}>
-          {post.data.pubDate.toLocaleDateString('en-GB', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })}
-        </time>
-        {' · '}
-        {post.data.tags.join(' · ')}
-      </p>
-      <Content />
-    </article>
+<Base title={post.data.title} description={post.data.description} hideFooter>
+ <div class="reading-page">
+  <a class="back-link" href="/writing/">← All writing</a>
+  <header class="article-opening"><h1>{post.data.title}</h1><p class="article-summary">{post.data.description}</p><p class="article-meta">Moaaz Magdy <span>·</span> <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}</time> <span>·</span> {minutes} min read</p></header>
+  <div class="reading-layout"><article class="reading-body"><Content /><footer class="article-end"><p>Keep exploring.</p><a href="/writing/">Back to the notebook →</a><a href="/projects/">See the projects →</a></footer></article>
+  {contents.length>0&&<aside class="contents"><details open><summary>In this article</summary><nav aria-label="Article contents">{contents.map(h=><a href={`#${h.slug}`}>{h.text}</a>)}</nav></details></aside>}
   </div>
+ </div>
 </Base>
-
+<style>
+ .reading-page{max-width:1120px;margin:auto;padding:8px 40px 24px;color:#302d28}.back-link{color:#6d593c;font-size:.85rem;text-decoration:none}.back-link:hover{text-decoration:underline}
+ .article-opening{max-width:850px;padding:30px 0 36px}.article-opening h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.5rem,4.4vw,3.8rem);line-height:1.08;letter-spacing:-.02em;margin:0 0 24px;text-wrap:pretty}
+ .article-summary{max-width:65ch;font-size:1.08rem;color:#665d50;line-height:1.8;margin:0 0 24px}.article-meta{display:flex;gap:8px;flex-wrap:wrap;font-size:.78rem;color:#75644e;margin:0}
+ .reading-layout{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:50px;align-items:start;border-top:1px solid #d8cbb6;padding-top:32px}
+ .reading-body{min-width:0;font-size:1rem;line-height:1.9}.contents{position:sticky;top:30px;font-size:.78rem;color:#6b5e4a}.contents summary{font-size:.88rem;color:#302d28;cursor:pointer}.contents nav{display:flex;flex-direction:column;gap:12px;padding-top:20px}.contents a{color:inherit;text-decoration:none;line-height:1.6}.contents a:hover{color:#1d5b7a;text-decoration:underline}
+ .article-end{border-top:1px solid #d8cbb6;margin-top:50px;padding-top:25px;display:flex;flex-wrap:wrap;gap:14px 28px;font-size:.85rem}.article-end p{flex-basis:100%;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.8rem;margin:0}
+ @media(max-width:1000px){.reading-page{padding-inline:28px}.reading-layout{gap:28px;grid-template-columns:minmax(0,1fr) 160px}}
+ @media(max-width:850px){.reading-layout{display:flex;flex-direction:column}.contents{position:static;order:-1;width:100%;padding-bottom:24px;border-bottom:1px solid #d8cbb6}.contents nav{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}.reading-body{width:100%}}
+ @media(max-width:500px){.reading-page{padding-inline:24px}.contents nav{grid-template-columns:1fr}.article-summary{font-size:1rem}}
+</style>
 <style is:global>
-  .prose img {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    margin: 1.5rem 0;
-  }
-
-  .prose hr {
-    border: 0;
-    border-top: 1px solid var(--border);
-    margin: 2.5rem 0;
-  }
-
-  .prose table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 0.9375rem;
-    margin: 1.5rem 0;
-  }
-
-  .prose th,
-  .prose td {
-    border: 1px solid var(--border);
-    padding: 0.5rem 0.65rem;
-    text-align: left;
-  }
-
-  .prose th {
-    background: var(--code-bg);
-  }
+ .reading-body p{max-width:72ch;margin:0 0 1.4em}.reading-body h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:2.25rem;line-height:1.2;margin:2em 0 .65em;scroll-margin-top:25px}.reading-body h3{font-size:1.15rem;line-height:1.5;margin:2em 0 .7em;scroll-margin-top:25px}.reading-body h2:first-child{margin-top:0}.reading-body ul,.reading-body ol{padding-left:1.3rem;margin:0 0 1.5em}.reading-body li{margin-bottom:.65em}.reading-body a{overflow-wrap:anywhere;text-underline-offset:4px}.reading-body img{display:block;max-width:100%;height:auto;margin:28px 0}.reading-body pre{max-width:100%;overflow:auto;background:#f1eadf!important;padding:20px;border-radius:3px;font-size:.8rem;line-height:1.7}.reading-body code{font-size:.85em;overflow-wrap:anywhere}.reading-body blockquote{margin:28px 0;padding:20px 24px;background:#f4eee3;color:#64543e}.reading-body blockquote p:last-child{margin:0}.reading-body table{display:block;overflow-x:auto;border-collapse:collapse;width:100%;font-size:.82rem;margin:28px 0}.reading-body td,.reading-body th{padding:12px;border-bottom:1px solid #d8cbb6;text-align:left;min-width:120px}.reading-body th{background:#f4eee3}.reading-body hr{border:0;border-top:1px solid #d8cbb6;margin:40px 0}.reading-page ::selection{background:#d8e5e9;color:#243f4b}
 </style>

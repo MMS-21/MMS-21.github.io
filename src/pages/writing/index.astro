@@ -1,103 +1,48 @@
 ---
 import Base from '../../layouts/Base.astro';
+import WritingSketch from '../../components/WritingSketch.astro';
 import { getCollection } from 'astro:content';
-
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
-const readingTime = (body: string = '') => {
-  const text = body.replace(/```[\s\S]*?```/g, '').replace(/!\[[^\]]*\]\([^)]*\)/g, '').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[#*_`>]/g, '');
-  return Math.max(1, Math.ceil(text.trim().split(/\s+/).filter(Boolean).length / 200));
-};
+const posts=(await getCollection('blog')).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+const [featured,...rest]=posts;
+const minutes=(body='')=>Math.max(1,Math.ceil(body.trim().split(/\s+/).length/200));
+const date=(d:Date)=>d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
+const category=(tags:string[])=>tags.includes('learning-resources')?'Learning guide':'Build notes';
 ---
-
-<Base title="Writing" description="What I learned building analytics and AI tools: practical write-ups on implementation, failures, and verification." ogImage="/og-writing.png">
-  <div class="wrap">
-    <section class="writing-intro">
-      <h1>What I learned building analytics and AI tools.</h1>
-      <p class="intro-copy">Notes from the work itself: decisions I made, things that broke, and what I would do differently next time.</p>
-      <a class="feed-link" href="/rss.xml">Follow via RSS <span aria-hidden="true">↗</span></a>
-    </section>
-
-    <section class="post-list" aria-label="Published articles">
-      {posts.map((post, index) => (
-        <article class:list={['post', { featured: index === 0 }]}>
-          {post.id === 'analytics-agent-build' && (
-            <figure class="agent-sketch">
-              <svg viewBox="0 0 640 200" role="img" aria-labelledby="agent-sketch-title">
-                <title id="agent-sketch-title">A tool-calling loop produces a draft report, then checks its quality and revises it.</title>
-                <g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                  <path fill="var(--accent-soft)" d="M42 39 159 34 168 133 49 140Z" />
-                  <path d="m57 53 88-4 5 69-88 6Z M76 72l-8 9 9 8 m46-20 8 9-7 9 m-22-18-8 24 M74 107l55-3" />
-                  <path class="ink-route" pathLength="1" d="M177 83h74 m-9-9 10 9-10 9" />
-                  <path d="M270 40h80l21 22v79H270Z M350 40v22h21 M287 83h66 M287 95h45 M287 109h58 M287 123h37" />
-                  <path class="ink-route" pathLength="1" d="M382 83h64 m-9-9 10 9-10 9" />
-                  <path fill="var(--accent-soft)" d="m466 46 99-6 8 90-101 8Z" />
-                  <circle cx="517" cy="87" r="24" />
-                  <path class="ink-check" pathLength="1" d="m506 87 8 8 17-19" />
-                  <path class="ink-return" pathLength="1" d="M516 145v23H105v-17 m-8 8 8-9 8 9" />
-                  <path d="m578 52 9-8 m-5 21 13-2 M32 57l-10-5 M31 72l-11 2" />
-                </g>
-                <g fill="currentColor" font-family="inherit" font-size="15" text-anchor="middle">
-                  <text x="105" y="27">Tool-calling loop</text>
-                  <text x="320" y="27">Draft report</text>
-                  <text x="520" y="27">Quality check</text>
-                  <text x="312" y="191">Revise when needed</text>
-                </g>
-              </svg>
-            </figure>
-          )}
-          <div class="article-meta">
-            <span>{post.data.tags.includes('agentic-ai') ? 'Agentic AI' : post.data.tags[0] || 'Build notes'}</span>
-            <span aria-hidden="true">·</span>
-            <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}</time>
-            <span aria-hidden="true">·</span>
-            <span>About {readingTime(post.body)} min read</span>
-          </div>
-          <h2><a href={`/writing/${post.id}/`}>{post.data.title}</a></h2>
-          <p class="article-description">{post.data.description}</p>
-          <a class="read-link" href={`/writing/${post.id}/`}>Read the article <span aria-hidden="true">→</span></a>
-        </article>
-      ))}
-      {posts.length === 0 && <p>No articles published yet. In the meantime, <a href="/projects/">explore the projects</a>.</p>}
-    </section>
-    <aside class="project-note">
-      <p>Want to see the work behind the writing?</p>
-      <a href="/projects/">Explore the projects <span aria-hidden="true">→</span></a>
-    </aside>
-  </div>
+<Base title="Writing" description="Practical notes on building AI applications, working with data, and learning by making things." ogImage="/og-writing.png" hideFooter>
+ <div class="writing-page">
+  <header class="notebook-opening"><div><h1>The working notebook.</h1><p>Ideas worth exploring. Things worth building.<br />Notes on AI, analysis, and what happens along the way.</p></div><a class="feed-link" href="/rss.xml">Follow via RSS ↗</a></header>
+  {featured&&<section class="featured-story" aria-label="Latest article">
+   <div class="story-copy"><h2><a href={`/writing/${featured.id}/`}>{featured.data.title}</a></h2><p class="story-meta">{category(featured.data.tags)} <span>·</span> {minutes(featured.body)} min read</p><p class="story-description">{featured.data.description}</p><a class="read-link" href={`/writing/${featured.id}/`}>Open the notebook <span aria-hidden="true">→</span></a><time datetime={featured.data.pubDate.toISOString()}>{date(featured.data.pubDate)}</time></div>
+   <figure><WritingSketch /><figcaption>A few useful ideas, connected.</figcaption></figure>
+  </section>}
+  {rest.length>0&&<section class="more-writing" aria-labelledby="more-title"><h2 id="more-title">More from the notebook</h2>{rest.map(post=><article class="article-row"><div class="row-date"><time datetime={post.data.pubDate.toISOString()}>{date(post.data.pubDate)}</time><span>{category(post.data.tags)} · {minutes(post.body)} min</span></div><div><h3><a href={`/writing/${post.id}/`}>{post.data.title}</a></h3><p>{post.data.description}</p><a class="read-link" href={`/writing/${post.id}/`}>Read the article <span aria-hidden="true">→</span></a></div></article>)}</section>}
+  <aside class="project-note"><p>The work behind the words.</p><a href="/projects/">Explore the projects →</a></aside>
+ </div>
 </Base>
-
 <style>
-  .writing-intro { padding: .5rem 0 2.75rem; }
-  .writing-intro h1 { max-width: 18ch; font-size: clamp(2.2rem, 6vw, 3.15rem); line-height: 1.14; letter-spacing: -.035em; text-wrap: balance; margin-bottom: 1rem; }
-  .intro-copy { max-width: 34rem; color: var(--muted); margin: 0 0 1.1rem; }
-  .feed-link { font-size: .875rem; }
-  .post { border-top: 1px solid var(--border); padding: 2rem 0 2.5rem; }
-  .agent-sketch { margin: 0 0 1.5rem; max-width: 38rem; color: var(--fg); }
-  .agent-sketch svg { width: 100%; height: auto; display: block; overflow: visible; }
-  .article-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem .55rem; font-size: .8125rem; color: var(--muted); margin-bottom: 1rem; }
-  .article-meta > span:first-child { color: var(--accent); font-weight: 650; }
-  .post h2 { margin: 0 0 1rem; max-width: 31ch; font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.3; text-wrap: pretty; }
-  .post h2 a { color: var(--fg); text-decoration: none; }
-  .post h2 a:hover { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; }
-  .article-description { margin: 0 0 1.35rem; color: var(--muted); }
-  .read-link { display: inline-flex; gap: .6rem; align-items: center; font-weight: 650; text-decoration: none; padding: .3rem 0; }
-  .read-link:hover { text-decoration: underline; }
-  .project-note { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem 1.5rem; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 1.5rem; font-size: .9375rem; }
-  .project-note p { margin: 0; color: var(--muted); }
-  @media (prefers-reduced-motion: no-preference) {
-    .ink-route, .ink-check, .ink-return { stroke-dasharray: 1; animation: draw-ink 650ms cubic-bezier(.16,1,.3,1) both; }
-    .ink-check { animation-delay: 150ms; }
-    .ink-return { animation-delay: 250ms; }
-    .read-link span { transition: transform 160ms ease-out; }
-    .read-link:hover span, .read-link:focus-visible span { transform: translateX(4px); }
-    @keyframes draw-ink { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-  }
-  @media (max-width: 480px) {
-    .writing-intro { padding-top: 0; padding-bottom: 2rem; }
-    .agent-sketch { margin-bottom: 1.25rem; }
-    .article-meta { gap: .3rem .4rem; }
-  }
+ .writing-page{max-width:1120px;margin:auto;padding:12px 40px 24px;color:#302d28}
+ .notebook-opening{display:flex;justify-content:space-between;align-items:end;gap:24px;padding-bottom:40px}
+ h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;letter-spacing:-.02em}
+ h1{font-size:clamp(3rem,5.3vw,4.6rem);line-height:1.02;margin:0 0 20px;text-wrap:balance}
+ .notebook-opening p{color:#6a6053;line-height:1.8;margin:0;font-size:1.05rem}
+ .feed-link{white-space:nowrap;font-size:.82rem;color:#725c3f;margin-bottom:5px}
+ .featured-story{display:grid;grid-template-columns:1.25fr .8fr;gap:28px;align-items:center;padding:42px 40px;background:#fffdf8;border:1px solid #ded2bd;box-shadow:3px 12px 30px #6c593b0c;position:relative}
+ .featured-story:before{content:'';position:absolute;inset:7px -6px -7px 6px;border:1px solid #e5daca;z-index:-1;transform:rotate(-.7deg)}
+ .story-copy h2{font-size:clamp(2.1rem,3.2vw,3rem);line-height:1.12;margin:0 0 18px;text-wrap:pretty}
+ h2 a,h3 a{color:inherit;text-decoration:none}h2 a:hover,h3 a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+ .story-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.78rem;color:#6f604c;margin:0 0 20px}
+ .story-description{font-size:.97rem;color:#655d51;line-height:1.8;margin:0 0 24px}
+ .read-link{display:inline-flex;gap:14px;align-items:center;color:#315d72;text-decoration:none;font-size:.9rem;border-bottom:1px solid #879ba3;padding:5px 0}
+ .read-link span{transition:transform 220ms}.read-link:hover span{transform:translateX(5px)}
+ .story-copy time{display:block;margin-top:24px;color:#716450;font-size:.75rem}
+ figure{margin:0;transform:rotate(2deg)}figcaption{text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:1.25rem;color:#796648;margin-top:8px}
+ .more-writing{margin-top:58px}.more-writing>h2{font-size:2.2rem;margin:0 0 26px}
+ .article-row{display:grid;grid-template-columns:160px 1fr;gap:28px;border-top:1px solid #dacdb9;padding:28px 0 32px}
+ .row-date{font-size:.76rem;color:#75644e;padding-top:5px}.row-date span{display:block;margin-top:7px}
+ .article-row h3{font-size:2rem;line-height:1.18;margin:0 0 14px;max-width:40ch}.article-row p{font-size:.93rem;color:#655d51;line-height:1.8;margin:0 0 14px}
+ .project-note{margin-top:36px;padding-top:24px;border-top:1px solid #dacdb9;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:.9rem}.project-note p{margin:0;color:#6a6053}
+ @media(max-width:1000px){.featured-story{padding:32px 28px;grid-template-columns:1fr .65fr;gap:15px}.writing-page{padding-inline:28px}.article-row{grid-template-columns:125px 1fr}}
+ @media(max-width:800px){.featured-story{grid-template-columns:1fr}.featured-story figure{max-width:300px;justify-self:center}.notebook-opening{align-items:start;flex-direction:column}.article-row{grid-template-columns:1fr;gap:14px}.row-date span{display:inline;margin-left:12px}}
+ @media(max-width:500px){.writing-page{padding:4px 24px 20px}.featured-story{padding:28px 22px}.featured-story figure{max-width:260px}.story-copy h2{font-size:2.15rem}.article-row h3{font-size:1.8rem}}
+ @media(prefers-reduced-motion:reduce){.read-link span{transition:none}}
 </style>
-

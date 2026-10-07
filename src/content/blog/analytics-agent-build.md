@@ -5,8 +5,6 @@ pubDate: 2026-10-02
 tags: ['agentic-ai', 'python', 'tool-calling']
 ---
 
-# I built a tool-calling agent without a framework, and the quality gate is the part worth copying
-
 Every tutorial I saw for agentic workflows started the same way: install LangGraph, wire up a state graph, define nodes and edges, and let the framework handle the loop. It worked, and I had no idea what it was doing for me.
 
 So I rebuilt the loop by hand. 737 lines in `agent.py`, no LangChain, no LangGraph, no dspy, no smolagents. Just a parse-execute-reflect cycle and 13 tools.
