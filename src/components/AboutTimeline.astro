@@ -15,7 +15,7 @@ const milestones=[
   <div class="timeline-window" tabindex="0" aria-label="Experience timeline. Scroll down to follow the milestones, or use the previous and next buttons.">
    <div class="timeline-track">
     <div class="timeline-rail" aria-hidden="true"></div>
-    {milestones.map((m,i)=><article class:list={['milestone',{'above':i%2===0}]}><span class="milestone-dot" aria-hidden="true"></span><span class="milestone-stem" aria-hidden="true"></span><div class="milestone-copy"><p class="milestone-date">{m.date}</p><h3>{m.title}</h3><p class="milestone-place">{m.place}</p><p>{m.body}</p></div></article>)}
+    {milestones.map((m,i)=><article class:list={['milestone',{'above':i%2===0}]}><button type="button" class="milestone-dot" aria-label={`Go to ${m.date}: ${m.title}`} title={`${m.date} · ${m.title}`}></button><span class="milestone-stem" aria-hidden="true"></span><div class="milestone-copy"><p class="milestone-date">{m.date}</p><h3>{m.title}</h3><p class="milestone-place">{m.place}</p><p>{m.body}</p></div></article>)}
    </div>
   </div>
   <div class="timeline-footer"><span>2017 — 2026</span><div class="timeline-controls"><button type="button" aria-label="Previous experience milestone">←</button><button type="button" aria-label="Next experience milestone">→</button></div><a href="/about/">More about me ↗</a></div>
@@ -28,7 +28,8 @@ const milestones=[
   const track=timeline.querySelector<HTMLElement>('.timeline-track')!;
   const windowEl=timeline.querySelector<HTMLElement>('.timeline-window')!;
   const milestones=[...timeline.querySelectorAll<HTMLElement>('.milestone')];
-  const buttons=[...timeline.querySelectorAll<HTMLButtonElement>('button')];
+  const buttons=[...timeline.querySelectorAll<HTMLButtonElement>('.timeline-controls button')];
+  const points=[...timeline.querySelectorAll<HTMLButtonElement>('.milestone-dot')];
   let frame=0,top=0,range=1,travel=0,active=0,settle=0;
   const clamp=(n:number)=>Math.max(0,Math.min(1,n));
   const render=()=>{
@@ -36,6 +37,7 @@ const milestones=[
    const progress=animated?clamp((scrollY-top-settle)/range):0;
    track.style.transform=animated?`translate3d(${-progress*travel}px,0,0)`:'none';
    active=Math.round(progress*(milestones.length-1));
+   points.forEach((point,i)=>{if(i===active)point.setAttribute('aria-current','step');else point.removeAttribute('aria-current');});
    milestones.forEach((m,i)=>{const visible=!animated||progress>=Math.max(0,(i-.8)/(milestones.length-1));m.dataset.visible=String(visible);});
    buttons[0].disabled=animated?active===0:windowEl.scrollLeft<=0;
    buttons[1].disabled=animated?active===milestones.length-1:windowEl.scrollLeft>=windowEl.scrollWidth-windowEl.clientWidth-2;
@@ -46,6 +48,11 @@ const milestones=[
    if(timeline.dataset.animated==='true'){const next=Math.max(0,Math.min(milestones.length-1,active+direction));scrollTo({top:top+settle+range*next/(milestones.length-1),behavior:'smooth'});}
    else windowEl.scrollBy({left:direction*windowEl.clientWidth*.8,behavior:reduced.matches?'instant':'smooth'});
   };
+  points.forEach((point,i)=>point.addEventListener('click',()=>{
+   if(timeline.dataset.animated==='true')scrollTo({top:top+settle+range*i/(milestones.length-1),behavior:'smooth'});
+   else if(innerWidth<=700)milestones[i].scrollIntoView({block:'center',behavior:reduced.matches?'instant':'smooth'});
+   else windowEl.scrollTo({left:Math.max(0,milestones[i].offsetLeft-140),behavior:reduced.matches?'instant':'smooth'});
+  }));
   buttons[0].addEventListener('click',()=>advance(-1));buttons[1].addEventListener('click',()=>advance(1));
   windowEl.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();advance(e.key==='ArrowRight'?1:-1);}});
   windowEl.addEventListener('scroll',schedule,{passive:true});addEventListener('scroll',schedule,{passive:true});addEventListener('resize',measure,{passive:true});reduced.addEventListener('change',measure);document.fonts.ready.then(measure);measure();
@@ -63,7 +70,11 @@ const milestones=[
  .timeline-track { display:flex; position:relative; width:max-content; height:clamp(470px,calc(100svh - 270px),720px); gap:80px; padding:0 80px 0 140px; }
  .timeline-rail { position:absolute; top:50%; left:0; right:0; height:1px; background:#b8a98f; }
  .milestone { position:relative; width:340px; flex-shrink:0; }
- .milestone-dot { position:absolute; top:calc(50% - 5px); left:0; width:11px; height:11px; border-radius:50%; border:2px solid #1d5b7a; background:#faf6ec; }
+ .milestone-dot { position:absolute; z-index:2; top:calc(50% - 22px); left:-16px; width:44px; height:44px; padding:0; border:0; background:transparent; cursor:pointer; border-radius:50%; }
+ .milestone-dot::after { content:''; position:absolute; top:17px; left:16px; width:11px; height:11px; border-radius:50%; border:2px solid #1d5b7a; background:#faf6ec; transition:transform 180ms ease,background 180ms ease; }
+ .milestone-dot:hover::after,.milestone-dot:focus-visible::after { transform:scale(1.35); background:#dceaf0; }
+ .milestone-dot[aria-current]::after { background:#1d5b7a; }
+ @media(max-width:700px) { .milestone .milestone-dot { top:-9px; left:-41px; } }
  .milestone-stem { position:absolute; top:50%; left:5px; width:1px; height:34px; background:#1d5b7a; transform-origin:top; transform:scaleY(0); transition:transform 600ms cubic-bezier(.16,1,.3,1); }
  .above .milestone-stem { top:calc(50% - 34px); transform-origin:bottom; }
  .milestone-copy { position:absolute; top:calc(50% + 44px); opacity:0; transform:translateY(12px); transition:opacity 650ms ease,transform 650ms cubic-bezier(.16,1,.3,1); }
