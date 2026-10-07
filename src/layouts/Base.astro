@@ -5,6 +5,7 @@ interface Props {
   title?: string;
   description?: string;
   hideHeader?: boolean;
+  hideFooter?: boolean;
   /** Drop <main>'s top padding, for a full-bleed hero that must sit flush
       under the sticky header. Keeps the header. */
   flushTop?: boolean;
@@ -16,6 +17,7 @@ const {
   title,
   description = SITE.description,
   hideHeader = false,
+  hideFooter = false,
   flushTop = false,
   ogImage = '/og.png',
 } = Astro.props;
@@ -99,7 +101,7 @@ const ogImageUrl = new URL(ogImage, Astro.site);
       <slot />
     </main>
 
-    <footer class="site-footer">
+    {!hideFooter && <footer class="site-footer">
       <div class="wrap">
         <p class="footer-name">{SITE.name} — {SITE.role}, {SITE.location}</p>
         <ul class="footer-links">
@@ -112,7 +114,7 @@ const ogImageUrl = new URL(ogImage, Astro.site);
           Built with Astro. No tracking, no cookies.
         </p>
       </div>
-    </footer>
+    </footer>}
   </body>
 </html>
 

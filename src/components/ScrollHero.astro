@@ -77,7 +77,13 @@ const fragments = Array.from({length:24}, (_,i) => ({
   </div>
   <div class="navigation-shell">
     <button class="pyramid-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="portfolio-navigation">
-      <svg viewBox="0 0 42 24" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21Q8 12 12 3Q17 13 22 21Z M12 3Q13 13 15 21 M19 21Q24 14 27 8Q31 16 34 21Z M27 8l2 13 M32 21q3-5 5-9l4 9Z"/></g></svg>
+      <svg class="stepped-pyramid" viewBox="0 0 100 104" aria-hidden="true"><g fill="currentColor" stroke="#faf6ec" stroke-width="1.1" stroke-linejoin="round">
+       <g class="pyramid-tier"><path d="M50 3 28 36 50 45 72 36Z"/><path d="M50 3v42" fill="none"/></g>
+       <g class="pyramid-tier"><path d="m26 39 24 10 24-10 9 17-33 14-33-14Z"/><path d="m26 39 24 10 24-10 M50 49v21" fill="none"/></g>
+       <g class="pyramid-tier"><path d="m16 59 34 15 34-15 8 15-42 18L8 74Z"/><path d="m16 59 34 15 34-15 M50 74v18" fill="none"/></g>
+       <g class="pyramid-tier"><path d="m8 78 42 18 42-18 7 13-49 21L1 91Z"/><path d="m8 78 42 18 42-18 M50 96v16" fill="none"/></g>
+      </g></svg>
+      <svg class="pyramid-underline" viewBox="0 0 100 9" fill="none" aria-hidden="true"><path d="M2 6Q43 0 98 4M14 8Q53 3 86 6"/></svg>
     </button>
     <nav class="hero-nav" id="portfolio-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}</nav>
   </div>
@@ -91,6 +97,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
     const nav=hero.querySelector<HTMLElement>('.hero-nav')!;
     const toggle=hero.querySelector<HTMLButtonElement>('.pyramid-toggle')!;
     const links=[...nav.querySelectorAll<HTMLElement>('a')];
+    const tiers=[...toggle.querySelectorAll<SVGElement>('.pyramid-tier')];
     const background=document.querySelector<HTMLElement>('.paper-background')!;
     const scraps=[...background.querySelectorAll<HTMLElement>('.paper-fragment')];
     const desk=document.querySelector<HTMLElement>('.desk-scene')!;
@@ -142,6 +149,11 @@ const fragments = Array.from({length:24}, (_,i) => ({
       identity.dataset.docked=String(dock>.99);
       const collapse=animated?ramp(p,.835,.94):0;
       set(shell,'--collapse',collapse);
+      links.forEach((link,i)=>{
+        const fold=animated?ramp(collapse,i*.12,.52+i*.12):0;
+        set(link,'--fold',fold);
+        tiers[i].style.opacity=String(animated?ramp(collapse,.28+i*.12,.46+i*.12):1);
+      });
       const navY=mobile?24:42;
       const sx=(w-shellWidth)/2+(x-w/2)*collapse;
       const sy=navY+(top+identityHeight*scale+8-navY)*collapse;
@@ -170,6 +182,10 @@ const fragments = Array.from({length:24}, (_,i) => ({
       hero.dataset.animated=String(!reduced.matches);desk.dataset.animated=String(!reduced.matches);
       h=innerHeight;w=document.documentElement.clientWidth;end=Math.max(1,hero.offsetHeight-h);
       identityHeight=identity.offsetHeight;shellWidth=shell.offsetWidth;
+      links.forEach((link,i)=>{
+        style(link,'--fold-x',`${shellWidth/2-nav.offsetLeft-link.offsetLeft-link.offsetWidth/2}px`);
+        style(link,'--fold-y',`${8+i*9-link.offsetHeight/2}px`);
+      });
       deskTop=desk.offsetTop;deskEnd=Math.max(1,desk.offsetHeight-h);schedule();
     };
     openingCue.addEventListener('click',e=>{e.preventDefault();scrollTo({top:end*.075,behavior:reduced.matches?'instant':'smooth'});});
@@ -220,7 +236,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .question-paper { opacity:var(--question-note); position:relative; max-width:350px; margin:0 auto 20px; padding:25px 26px 18px 38px; background:#fffaf0 url('/img/paper-fibers.svg'); text-align:left; transform:translate(-24px,calc(25px * (1 - var(--question-note)))) rotate(calc(-2deg - 6deg * (1 - var(--question-note)))); filter:drop-shadow(2px 5px 5px #57402018); clip-path:polygon(0 0,100% 0,99.4% 15%,100% 29%,99.2% 43%,100% 58%,99.5% 76%,100% 100%,97% 98%,94% 100%,91% 98.5%,88% 100%,84% 98.6%,81% 100%,77% 98%,73% 100%,69% 98.5%,65% 100%,61% 98%,56% 100%,52% 98.5%,47% 100%,43% 98%,38% 100%,34% 98.6%,29% 100%,25% 98%,20% 100%,16% 98.5%,11% 100%,7% 98%,3% 100%,0 99%); }
   .question-paper p { font-family:Georgia,'Times New Roman',serif; font-size:1.25rem; line-height:1.45; color:#30291f; margin:0; }
   .binding-holes { position:absolute; top:0; bottom:0; left:9px; width:10px; background:radial-gradient(circle,#d2c3a8 3px,transparent 3.5px) center 10px / 10px 22px repeat-y; }
-  .hero-nav { position:absolute; top:0; left:20px; right:20px; display:flex; justify-content:center; flex-wrap:nowrap; gap:clamp(20px,4vw,64px); opacity:calc(var(--nav) * (1 - var(--collapse,0))); transform:translateY(calc(12px * (1 - var(--nav)))) scale(calc(1 - .6 * var(--collapse,0))); }
+  .hero-nav { position:absolute; top:0; left:20px; right:20px; display:flex; justify-content:center; flex-wrap:nowrap; gap:clamp(20px,4vw,64px); opacity:var(--nav); transform:translateY(calc(12px * (1 - var(--nav)))); }
+  .navigation-shell:not([data-open="true"]) .hero-nav a { opacity:calc(1 - var(--fold,0)); transform:translate(calc(var(--fold-x,0px) * var(--fold,0)),calc(var(--fold-y,0px) * var(--fold,0))) scale(calc(1 - .92 * var(--fold,0))); }
   .hero-nav a { position:relative; color:#342b20; text-decoration:none; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:1.65rem; line-height:1.2; padding:10px 8px 16px; }
   .hero-nav a span { display:inline-block; transition:transform 220ms cubic-bezier(.16,1,.3,1),color 220ms; }
   .hero-nav a svg { position:absolute; left:5%; bottom:5px; width:90%; height:9px; stroke:#79613e; stroke-width:1.5; stroke-linecap:round; }
@@ -232,12 +249,13 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .hero-nav a { pointer-events:auto; }
   .navigation-shell[data-collapsed="true"] .hero-nav { pointer-events:none; }
   .navigation-shell[data-collapsed="true"] .hero-nav a { pointer-events:none; }
-  .pyramid-toggle { position:absolute; top:0; left:50%; transform:translateX(-50%) scale(calc(.7 + .3 * var(--collapse))); opacity:var(--collapse); border:0; background:transparent; color:#57472f; padding:6px 10px; min-height:44px; min-width:44px; cursor:pointer; display:flex; align-items:center; flex-direction:column; gap:0; pointer-events:none; }
-  .pyramid-toggle svg { width:34px; height:25px; transition:transform 450ms ease; }
+  .pyramid-toggle { position:absolute; top:0; left:50%; transform:translateX(-50%); opacity:var(--collapse); border:0; background:transparent; color:#292522; padding:2px 6px; min-height:44px; min-width:44px; cursor:pointer; display:flex; align-items:center; flex-direction:column; gap:3px; pointer-events:none; }
+  .pyramid-toggle .stepped-pyramid { width:34px; height:38px; overflow:visible; transition:transform 450ms ease; }
+  .pyramid-toggle .pyramid-underline { width:40px; height:6px; stroke:#79613e; stroke-width:1.5; stroke-linecap:round; }
   .pyramid-toggle span { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.15rem; }
-  .pyramid-toggle:hover svg { transform:translateY(-4px); }
+  .pyramid-toggle:hover .stepped-pyramid { transform:translateY(-2px); }
   .navigation-shell[data-collapsed="true"] .pyramid-toggle { pointer-events:auto; }
-  .navigation-shell[data-open="true"] .hero-nav { top:48px; left:50%; right:auto; width:160px; padding:14px; gap:0; flex-direction:column; background:#fffaf0; box-shadow:2px 8px 22px #57402025; opacity:1; transform:translateX(-50%); pointer-events:auto; border-radius:2px; animation:menu-panel-in 450ms cubic-bezier(.16,1,.3,1); }
+  .navigation-shell[data-open="true"] .hero-nav { top:58px; left:50%; right:auto; width:160px; padding:14px; gap:0; flex-direction:column; background:#fffaf0; box-shadow:2px 8px 22px #57402025; opacity:1; transform:translateX(-50%); pointer-events:auto; border-radius:2px; animation:menu-panel-in 450ms cubic-bezier(.16,1,.3,1); }
   .navigation-shell[data-open="true"] .hero-nav a { pointer-events:auto; font-size:1.45rem; padding:10px 16px; text-align:left; animation:menu-link-in 420ms both; }
   .navigation-shell[data-open="true"] .hero-nav a:nth-child(2) { animation-delay:50ms; }
   .navigation-shell[data-open="true"] .hero-nav a:nth-child(3) { animation-delay:100ms; }
