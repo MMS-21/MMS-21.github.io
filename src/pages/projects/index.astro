@@ -1,36 +1,82 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { PROJECTS } from '../../data/site';
+const featured=PROJECTS.find(p=>p.slug==='ecommerce-clv-churn')!;
+const descriptions:Record<string,{title:string;kind:string;body:string;output:string}>={
+ 'analytics-agent':{title:'From a dataset to a report you can inspect',kind:'AI tooling',body:'An analytics assistant that works through tools and checks its report before writing it.',output:'Python tool loop · Charts · Report validation'},
+ 'ai-tell':{title:'A closer look at document authorship',kind:'Desktop application',body:'A desktop tool that brings document metadata and writing signals together for closer inspection.',output:'Document analysis · Authorship signals · Desktop interface'},
+ 'ab-test':{title:'Is the difference worth trusting?',kind:'Statistical analysis',body:'An A/B testing project that makes hypotheses, confidence intervals, and statistical comparisons explicit.',output:'Hypothesis testing · Confidence intervals'},
+ 'analytics-projects':{title:'Making the numbers easier to explore',kind:'Dashboard collection',body:'Power BI and Tableau work across retail, manufacturing, and housing datasets.',output:'Interactive dashboards · Visual analysis'},
+ 'sql-for-business-analytics':{title:'Finding answers in imperfect data',kind:'SQL analysis',body:'Querying, exploring, and cleaning data across the Chinook, COVID-19, and Nashville housing datasets.',output:'Data cleaning · Joins · Window functions'},
+};
 ---
-
-<Base
-  title="Projects"
-  description="Case studies in customer analytics and agentic AI tooling."
->
-  <div class="wrap">
-    <p class="eyebrow">Projects</p>
-    <h1>Work</h1>
-    <p class="lede">
-      Each case study follows the same shape: the problem, the approach, the
-      tradeoffs, and the result. Numbers come from the actual code.
-    </p>
-
-    <div style="margin-top: 2.5rem;">
-      {
-        PROJECTS.map((p) => (
-          <article class="card">
-            <h3>
-              <a href={`/projects/${p.slug}/`}>{p.name}</a>
-            </h3>
-            <p>{p.tagline}</p>
-            <ul class="tag-row">
-              {p.stack.map((s) => (
-                <li class="tag">{s}</li>
-              ))}
-            </ul>
-          </article>
-        ))
-      }
-    </div>
-  </div>
+<Base title="Projects" description="Explore Moaaz Magdy’s work in data analysis, dashboards, and practical AI tools." hideFooter>
+ <div class="project-collection">
+  <header class="collection-intro">
+   <h1>Ideas, put to work.</h1>
+   <p>Analysis, dashboards, and tools built around a useful question. Take a look at the work—and the decisions behind it.</p>
+   <nav aria-label="Browse projects"><a href="#customer-study">Customer analytics</a><a href="#more-projects">Tools &amp; more</a></nav>
+  </header>
+  <article class="lead-project" id="customer-study" aria-labelledby="customer-title">
+   <div class="lead-copy">
+    <p class="project-kind">Customer analytics · Case study</p>
+    <h2 id="customer-title"><a href="/projects/ecommerce-clv-churn/">Who needs attention first?</a></h2>
+    <p>When customers differ in value and likelihood of returning, where should a retention team focus?</p>
+    <p class="project-detail">A project informed by helping a friend with an ecommerce business. It brings customer segments, estimated future value, and churn risk into one view.</p>
+    <ul class="project-tools" aria-label="Tools used">{featured.stack.map(s=><li>{s}</li>)}</ul>
+    <div class="project-links"><a class="read-study" href="/projects/ecommerce-clv-churn/">Explore the case study <span aria-hidden="true">→</span></a><a href={featured.repo} target="_blank" rel="noopener noreferrer">View code ↗</a></div>
+   </div>
+   <figure class="evidence-sheet">
+    <a href="/projects/ecommerce-clv-churn/" aria-label="Explore the customer retention case study"><img src="/img/ecommerce/segment-revenue.svg" width="900" height="734" alt="Customer segments compared by their share of customers and historical revenue." /></a>
+    <figcaption>A look inside the analysis: customer share versus historical revenue share.</figcaption>
+   </figure>
+  </article>
+  <section class="project-index" id="more-projects" aria-labelledby="more-title">
+   <div class="section-intro"><h2 id="more-title">More from the workbench</h2><p>Different questions. Different ways of building an answer.</p></div>
+   {PROJECTS.filter(p=>p.slug!==featured.slug).map(p=>{const copy=descriptions[p.slug];return <article class="project-entry">
+    <div class="entry-type"><p>{copy.kind}</p><span>{p.name}</span></div>
+    <div class="entry-copy"><h3><a href={`/projects/${p.slug}/`}>{copy.title}</a></h3><p>{copy.body}</p><p class="entry-output">{copy.output}</p></div>
+    <div class="entry-links"><a href={`/projects/${p.slug}/`}>Read the project <span aria-hidden="true">→</span></a><a href={p.repo} target="_blank" rel="noopener noreferrer">View code ↗</a></div>
+   </article>})}
+  </section>
+  <aside class="collection-close"><p>Something here sparked a question?</p><a href="/#connect">Let’s talk about it →</a></aside>
+ </div>
 </Base>
+<style>
+ @font-face{font-family:"Cormorant Garamond";src:url("/fonts/cormorant-garamond-medium.ttf") format("truetype");font-weight:500;font-style:normal;font-display:swap;}
+ .project-collection{max-width:1180px;margin:auto;padding:20px 38px 0;color:#302d28}
+ .collection-intro{padding:16px 0 60px;max-width:760px}
+ h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;letter-spacing:-.025em;text-wrap:balance}
+ h1{font-size:clamp(3.4rem,7vw,5.8rem);line-height:1;margin:0 0 24px}
+ .collection-intro>p{font-size:1.12rem;line-height:1.85;color:#685e50;max-width:600px}
+ .collection-intro nav{display:flex;gap:28px;flex-wrap:wrap;margin-top:28px;font-size:.85rem}
+ a{color:inherit;text-underline-offset:5px} a:hover{color:#805e28} a:focus-visible{outline:2px solid #8c692d;outline-offset:6px}
+ .lead-project{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;padding:45px 0 65px;border-top:1px solid #cfc3ad;scroll-margin-top:110px}
+ .project-kind{font-size:.78rem;color:#75634a;margin:0 0 18px}
+ .lead-copy h2{font-size:clamp(2.7rem,4vw,3.8rem);line-height:1.05;margin:0 0 24px}
+ h2 a,h3 a{text-decoration:none}
+ .lead-copy>p:not(.project-kind){font-size:1rem;line-height:1.8}
+ .lead-copy .project-detail{color:#685e50;font-size:.9rem!important}
+ .project-tools{display:flex;flex-wrap:wrap;gap:6px 16px;list-style:none;padding:0;margin:24px 0;font-size:.72rem;color:#685e50}
+ .project-links{display:flex;gap:24px;align-items:center;flex-wrap:wrap;font-size:.82rem;margin-top:28px}
+ .read-study{font-weight:650}
+ .evidence-sheet{margin:0;padding:18px;background:#fffcf5;box-shadow:0 12px 32px #3b2e1914;transform:rotate(2deg)}
+ .evidence-sheet img{display:block;width:100%;height:auto}
+ figcaption{font-size:.72rem;line-height:1.6;color:#685e50;padding:12px 8px 3px}
+ .project-index{scroll-margin-top:110px}
+ .section-intro{padding:35px 0 28px;border-top:1px solid #cfc3ad}
+ .section-intro h2{font-size:2.5rem;margin:0 0 12px}
+ .section-intro p{font-size:.9rem;color:#685e50;margin:0}
+ .project-entry{display:grid;grid-template-columns:180px 1fr 145px;gap:30px;padding:36px 0;border-bottom:1px solid #d9cfbd;align-items:start}
+ .entry-type p{font-size:.78rem;margin:5px 0 7px;color:#685e50}
+ .entry-type span{font-size:.68rem;color:#756b5c;overflow-wrap:anywhere}
+ .entry-copy h3{font-size:2rem;margin:0 0 12px;line-height:1.15}
+ .entry-copy>p{font-size:.9rem;line-height:1.8;margin:0;color:#685e50}
+ .entry-copy .entry-output{font-size:.72rem;margin-top:16px}
+ .entry-links{display:flex;flex-direction:column;gap:14px;font-size:.77rem;padding-top:8px}
+ .collection-close{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:65px 0 12px}
+ .collection-close p{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;margin:0}
+ .collection-close a{font-size:.9rem;white-space:nowrap}
+ @media(max-width:850px){.lead-project{gap:30px}.project-entry{grid-template-columns:140px 1fr}.entry-links{grid-column:2;flex-direction:row;gap:24px;padding:0}}
+ @media(max-width:600px){.project-collection{padding:12px 24px 0}.collection-intro{padding-bottom:36px}.collection-intro>p{font-size:1rem}.lead-project{grid-template-columns:1fr;padding:32px 0 44px;gap:36px}.evidence-sheet{max-width:440px;transform:rotate(1deg)}.project-entry{grid-template-columns:1fr;gap:15px;padding:28px 0}.entry-type{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}.entry-type p{margin:0}.entry-copy h3{font-size:1.85rem}.entry-links{grid-column:auto;margin-top:4px}.collection-close{align-items:start;flex-direction:column;padding-top:45px}.collection-close p{font-size:1.75rem}}
+</style>
