@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import ContributionSkyline from '../components/ContributionSkyline.astro';
 import ScrollHero from '../components/ScrollHero.astro';
 import { FEATURED } from '../data/site';
 
@@ -20,22 +19,6 @@ import { FEATURED } from '../data/site';
       <div class="paper-copy"><h2>Featured Work</h2><ul class="desk-projects">{FEATURED.map(p=><li><a href={`/projects/${p.slug}/`}>{p.name}<span aria-hidden="true">↗</span></a><p>{p.tagline}</p></li>)}</ul><a href="/projects/">All projects →</a></div>
     </article>
   </section>
-  <div class="wrap">
-    <ContributionSkyline />
-    <section>
-      <h2>How I work</h2>
-      <p>
-        The parts I care about are the parts nobody screenshots: tests that pass
-        without an API key, prompts derived from the data instead of hardcoded,
-        output validated before it is written, and honest reporting when a method
-        does not work.
-      </p>
-      <p>
-        I write about what I build, including what broke.
-        <a href="/writing/">Read the write-ups →</a>
-      </p>
-    </section>
-  </div>
 </Base>
 
 <style>

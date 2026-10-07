@@ -66,11 +66,18 @@ const fragments = Array.from({length:24}, (_,i) => ({
         </div>
       </div>
     </div>
-    <nav class="hero-nav" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}</nav>
+
   </div>
   <div class="hero-identity">
     <div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={220} label="Moaaz avatar" /></div></div>
     <h1>{SITE.name}</h1>
+  </div>
+  <div class="navigation-shell">
+    <button class="pyramid-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="portfolio-navigation">
+      <svg viewBox="0 0 110 46" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path fill="#ddc9a5" d="M3 40 26 5 49 40Z"/><path d="m26 5 7 35H3"/><path fill="#e8d8bb" d="m43 40 19-28 19 28Z"/><path d="m62 12 5 28H43"/><path fill="#f0e4cd" d="m78 40 13-19 13 19Z"/><path d="m91 21 3 19H78"/></g></svg>
+      <span>Menu</span>
+    </button>
+    <nav class="hero-nav" id="portfolio-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}</nav>
   </div>
 </section>
 <script>
@@ -79,13 +86,21 @@ const fragments = Array.from({length:24}, (_,i) => ({
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const identity = hero.querySelector<HTMLElement>('.hero-identity')!;
     const nav = hero.querySelector<HTMLElement>('.hero-nav')!;
+    const shell = hero.querySelector<HTMLElement>('.navigation-shell')!;
+    const toggle = hero.querySelector<HTMLButtonElement>('.pyramid-toggle')!;
+    let menuOpen=false;
+    const closeMenu=(focus=false)=>{menuOpen=false; shell.dataset.open='false'; toggle.setAttribute('aria-expanded','false'); toggle.setAttribute('aria-label','Open navigation menu'); if(focus)toggle.focus(); schedule();};
+    toggle.addEventListener('click',()=>{menuOpen=!menuOpen; shell.dataset.open=String(menuOpen); toggle.setAttribute('aria-expanded',String(menuOpen)); toggle.setAttribute('aria-label',menuOpen?'Close navigation menu':'Open navigation menu'); schedule();});
+    addEventListener('keydown',e=>{if(e.key==='Escape'&&menuOpen)closeMenu(true);});
+    document.addEventListener('click',e=>{if(menuOpen&&!shell.contains(e.target as Node))closeMenu();});
+    nav.addEventListener('click',e=>{if((e.target as HTMLElement).closest('a'))closeMenu();});
     const background = document.querySelector<HTMLElement>('.paper-background')!;
     const papers = [...document.querySelectorAll<HTMLElement>('.work-paper')];
     const scraps = [...background.querySelectorAll<HTMLElement>('.paper-fragment')];
     const moments = [['notebook',.18,.05],['arrow-one',.25,.045],['arrow-two',.31,.045],['lens',.37,.05],['role',.44,.04],['location',.50,.04],['question-line',.56,.045],['question-curve',.62,.045],['question-note',.68,.06]] as const;
     const clamp = (n:number) => Math.max(0,Math.min(1,n));
     const ease = (n:number) => { const t=clamp(n); return t*t*(3-2*t); };
-    let frame=0, h=0, w=0, end=1, total=1;
+    let frame=0, h=0, w=0, end=1, total=1, identityHeight=254, shellWidth=640;
     let targets:{x:number,y:number,width:number,height:number}[]=[];
     const values = new WeakMap<HTMLElement,Map<string,string>>();
     const set = (el:HTMLElement,key:string,value:number) => {
@@ -96,6 +111,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
     const measure = () => {
       hero.dataset.animated=String(!reduced.matches);
       h=innerHeight; w=document.documentElement.clientWidth;
+      identityHeight=identity.offsetHeight; shellWidth=shell.offsetWidth;
       end=Math.max(1,hero.offsetHeight-h); total=Math.max(end+1,document.documentElement.scrollHeight-h);
       // Offsets are layout geometry: transformed paper rectangles would feed back into the animation.
       targets=papers.map(el=>({x:(el.offsetParent as HTMLElement).offsetLeft+el.offsetLeft+el.offsetWidth/2,y:(el.offsetParent as HTMLElement).offsetTop+el.offsetTop,width:el.offsetWidth,height:el.offsetHeight}));
@@ -113,10 +129,9 @@ const fragments = Array.from({length:24}, (_,i) => ({
       const depart=animated?ease((p-.77)/.08):0;
       set(hero,'--depart',depart);
       const handoff=animated?ease((p-.85)/.15):1;
-      set(hero,'--handoff',animated?ease((p-.85)/.03):1);
+      set(hero,'--handoff',animated?ease((p-.85)/.06):1);
       set(hero,'--nav',ease((p-.12)/.05));
-      nav.inert=animated&&p<.14;
-      nav.style.visibility=p<.12?'hidden':'visible';
+
       const travel=animated?clamp((y-end*.79)/(total-end*.79)):1;
       // Get the portrait clear of the growing papers early, then finish shrinking at the page bottom.
       const move=animated?ease((p-.79)/.19):1, shrink=ease(travel);
@@ -128,6 +143,19 @@ const fragments = Array.from({length:24}, (_,i) => ({
       const identityTransform=animated?`translate3d(${x-170}px,${top}px,0) scale(${scale})`:'none';
       if(identity.style.transform!==identityTransform) identity.style.transform=identityTransform;
       identity.dataset.docked=String(travel>.85);
+      const collapse=animated?ease((p-.79)/.20):0;
+      set(shell,'--collapse',collapse);
+      set(shell,'--nav',ease((p-.12)/.05));
+      const navTop=w<=600?24:Math.min(65,Math.max(25,h*.06));
+      const shellX=(w-shellWidth)/2+(x-shellWidth/2-(w-shellWidth)/2)*collapse;
+      const shellY=navTop+(top+identityHeight*scale+14-navTop)*collapse;
+      shell.style.transform=`translate3d(${shellX}px,${shellY}px,0)`;
+      shell.dataset.collapsed=String(collapse>.98);
+      if(collapse<.8&&menuOpen)closeMenu();
+      toggle.inert=collapse<.98;
+      nav.inert=(animated&&p<.14)||(collapse>.65&&!menuOpen);
+      shell.style.visibility=p<.12?'hidden':'visible';
+
       papers.forEach((paper,i)=>{
         const target=targets[i]; if (!target) return;
         const sourceX=w/2+(i===0?-220:220)*Math.min(1,w/640);
@@ -138,7 +166,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
         const paperTransform=animated?`translate3d(${dx}px,${dy}px,0) scale(${size}) rotate(${(i===0?-4:3)*t}deg)`:`rotate(${i===0?-3:2}deg)`;
         if(paper.style.transform!==paperTransform) paper.style.transform=paperTransform;
         set(paper,'--paper-copy',ease((t-.25)/.65));
-        paper.style.opacity=String(animated?ease((p-.85)/.03):1);
+        paper.style.opacity=String(animated?ease((p-.85)/.06):1);
         paper.style.visibility=animated&&p<.85?'hidden':'visible';
         paper.inert=animated&&t<.9;
       });
@@ -155,7 +183,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <style>
   .scroll-hero { --assembly:1; --identity:1; --role:1; --location:1; --question-line:1; --question-curve:1; --question-note:1; --notebook:1; --arrow-one:1; --arrow-two:1; --lens:1; --nav:1; position:relative; margin:0; }
   .hero-stage { position:relative; min-height:840px; height:100svh; isolation:isolate; overflow:hidden; text-align:center; }
-  .scroll-hero[data-animated="true"] { height:440svh; }
+  .scroll-hero[data-animated="true"] { height:540svh; }
   [data-animated="true"] .hero-stage { position:sticky; top:0; min-height:0; }
   @font-face { font-family:'Cormorant Garamond'; src:url('/fonts/cormorant-garamond-medium.ttf') format('truetype'); font-weight:500; font-display:swap; }
   .paper-background { --assembly:1; position:fixed; inset:0; z-index:-1; pointer-events:none; contain:strict; }
@@ -195,7 +223,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .question-paper { opacity:var(--question-note); position:relative; max-width:350px; margin:0 auto 20px; padding:25px 26px 18px 38px; background:#fffaf0 url('/img/paper-fibers.svg'); text-align:left; transform:translate(-24px,calc(25px * (1 - var(--question-note)))) rotate(calc(-2deg - 6deg * (1 - var(--question-note)))); filter:drop-shadow(2px 5px 5px #57402018); clip-path:polygon(0 0,100% 0,99.4% 15%,100% 29%,99.2% 43%,100% 58%,99.5% 76%,100% 100%,97% 98%,94% 100%,91% 98.5%,88% 100%,84% 98.6%,81% 100%,77% 98%,73% 100%,69% 98.5%,65% 100%,61% 98%,56% 100%,52% 98.5%,47% 100%,43% 98%,38% 100%,34% 98.6%,29% 100%,25% 98%,20% 100%,16% 98.5%,11% 100%,7% 98%,3% 100%,0 99%); }
   .question-paper p { font-family:Georgia,'Times New Roman',serif; font-size:1.25rem; line-height:1.45; color:#30291f; margin:0; }
   .binding-holes { position:absolute; top:0; bottom:0; left:9px; width:10px; background:radial-gradient(circle,#d2c3a8 3px,transparent 3.5px) center 10px / 10px 22px repeat-y; }
-  .hero-nav { position:absolute; top:clamp(25px,6vh,65px); left:20px; right:20px; display:flex; justify-content:center; flex-wrap:wrap; gap:clamp(32px,5vw,85px); opacity:var(--nav); transform:translateY(calc(12px * (1 - var(--nav)))); }
+  .hero-nav { position:absolute; top:0; left:20px; right:20px; display:flex; justify-content:center; flex-wrap:wrap; gap:clamp(32px,5vw,85px); opacity:calc(var(--nav) * (1 - var(--collapse,0))); transform:translateY(calc(12px * (1 - var(--nav)))) scale(calc(1 - .6 * var(--collapse,0))); }
   .hero-nav a { position:relative; color:#342b20; text-decoration:none; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:1.65rem; line-height:1.2; padding:10px 8px 16px; }
   .hero-nav a span { display:inline-block; transition:transform 220ms cubic-bezier(.16,1,.3,1),color 220ms; }
   .hero-nav a svg { position:absolute; left:5%; bottom:5px; width:90%; height:9px; stroke:#79613e; stroke-width:1.5; stroke-linecap:round; }
@@ -203,6 +231,23 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .hero-nav a:hover span, .hero-nav a:focus-visible span { transform:translateY(-3px) rotate(-3deg); color:#705832; }
   .hero-nav a:hover path, .hero-nav a:focus-visible path { stroke-dashoffset:0; }
   .hero-nav a:focus-visible { outline:1px solid #79613e; outline-offset:4px; border-radius:4px; }
+  .navigation-shell { --collapse:0; --nav:1; position:fixed; top:0; left:0; width:640px; max-width:calc(100% - 32px); transform:translate3d(calc(50vw - 320px),50px,0); z-index:30; pointer-events:none; }
+  .hero-nav a { pointer-events:auto; }
+  .navigation-shell[data-collapsed="true"] .hero-nav { pointer-events:none; }
+  .navigation-shell[data-collapsed="true"] .hero-nav a { pointer-events:none; }
+  .pyramid-toggle { position:absolute; top:0; left:50%; transform:translateX(-50%) scale(calc(.7 + .3 * var(--collapse))); opacity:var(--collapse); border:0; background:transparent; color:#57472f; padding:6px 10px; min-height:54px; cursor:pointer; display:flex; align-items:center; flex-direction:column; gap:0; pointer-events:none; }
+  .pyramid-toggle svg { width:86px; height:37px; transition:transform 450ms ease; }
+  .pyramid-toggle span { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.15rem; }
+  .pyramid-toggle:hover svg { transform:translateY(-4px); }
+  .navigation-shell[data-collapsed="true"] .pyramid-toggle { pointer-events:auto; }
+  .navigation-shell[data-open="true"] .hero-nav { top:78px; left:50%; right:auto; width:160px; padding:14px; gap:0; flex-direction:column; background:#fffaf0; box-shadow:2px 8px 22px #57402025; opacity:1; transform:translateX(-50%); pointer-events:auto; border-radius:2px; animation:menu-panel-in 450ms cubic-bezier(.16,1,.3,1); }
+  .navigation-shell[data-open="true"] .hero-nav a { pointer-events:auto; font-size:1.45rem; padding:10px 16px; text-align:left; animation:menu-link-in 420ms both; }
+  .navigation-shell[data-open="true"] .hero-nav a:nth-child(2) { animation-delay:50ms; }
+  .navigation-shell[data-open="true"] .hero-nav a:nth-child(3) { animation-delay:100ms; }
+  .navigation-shell[data-open="true"] .hero-nav a:nth-child(4) { animation-delay:150ms; }
+  @keyframes menu-panel-in { from { opacity:0; clip-path:inset(0 0 100% 0); } to { opacity:1; clip-path:inset(0); } }
+  @keyframes menu-link-in { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:none; } }
+  @media(prefers-reduced-motion:reduce) { .pyramid-toggle svg { transition:none; } .navigation-shell[data-open="true"] .hero-nav, .navigation-shell[data-open="true"] .hero-nav a { animation:none; } }
   .skip-intro { position:absolute; top:12px; left:12px; z-index:5; padding:10px 16px; background:var(--bg); transform:translateY(-200%); }
   .skip-intro:focus { transform:none; }
   @media (max-width:600px) {
@@ -217,7 +262,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
     .question-cue { transform:translateX(-6px); }
     .question-paper { transform:translate(-6px,calc(25px * (1 - var(--question-note)))) rotate(-2deg); padding:22px 20px 18px 32px; margin-bottom:16px; }
     .question-paper p { font-size:1.15rem; }
-    .hero-nav { opacity:calc(var(--nav) * (1 - var(--handoff,0))); gap:clamp(14px,4vw,26px); top:24px; left:8px; right:8px; }
+    .hero-nav { gap:clamp(14px,4vw,26px); top:0; left:8px; right:8px; }
     .hero-nav a { font-size:1.35rem; padding-inline:4px; }
 
   }
@@ -231,7 +276,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
     .question-paper { padding-top:18px; margin-bottom:10px; }
     .question-paper p { font-size:1.05rem; }
     .hero-location { margin-bottom:5px; }
-    .hero-nav { top:12px; }
+    .hero-nav { top:0; }
   }
   @media (prefers-reduced-motion:reduce) { .hero-identity { position:absolute; top:155px; left:calc(50% - 170px); } .hero-stage { height:auto; min-height:840px; } .hero-nav a span, .hero-nav a path { transition:none; } .hero-nav a:hover span, .hero-nav a:focus-visible span { transform:none; } }
 </style>
