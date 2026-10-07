@@ -1,4 +1,5 @@
 ---
+import CairoLinework from '../components/CairoLinework.astro';
 import Base from '../layouts/Base.astro';
 import { SITE } from '../data/site';
 const credentials=[
@@ -9,6 +10,7 @@ const credentials=[
 ---
 <Base title="About" description="Meet Moaaz Magdy: a business analyst in Cairo working with operational data, reporting, dashboards, and practical tools." hideFooter>
  <div class="about-page">
+  <CairoLinework />
   <header class="about-opening">
    <div><h1>Business questions.<br />A practical way forward.</h1><p class="introduction">I’m Moaaz, a business analyst based in Cairo. I work with operational data, build reports and dashboards, and explore tools that make analysis easier to repeat and check.</p></div>
    <aside class="personal-note"><svg viewBox="0 0 160 90" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m10 74 40-61 35 61Z m40-61v61 M63 74 30-44 27 44 M105 74l19-29 21 29 M5 79q70-7 149 0"/><path d="m102 20 5-7 m18 8 8-3 m-7 19 9 3"/></g></svg><p>Based in Cairo.<br />Curious about what comes next.</p><a href={SITE.links.linkedin} target="_blank" rel="noopener noreferrer">Find me on LinkedIn ↗</a></aside>
@@ -42,7 +44,8 @@ const credentials=[
  </div>
 </Base>
 <style>
- .about-page{max-width:1120px;margin:auto;padding:28px 40px 20px;color:#302d28}
+ .about-page{position:relative;isolation:isolate;max-width:1120px;margin:auto;padding:28px 40px 20px;color:#302d28}
+ .about-opening,.about-section,.about-close{position:relative;z-index:1}
  h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;text-wrap:balance;letter-spacing:-.025em}
  .about-opening{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:50px;align-items:center;padding:12px 0 65px}
  h1{font-size:clamp(3rem,5.5vw,5rem);line-height:1.04;margin:0 0 28px}
