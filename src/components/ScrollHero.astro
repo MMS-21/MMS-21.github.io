@@ -1,5 +1,5 @@
 ---
-import PyramidIcon from './PyramidIcon.astro';
+import FlowerMenu from './FlowerMenu.astro';
 import { Mascot } from 'page-mascot';
 import { SITE } from '../data/site';
 const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'#about',label:'About'},{href:'/contact/',label:'Contact'}];
@@ -78,8 +78,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
   </div>
   <div class="navigation-shell">
     <button class="pyramid-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="portfolio-navigation">
-      <PyramidIcon />
-      <svg class="pyramid-underline" viewBox="0 0 100 9" fill="none" aria-hidden="true"><path d="M2 6Q43 0 98 4M14 8Q53 3 86 6"/></svg>
+      <FlowerMenu />
+      
     </button>
     <nav class="hero-nav" id="portfolio-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}</nav>
   </div>
@@ -93,7 +93,6 @@ const fragments = Array.from({length:24}, (_,i) => ({
     const nav=hero.querySelector<HTMLElement>('.hero-nav')!;
     const toggle=hero.querySelector<HTMLButtonElement>('.pyramid-toggle')!;
     const links=[...nav.querySelectorAll<HTMLElement>('a')];
-    const tiers=[...toggle.querySelectorAll<SVGElement>('.pyramid-tier')];
     const background=document.querySelector<HTMLElement>('.paper-background')!;
     const scraps=[...background.querySelectorAll<HTMLElement>('.paper-fragment')];
     const desk=document.querySelector<HTMLElement>('.desk-scene')!;
@@ -148,7 +147,6 @@ const fragments = Array.from({length:24}, (_,i) => ({
       links.forEach((link,i)=>{
         const fold=animated?ramp(collapse,i*.12,.52+i*.12):0;
         set(link,'--fold',fold);
-        tiers[i].style.opacity=String(animated?ramp(collapse,.28+i*.12,.46+i*.12):1);
       });
       const navY=mobile?24:42;
       const sx=(w-shellWidth)/2+(x-w/2)*collapse;
