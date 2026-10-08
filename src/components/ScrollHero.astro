@@ -1,5 +1,6 @@
 ---
 import FlowerMenu from './FlowerMenu.astro';
+import AnalystDesk from './AnalystDesk.astro';
 import WelcomeGarden from './WelcomeGarden.astro';
 import PaperLandmark from './PaperLandmark.astro';
 import FloralAccent from './FloralAccent.astro';
@@ -28,45 +29,9 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction">
   <div class="dock-backdrop" aria-hidden="true"></div>
   <div class="hero-stage" id="hero-story" tabindex="-1">
-    <div class="hero-illustrations">
-      <div class="hero-art">
-        <svg class="ink-sketch" viewBox="0 0 640 180" fill="none" aria-hidden="true" focusable="false">
-          <g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <g class="doodle notebook">
-            <path fill="#f6eddb" d="M39 40 164 29 179 141 54 152Z" />
-            <path d="m51 47 101-9 12 91-101 10Z M57 30l11 121 M80 51l54-5 M82 60l32-3" />
-            <path d="m83 115-3-32 m3 32 62-6 M96 111l-1-15 m17 13-2-29 m20 27-3-41" />
-            <path class="draw-line" pathLength="1" d="m85 96 19-16 14 5 23-23" />
-            <path d="m135 62 7-1-1 8 M30 126l-7 10 m10-6-9-3 M176 45l8-8 m-4 15 12-2" />
-            </g>
-            <g class="doodle arrow-one"><path pathLength="1" d="M184 100c18 17 30 20 46 12 m-10-3 11 2-5 9" />
-            </g>
-            <g class="doodle lens">
-            <path fill="#f6eddb" d="m471 32 103 8-7 104-103-9Z" />
-            <path d="m487 49 66 5 m-67 8 40 3 m-43 48 23 2 m-24 10 31 2" />
-            <circle cx="544" cy="91" r="27" fill="var(--bg)" />
-            <circle cx="544" cy="91" r="21" />
-            <path class="draw-line check-mark" pathLength="1" d="m533 91 8 8 15-17" />
-            <path d="m563 112 24 28c5 6 14-2 9-8l-26-28 M587 150c-10 12-23 16-39 12 m-83-12-11 5 m8-14-10-2 M583 54l7-10 m1 19 12-2" />
-            </g>
-            <g class="doodle arrow-two"><path pathLength="1" d="M410 107c12-11 23-10 39 1 m-6-9 7 10-12 2" /></g>
-          </g>
-        </svg>
-
-
-      </div>
-
-    </div>
+    <AnalystDesk />
     <a class="scroll-cue opening-cue" href="#hero-story"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
     <a class="scroll-cue hero-end-cue" href="#featured-work"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
-    <div class="hero-details">
-      <p class="hero-role">Operations Reporting &amp; Data Analysis</p>
-      <p class="hero-location">{SITE.location}</p>
-      <div class="bio-intro">
-        <div class="question-cue"><p class="margin-note">What I bring to the desk.</p><svg class="question-arrow" viewBox="0 0 100 55" fill="none" aria-hidden="true"><path d="M8 7C72-5 90 17 68 43m-5-13 4 15 15-6" /></svg></div>
-        <div class="notebook-garden"><div class="question-paper"><span class="binding-holes" aria-hidden="true"></span><p>Business analysis, clear reporting, and practical tools—built to make everyday work easier.</p></div><FloralAccent mode="edge" /></div>
-      </div>
-    </div>
 
   </div>
   <div class="opening-welcome"><WelcomeGarden /></div>
@@ -126,18 +91,23 @@ const fragments = Array.from({length:24}, (_,i) => ({
       scraps.forEach((scrap,i)=>set(scrap,'--assembly',animated?ease(((p-.07)-(i%6)*.006)/.15):1));
       const lift=animated?ramp(p,.07,.13):1;
       set(hero,'--identity',lift);
+      const workReveal=animated?ramp(p,.18,.25):1;
+      set(hero,'--work-reveal',workReveal);style(hero,'--work-visibility',workReveal>.01?'visible':'hidden');
+      set(hero,'--paper-reveal',animated?ramp(p,.25,.55):1);
+      hero.querySelector<HTMLElement>('.analyst-desk')!.inert=workReveal<.9;
       set(hero,'--opening-welcome',animated?1-ramp(p,.025,.07):0);
       for(const [name,a,b,c,d] of moments)set(hero,`--${name}`,animated?ramp(p,a,b)*(1-ramp(p,c,d)):1);
       set(hero,'--depart',0);set(hero,'--handoff',0);
       cue(openingCue,animated?1-ramp(p,0,.025):0);
-      cue(endCue,animated?ramp(p,.59,.61)*(1-ramp(p,.65,.675)):0);
-      const dock=animated?ramp(p,.835,.94):0,scale=1-.62*dock;
+      cue(endCue,0);
+      const dock=animated?ramp(p,.835,.94):0,scale=1-.52*lift-.10*dock;
       set(hero,'--dock',dock);
       const mobile=w<=700;
       const initialY=h/2-(mobile?215:240);
-      const finalHeroY=mobile?105:Math.max(90,h*.16);
+      const finalHeroY=mobile?65:110;
       const baseY=initialY+(finalHeroY-initialY)*lift;
-      const x=w/2+(18+340*.38/2-w/2)*dock;
+      const signatureX=mobile?84:103;
+      const x=w/2+(signatureX-w/2)*lift;
       const top=baseY+(12-baseY)*dock;
       style(identity,'transform',`translate3d(${(x-170).toFixed(2)}px,${top.toFixed(2)}px,0) scale(${scale.toFixed(4)})`);
       identity.dataset.docked=String(dock>.99);
@@ -182,7 +152,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <style>
   .scroll-hero { --assembly:1; --identity:1; --role:1; --location:1; --question-line:1; --question-curve:1; --question-note:1; --notebook:1; --arrow-one:1; --arrow-two:1; --lens:1; --nav:1; position:relative; margin:0; }
   .hero-stage { position:relative; min-height:840px; height:100svh; isolation:isolate; overflow:hidden; text-align:center; }
-  .scroll-hero[data-animated="true"] { height:880svh; }
+  .scroll-hero[data-animated="true"] { height:480svh; }
   [data-animated="true"] .hero-stage { position:sticky; top:0; min-height:0; }
   @font-face { font-family:'Cormorant Garamond'; src:url('/fonts/cormorant-garamond-medium.ttf') format('truetype'); font-weight:500; font-display:swap; }
   .paper-background { --assembly:1; position:fixed; inset:0; z-index:-1; pointer-events:none; contain:strict; opacity:var(--paper-visible,0); }
@@ -312,4 +282,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
  .name-english{display:block;font-size:1.3rem;line-height:1.25;color:#75664f;text-shadow:1px 2px 2px #6c593b18;font-weight:500;letter-spacing:.01em}
  .name-arabic{display:block;font-family:'Diwani Bent',serif;font-size:3.2rem;font-weight:700;line-height:1.1;letter-spacing:0;margin-top:0}
  @media(max-width:700px){.name-arabic{font-size:2.8rem}.name-english{font-size:1.1rem}.hero-identity h1{margin-top:-20px}.hero-details{translate:0 45px}}
+</style>
+
+<style>
+@media(prefers-reduced-motion:reduce){.hero-identity{top:90px;left:-67px;transform:scale(.48)}.hero-stage{min-height:850px}@media(max-width:700px){.hero-identity{top:20px;left:-86px}.hero-stage{min-height:900px}}}
 </style>
