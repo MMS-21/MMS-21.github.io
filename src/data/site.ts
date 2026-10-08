@@ -5,7 +5,7 @@ export const SITE = {
   name: 'Moaaz Magdy',
   title: 'Moaaz Magdy | Data & Business Analyst',
   description:
-    'Making everyday business data easier to trust and act on. Explore my analyses, dashboards, and practical AI tools. Say hi to Lulu along the way.',
+    'Clear data. Better decisions. Analyses, dashboards, and practical AI tools by Moaaz Magdy.',
   role: 'Data & Business Analyst',
   location: 'Cairo, Egypt',
   email: 'moaz.magdy220@gmail.com',
