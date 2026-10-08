@@ -106,7 +106,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       set(hero,'--dock',dock);
       const mobile=w<=700;
       const initialY=h/2-(mobile?215:240);
-      const finalHeroY=mobile?65:12;
+      const finalHeroY=mobile?45:12;
       const baseY=initialY+(finalHeroY-initialY)*lift;
       const signatureX=mobile?84:103;
       const x=w/2+(signatureX-w/2)*lift;
