@@ -1,4 +1,7 @@
-<div class="welcome-garden"><p aria-label="Welcome to my little corner.">{'Welcome'.split('').map((letter,i)=><span style={`--letter:${i}`}>{letter}</span>)}</p><span class="welcome-follow" aria-hidden="true">to my little corner.</span><canvas aria-hidden="true"></canvas></div>
+---
+const { word = 'Welcome', follow = 'to my little corner.' } = Astro.props;
+---
+<div class="welcome-garden"><p aria-label={`${word} ${follow}`}>{word.split('').map((letter,i)=><span style={`--letter:${i}`}>{letter}</span>)}</p><span class="welcome-follow" aria-hidden="true">{follow}</span><canvas aria-hidden="true"></canvas></div>
 <script>
  import { startWelcomeGardens } from '../scripts/welcome-garden.js';
  startWelcomeGardens();

@@ -3,7 +3,7 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
 ---
 <nav class="scroll-rail" aria-label="Page sections">
  <div class="rail-line" aria-hidden="true"><span class="rail-fill"></span><span class="rail-light"></span></div>
- {stops.map((stop,i)=><a href={stop.id==='connect'?'/contact/':`#${stop.id}`} data-section={stop.id} class="rail-stop" style={`--stop:${i/(stops.length-1)}`} aria-label={`Go to ${stop.label}`}><span class="rail-dot" aria-hidden="true"></span><span class="rail-label">{stop.label}</span></a>)}
+ {stops.map((stop,i)=><a href={`#${stop.id}`} data-section={stop.id} class="rail-stop" style={`--stop:${i/(stops.length-1)}`} aria-label={`Go to ${stop.label}`}><span class="rail-dot" aria-hidden="true"></span><span class="rail-label">{stop.label}</span></a>)}
 </nav>
 <script>
  const rail=document.querySelector<HTMLElement>('.scroll-rail');

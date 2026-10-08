@@ -11,7 +11,7 @@ import FloralAccent from './FloralAccent.astro';
     <FloralAccent mode="edge" />
    </article>
    <article class="work-paper hr-paper">
-    <a class="preview" href="/projects/hr-attrition-analysis/" aria-label="Explore the employee attrition case study"><img src="/img/hr/executive-overview.png" width="1224" height="688" loading="lazy" alt="Power BI Executive Overview with employee metrics, department and role drill-down, and filter controls." /></a>
+    <a class="preview" href="/projects/hr-attrition-analysis/" aria-label="Explore the employee attrition case study"><img src="/img/hr/attrition-overview.svg" width="960" height="580" loading="lazy" alt="Recorded attrition shares compared across overtime and job roles, with employee counts for context." /></a>
     <div class="project-copy"><h3><a href="/projects/hr-attrition-analysis/">Where should HR focus its retention efforts?</a></h3><p>Exploring employee attrition across roles, overtime, and experience, and turning the findings into a practical retention briefing.</p><div class="paper-foot"><span>Power BI · SQL · Python</span><a href="/projects/hr-attrition-analysis/">Read the case study →</a></div></div>
     <FloralAccent mode="edge" />
    </article>
@@ -22,7 +22,7 @@ import FloralAccent from './FloralAccent.astro';
    <article class="work-paper tool-paper"><div><h3><a href="/projects/ai-tell/">A closer look at document authorship</a></h3><p>ai-tell · A desktop application for authorship signals</p></div><a class="tool-link" href="/projects/ai-tell/" aria-label="Explore ai-tell">Explore →</a></article>
   </div>
   <a class="all-projects" href="/projects/">Explore all projects →</a>
-  <a class="scroll-cue" href="#about" aria-label="Continue to the path so far"><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
+  <a class="scroll-cue" href="#about" aria-label="Continue to the path so far"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
  </div>
 </section>
 <style>
@@ -52,7 +52,7 @@ import FloralAccent from './FloralAccent.astro';
  .tool-paper:hover,.tool-paper:focus-within{transform:translateY(-3px)}
  .tool-paper h3{font-size:1.5rem;margin:0 0 8px}.tool-paper p{font-size:.7rem;line-height:1.65;color:#665b4c;margin:0}.tool-link{font-size:.75rem;white-space:nowrap}
  .all-projects{display:block;width:fit-content;margin:auto;font-size:.9rem;padding:15px 0}
- .scroll-cue{display:block;width:fit-content;margin:35px auto 0;color:#79613e}.scroll-cue svg{width:22px;height:32px;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+ .scroll-cue{display:flex;flex-direction:column;align-items:center;gap:5px;width:fit-content;margin:clamp(70px,12svh,110px) auto 0;color:#79613e;text-decoration:none;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.1rem}.scroll-cue svg{width:22px;height:32px;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
  @media(prefers-reduced-motion:no-preference){.arriving{animation:settle 750ms cubic-bezier(.16,1,.3,1) both}.hr-paper.arriving{animation-delay:100ms}@keyframes settle{from{translate:0 24px;filter:blur(2px)}to{translate:0 0;filter:blur(0)}}}
  @media(max-width:950px){.desk-stage{padding-left:175px;padding-right:40px}.case-papers{gap:24px}.preview img{height:185px}.project-copy{padding-left:4px;padding-right:4px}.tool-papers{gap:20px}.tool-paper{padding:20px;display:block}.tool-link{display:inline-block;margin-top:12px}}
  @media(max-width:700px){.desk-stage{padding:190px 35px 110px;min-height:0}.case-papers,.tool-papers{grid-template-columns:1fr;gap:45px;max-width:440px;margin-left:auto;margin-right:auto}.hr-paper{margin-top:0}.preview img{height:auto;max-height:280px}.project-copy{padding:18px 10px 0}.workbench-heading{margin-top:95px}.tool-papers{margin-top:0;gap:28px}.tool-paper{display:flex}.tool-link{margin:0}.desk-heading{margin-bottom:34px}}

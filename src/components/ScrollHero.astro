@@ -5,7 +5,7 @@ import PaperLandmark from './PaperLandmark.astro';
 import FloralAccent from './FloralAccent.astro';
 import { Mascot } from 'page-mascot';
 import { SITE } from '../data/site';
-const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'#about',label:'About'},{href:'/contact/',label:'Contact'}];
+const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'/about/',label:'About'},{href:'/contact/',label:'Contact'}];
 // Small scraps overlap; each exposes a white torn-paper edge beneath its sandy face.
 const torn = Array.from({length:30}, (_,i) => `${(100 + Math.sin(i*4.2)*1.7).toFixed(2)}% ${(i*100/29).toFixed(2)}%`);
 const bottom = Array.from({length:30}, (_,i) => `${(100-i*100/29).toFixed(2)}% ${(100 + Math.sin(i*3.8)*1.4).toFixed(2)}%`);
@@ -60,7 +60,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
     <a class="scroll-cue opening-cue" href="#hero-story"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
     <a class="scroll-cue hero-end-cue" href="#featured-work"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
     <div class="hero-details">
-      <p class="hero-role">Business Analyst</p>
+      <p class="hero-role">Operations Reporting &amp; Data Analysis</p>
       <p class="hero-location">{SITE.location}</p>
       <div class="bio-intro">
         <div class="question-cue"><p class="margin-note">What I bring to the desk.</p><svg class="question-arrow" viewBox="0 0 100 55" fill="none" aria-hidden="true"><path d="M8 7C72-5 90 17 68 43m-5-13 4 15 15-6" /></svg></div>

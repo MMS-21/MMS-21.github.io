@@ -1,11 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
 import CairoPostage from '../components/CairoPostage.astro';
+import WelcomeGarden from '../components/WelcomeGarden.astro';
 import { SITE } from '../data/site';
 ---
 <Base title="Contact" description="A role, a project, or a little hello. Leave Moaaz a letter from wherever you are." hideFooter>
  <div class="letter-desk" id="connect">
   <header class="desk-intro"><h1>Good things start<br />with a hello.</h1><p>A role in mind? An idea to explore?<br />There’s room on my desk for both.</p>
+   <div class="contact-garden"><WelcomeGarden word="Hello." follow="" /></div>
    <div class="conversation"><p>What brings you here?</p><div class="conversation-options" role="group" aria-label="Choose a conversation starter"><button type="button" data-topic="A role to talk about" aria-pressed="false">A role</button><button type="button" data-topic="An idea for a project" aria-pressed="false">A project</button><button type="button" data-topic="Just saying hello" aria-pressed="false">Just a hello</button></div></div>
    <div class="desk-envelope" aria-hidden="true"><div class="envelope-back"></div><div class="envelope-note"><span>Hello, Moaaz.</span><i></i><i></i><i></i></div><div class="envelope-front"></div><div class="envelope-flap"></div><span class="envelope-caption">From your corner of the world<br />to mine, in Cairo.</span></div>
    <div class="direct-contact"><p>Or, take the direct route.</p><a href={`mailto:${SITE.email}`}>{SITE.email}</a><div><button type="button" class="copy-email" data-email={SITE.email}>Copy email</button><a href={SITE.links.linkedin}>LinkedIn ↗</a><a href={SITE.links.github}>GitHub ↗</a></div><span class="copy-status" role="status"></span></div>
@@ -48,7 +50,7 @@ import { SITE } from '../data/site';
 </script>
 <style>
  .letter-desk{position:relative;max-width:1180px;margin:auto;padding:12px 48px 50px 40px;display:grid;grid-template-columns:.8fr 1.45fr;gap:54px;align-items:start;color:#322f27;isolation:isolate}
- .desk-intro{padding-top:30px}h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.8rem,4vw,3.8rem);line-height:1.05;letter-spacing:-.025em;margin:0 0 24px;text-wrap:balance}
+ .contact-garden{margin:-12px -12px 10px;pointer-events:none}.desk-intro{padding-top:30px}h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.8rem,4vw,3.8rem);line-height:1.05;letter-spacing:-.025em;margin:0 0 24px;text-wrap:balance}
  .desk-intro>p{color:#685c4b;font-size:.96rem;line-height:1.9;margin:0 0 30px}
  .conversation>p{font-size:.79rem;color:#685c4b;margin:0 0 12px}.conversation-options{display:flex;flex-wrap:wrap;gap:10px 18px}.conversation-options button{font:inherit;font-size:.82rem;background:none;border:0;border-bottom:1px dashed #b5a181;padding:5px 0;color:#665037;cursor:pointer;transition:color 200ms,border-color 200ms}.conversation-options button:hover,.conversation-options button[aria-pressed=true]{color:#31553c;border-color:#31553c;border-bottom-style:solid}
  .desk-envelope{width:240px;height:200px;position:relative;margin:64px 0 26px 18px;transform:rotate(-8deg);perspective:700px}
