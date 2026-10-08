@@ -15,7 +15,7 @@ export function startLulu(){
  const image=new Image();
  let visible=true,loaded=false,state:State='wave',since=performance.now();
  let x=16,footY=scrollY+innerHeight-12,raf=0,last=0,drawn=-1,nextAction=since+3600;
- let hovered=false,dragging=false,moved=false,clicks=0,decisions=0;
+ let hovered=false,dragging=false,moved=false,clicks=0,decisions=0,touring=false,tourWasVisible=true;
  let trip:Trip|null=null,walkTo:number|null=null,reactUntil=since+1200;
  let perches:Perch[]=[],current:Perch;
  let pointerId=-1,startPointerX=0,startPointerY=0,startX=0,startY=0,scanTimer=0;
@@ -70,7 +70,7 @@ export function startLulu(){
    else safe.forEach((px,i)=>result.push({key:`text-${ids.get(el)}-${index}-${i}`,left:px,right:px+width(),y:top+scrollY,floor:false}));
   }
   perches=result;host.dataset.perches=String(result.length-1);
-  if(!dragging&&!trip){
+  if(!dragging&&!trip&&!touring){
    const found=result.find(p=>p.key===current.key);
    if(found){current=found;footY=found.y;x=Math.max(found.left,Math.min(found.right-width(),x))}
    else{current=floor();footY=current.y;walkTo=null;change('idle',performance.now())}
@@ -96,7 +96,7 @@ export function startLulu(){
  function tick(now:number){
   raf=0;if(!visible||document.hidden||!loaded)return;
   const dt=Math.min((now-last)/1000,.05);last=now;
-  if(reduced.matches){trip=null;walkTo=null;current=floor();footY=current.y;change('idle',now);position();paint(now);return}
+  if(reduced.matches){trip=null;walkTo=null;if(!(touring&&current.key==='tour')){current=floor();footY=current.y}change('idle',now);position();paint(now);return}
   const menuOpen=shell?.dataset.open==='true';
   if(!dragging){
    if(current.floor&&!trip)footY=scrollY+innerHeight-12;
@@ -108,7 +108,7 @@ export function startLulu(){
     if(hovered||menuOpen){walkTo=null;change(hovered?'play':'idle',now);nextAction=now+3000}
     else{const step=dt*36,delta=walkTo-x;if(Math.abs(delta)<step){x=walkTo;land(now,current)}else x+=Math.sign(delta)*step}
    }else if(reactUntil&&now>=reactUntil){reactUntil=0;change(hovered?'play':'idle',now)}
-   else if(now>nextAction&&!hovered&&!menuOpen&&!reactUntil)decide(now);
+   else if(now>nextAction&&!hovered&&!menuOpen&&!reactUntil&&!touring)decide(now);
   }
   position();paint(now);raf=requestAnimationFrame(tick);
  }
@@ -117,6 +117,15 @@ export function startLulu(){
  try{visible=sessionStorage.getItem('lulu-hidden')!=='1'}catch{}
  setVisible(visible);
  control.addEventListener('click',()=>setVisible(!visible));
+ window.addEventListener('portfolio:tour',((event:CustomEvent<{active:boolean;greet:boolean;footY:number}>)=>{
+  const detail=event.detail;
+  if(detail.active&&!touring)tourWasVisible=visible;
+  touring=detail.active;trip=null;walkTo=null;
+  if(detail.greet){setVisible(true);x=innerWidth<=700?24:Math.max(24,innerWidth-520);footY=scrollY+Math.max(height()+24,detail.footY);current={key:'tour',left:x,right:x+width(),y:footY,floor:false};change('wave',performance.now());reactUntil=performance.now()+1200}
+  else if(current.key==='tour'){current=floor();footY=current.y;change('idle',performance.now())}
+  if(!touring&&!tourWasVisible)setVisible(false);
+  nextAction=performance.now()+3600;position();wake();
+ }) as EventListener);
  button.addEventListener('pointerenter',()=>{hovered=true;if(!trip&&!dragging&&!reduced.matches){walkTo=null;change('play',performance.now());wake()}});
  button.addEventListener('pointerleave',()=>{hovered=false;if(!trip&&!dragging&&state==='play'){change('idle',performance.now());nextAction=performance.now()+3000}});
  button.addEventListener('pointerdown',event=>{if(event.button!==0)return;dragging=true;moved=false;trip=null;walkTo=null;pointerId=event.pointerId;startPointerX=event.clientX;startPointerY=event.clientY;startX=x;startY=footY;button.setPointerCapture(pointerId);change('idle',performance.now())});
@@ -140,5 +149,5 @@ export function startLulu(){
  image.onerror=()=>{host.dataset.ready='fallback'};image.src='/pets/lulu.webp';
   document.fonts.ready.then(scheduleScan);
   // Revisit surfaces after scroll reveals and timeline transitions have settled.
-  window.setInterval(()=>{if(visible&&!document.hidden&&!dragging&&!trip)scan()},2400);
+  window.setInterval(()=>{if(visible&&!document.hidden&&!dragging&&!trip&&!touring)scan()},2400);
 }

@@ -1,0 +1,30 @@
+<div class="tour-spotlight" data-tour-spotlight hidden aria-hidden="true"></div>
+<section class="tour-card" data-tour-card hidden role="dialog" aria-modal="false" aria-labelledby="tour-title" aria-describedby="tour-description">
+ <h2 id="tour-title">Welcome to my little corner.</h2>
+ <p id="tour-description" aria-live="polite">A few quick pointers, and a little hello to Lulu.</p>
+ <div class="tour-actions">
+  <button type="button" class="tour-skip" data-tour-skip>I’ll explore</button>
+  <button type="button" class="tour-back" data-tour-back hidden>Back</button>
+  <button type="button" class="tour-next" data-tour-next>Show me around</button>
+ </div>
+ <span class="tour-progress" data-tour-progress>1 of 4</span>
+</section>
+<script>
+ import { startWelcomeTour } from '../scripts/welcome-tour';
+ startWelcomeTour();
+</script>
+<style>
+.tour-spotlight{position:fixed;z-index:70;pointer-events:none;border:1.5px solid #60869a;border-radius:12px;box-shadow:0 0 0 200vmax #302d2830}
+.tour-card{position:fixed;z-index:72;right:24px;bottom:24px;width:min(360px,calc(100vw - 32px));padding:24px;background:#fffaf0 url('/img/paper-fibers.svg');color:#302d28;border:1px solid #d9cdb8;box-shadow:3px 12px 30px #59472924;box-sizing:border-box}
+.tour-card h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.85rem;font-weight:500;line-height:1.1;margin:0 0 12px;text-wrap:balance}
+.tour-card p{font-family:Manrope,sans-serif;font-size:.84rem;line-height:1.65;color:#57472f;margin:0 0 18px}
+.tour-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tour-card button{font-family:Manrope,sans-serif;font-size:.76rem;min-height:44px;cursor:pointer;padding:9px 12px;border:0}
+.tour-next{margin-left:auto;background:#526d79;color:#fffaf0;border-radius:3px}
+.tour-skip,.tour-back{background:transparent;color:#57472f;text-decoration:underline;text-underline-offset:4px}
+.tour-card button:focus-visible{outline:2px solid #60869a;outline-offset:3px}
+.tour-progress{display:block;margin-top:12px;font-family:Manrope,sans-serif;font-size:.68rem;color:#665b4c}
+[hidden]{display:none!important}
+@media(max-width:700px){.tour-card{right:16px;bottom:max(16px,env(safe-area-inset-bottom));padding:20px}.tour-card h2{font-size:1.65rem}.tour-card button{padding-inline:9px}}
+@media(max-height:500px){.tour-card{bottom:10px;padding:14px;width:320px;max-height:calc(100svh - 20px);overflow:auto}.tour-card p{margin-bottom:8px}.tour-progress{margin-top:4px}}
+</style>
