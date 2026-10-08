@@ -6,26 +6,29 @@ export function startWelcomeGardens(){
   const arabic=host.classList.contains('arabic-intro');
   let fontsReady=!arabic;
   if(arabic)document.fonts.load('76px \"DecoType Thuluth\"').then(()=>{fontsReady=true;wake()}).catch(()=>{fontsReady=true;wake()});
+  const canvasHeight=arabic?320:190;
   let width=0,start=0,last=0,raf=0,visible=false;
   const rand=n=>{const v=Math.sin(n*127.1)*43758.5453;return v-Math.floor(v)};
   const branches=Array.from({length:15},(_,i)=>({u:.06+i*.062,phase:rand(i+4)*6.28,side:i%3===0?1:-1,r:8+rand(i+13)*8,delay:rand(i+23)*1800}));
+  if(arabic)branches.push(...Array.from({length:8},(_,i)=>({u:.15+i*.1,phase:rand(i+94)*6.28,side:i%2?1:-1,r:6+rand(i+103)*4,delay:3600+i*110,lower:true})));
   const path=(points,closed)=>{ctx.beginPath();ctx.moveTo(...points[0]);for(let i=1;i<points.length-1;i++){const p=points[i],q=points[i+1];ctx.quadraticCurveTo(...p,(p[0]+q[0])/2,(p[1]+q[1])/2)}ctx.lineTo(...points[points.length-1]);if(closed)ctx.closePath()};
   const B={fill:(p,c)=>{path(p,true);ctx.fillStyle=c;ctx.fill()},stroke:(p,c,w)=>{path(p,false);ctx.strokeStyle=c;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke()}};
-  const resize=()=>{width=host.clientWidth;const d=Math.min(devicePixelRatio||1,1.5);canvas.width=width*d;canvas.height=190*d;ctx.setTransform(d,0,0,d,0,0)};
+  const resize=()=>{width=host.clientWidth;const d=Math.min(devicePixelRatio||1,1.5);canvas.width=width*d;canvas.height=canvasHeight*d;ctx.setTransform(d,0,0,d,0,0)};
   new ResizeObserver(resize).observe(host);resize();
   function draw(now){
    raf=0;if(!visible||document.hidden)return;
    const reveal=Number(getComputedStyle(host.parentElement).opacity);
-   if(reveal<.25){start=0;host.dataset.blooming='false';ctx.clearRect(0,0,width,190);raf=requestAnimationFrame(draw);return;}
+   if(reveal<.25){start=0;host.dataset.blooming='false';ctx.clearRect(0,0,width,canvasHeight);raf=requestAnimationFrame(draw);return;}
    if(!fontsReady){raf=requestAnimationFrame(draw);return;}
    if(!start){start=now;host.dataset.blooming='true'}
    if(now-last<32){raf=requestAnimationFrame(draw);return;}last=now;
-   const elapsed=reduced.matches?10000:now-start,t=now/1000;ctx.clearRect(0,0,width,190);
+   const elapsed=reduced.matches?10000:now-start,t=now/1000;ctx.clearRect(0,0,width,canvasHeight);
+   if(arabic){const lineAge=elapsed-3400;const line=Array.from({length:60},(_,i)=>{const u=i/59;return[width*(.12+.76*u),220+Math.sin(u*6.28)*4]});engine.strokeRange(B,line,0,Math.max(0,engine.eo(lineAge/2800)),engine.cc.blue,1.1);}
    branches.forEach((b,i)=>{
-    const age=elapsed-(arabic?950:350)-b.delay;if(age<=0)return;
+    const age=elapsed-(b.lower?0:arabic?1400:350)-b.delay;if(age<=0)return;
     const sway=reduced.matches?0:Math.sin(t*.8+b.phase)*3;
-    const x=width*b.u,base=89+(rand(i+40)-.5)*30;
-    const height=b.side*(36+rand(i+50)*30),lean=(rand(i+60)-.5)*36;
+    const x=width*b.u,base=b.lower?220+Math.sin((b.u-.12)/.76*6.28)*4:89+(rand(i+40)-.5)*30;
+    const height=b.side*(b.lower?16+rand(i+50)*12:36+rand(i+50)*30),lean=(rand(i+60)-.5)*36;
     const points=Array.from({length:40},(_,k)=>{const u=k/39;return[x+lean*u+Math.sin(u*5+b.phase)*10*u+sway*u*u,base+height*u]});
     const growth=engine.eo(age/1600);engine.strokeRange(B,points,0,growth,engine.cc.blue,1.2);
     [.4,.7].forEach((u,k)=>{const g=engine.spr((age-500-k*230)/1000);const p=points[Math.round(u*39)];engine.leaf(B,p[0],p[1],b.phase+k*2,Math.max(0,g)*(12+rand(i+70)*8),.8)});
