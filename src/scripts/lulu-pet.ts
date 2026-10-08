@@ -7,6 +7,8 @@ export function startLulu(){
  const host=document.querySelector<HTMLElement>('[data-lulu]');if(!host)return;
  const stage=host.querySelector<HTMLElement>('.lulu-stage')!;
  const button=host.querySelector<HTMLButtonElement>('.lulu-character')!;
+ const hint=host.querySelector<HTMLElement>('.lulu-hint')!;
+ let greeted=false;
  const control=document.querySelector<HTMLButtonElement>('[data-lulu-toggle]')!;
  const canvas=host.querySelector('canvas')!,ctx=canvas.getContext('2d');if(!ctx)return;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -25,7 +27,14 @@ export function startLulu(){
  const floor=():Perch=>({key:'floor',left:8,right:innerWidth-8,y:scrollY+innerHeight-12,floor:true});
  current=floor();
  function change(next:State,now:number){if(state!==next){state=next;since=now;drawn=-1}host.dataset.state=state}
- function position(){stage.style.setProperty('--lulu-x',`${clampX(x).toFixed(1)}px`);stage.style.setProperty('--lulu-y',`${(footY-scrollY-height()*.96).toFixed(1)}px`);host.dataset.perch=current.key}
+ function position(){
+  const px=clampX(x),py=footY-scrollY-height()*.96;
+  stage.style.setProperty('--lulu-x',`${px.toFixed(1)}px`);stage.style.setProperty('--lulu-y',`${py.toFixed(1)}px`);host.dataset.perch=current.key;
+  const intro=document.querySelector('#pre-hero')?.getBoundingClientRect();
+  hint.hidden=greeted||touring||dragging||!intro||intro.top < -innerHeight*.35||intro.top>innerHeight*.2||py<65;
+  if(!hint.hidden){const center=px+width()/2,offset=Math.max(93,Math.min(innerWidth-93,center))-center;hint.style.setProperty('--hint-offset',`${offset}px`);button.setAttribute('aria-describedby','lulu-intro-hint')}
+  else button.removeAttribute('aria-describedby');
+ }
  function paint(now:number){
   if(!loaded)return;
   const frame=reduced.matches?0:Math.max(0,Math.floor((now-since)/150))%8,key=rows[state]*8+frame;
@@ -136,7 +145,7 @@ export function startLulu(){
   wake();
  };
  button.addEventListener('pointerup',release);button.addEventListener('pointercancel',release);button.addEventListener('lostpointercapture',release);
- button.addEventListener('click',()=>{if(moved){moved=false;return}const now=performance.now();if(trip)return;clicks++;if(clicks%2){change('wave',now);reactUntil=now+1200}else if(!reduced.matches)jumpTo(current,x,now,true);nextAction=now+4000;wake()});
+ button.addEventListener('click',()=>{if(moved){moved=false;return}greeted=true;position();const now=performance.now();if(trip)return;clicks++;if(clicks%2){change('wave',now);reactUntil=now+1200}else if(!reduced.matches)jumpTo(current,x,now,true);nextAction=now+4000;wake()});
  function scheduleScan(){
   if(scanTimer)clearTimeout(scanTimer);scanTimer=window.setTimeout(scan,150);
   if(trip&&(footY-scrollY<height()||footY-scrollY>innerHeight)){trip=null;current=floor();change('idle',performance.now())}
