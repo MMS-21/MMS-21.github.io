@@ -1,0 +1,26 @@
+---
+---
+<aside class="site-pet" aria-label="Rem, your little site companion" data-pet>
+ <button class="pet-toggle" type="button" aria-expanded="false" aria-controls="rem-stage">Meet Rem</button>
+ <div class="pet-stage" id="rem-stage" hidden>
+  <button class="pet-close" type="button" aria-label="Hide Rem">×</button>
+  <button class="pet-character" type="button" aria-label="Pet Rem" title="Click to say hello"><span class="pet-status" role="status">Waking up…</span></button>
+  <span class="pet-caption" aria-hidden="true">Rem</span>
+ </div>
+</aside>
+<script>
+ import { setupPet } from '../scripts/site-pet';
+ setupPet();
+</script>
+<style>
+.site-pet{position:fixed;bottom:18px;left:18px;z-index:45;color:#302d28;font-family:'Cormorant Garamond',Georgia,serif}
+.pet-toggle{border:1px solid #b8ac96;background:#fffaf0;color:inherit;border-radius:24px;padding:9px 15px;font:inherit;font-size:1rem;cursor:pointer;box-shadow:0 4px 14px #59472916}
+.pet-stage{position:relative;width:156px;height:240px}
+.pet-stage[hidden],.pet-toggle[hidden]{display:none}
+.pet-character{display:block;width:100%;height:220px;padding:0;border:0;background:transparent;color:inherit;cursor:pointer;touch-action:manipulation}
+.pet-character :global(canvas){display:block;width:100%;height:100%}
+.pet-close{position:absolute;right:0;top:0;z-index:2;border:1px solid #b8ac96;border-radius:50%;width:28px;height:28px;background:#fffaf0;color:#57472f;font-size:20px;cursor:pointer}
+.pet-status{font-family:Manrope,sans-serif;font-size:.75rem}.pet-caption{display:block;text-align:center;font-size:1rem}
+button:focus-visible{outline:2px solid #60869a;outline-offset:4px}
+@media(max-width:700px){.site-pet{bottom:12px;left:8px}.pet-stage{width:116px;height:182px}.pet-character{height:164px}.pet-caption{font-size:.9rem}}
+</style>
