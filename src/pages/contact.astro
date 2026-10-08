@@ -2,6 +2,8 @@
 import Base from '../layouts/Base.astro';
 import CairoPostage from '../components/CairoPostage.astro';
 import WelcomeGarden from '../components/WelcomeGarden.astro';
+import TopicStamp from '../components/TopicStamp.astro';
+import ContactLulu from '../components/ContactLulu.astro';
 import { SITE } from '../data/site';
 ---
 <Base title="Contact" description="A role, a project, or a little hello. Leave Moaaz a letter from wherever you are." hideFooter>
@@ -9,7 +11,9 @@ import { SITE } from '../data/site';
   <header class="desk-intro"><h1>Good things start<br />with a<WelcomeGarden word="HELLO." follow="" compact /></h1><p>A role in mind? An idea to explore?<br />There’s room on my desk for both.</p>
    <div class="conversation"><p>What brings you here?</p><div class="conversation-options" role="group" aria-label="Choose a conversation starter"><button type="button" data-topic="A role to talk about" aria-pressed="false">A role</button><button type="button" data-topic="An idea for a project" aria-pressed="false">A project</button><button type="button" data-topic="Just saying hello" aria-pressed="false">Just a hello</button></div></div>
    <div class="direct-contact"><p>Or, take the direct route.</p><a href={`mailto:${SITE.email}`}>{SITE.email}</a><div><button type="button" class="copy-email" data-email={SITE.email}>Copy email</button><a href={SITE.links.linkedin}>LinkedIn ↗</a><a href={SITE.links.github}>GitHub ↗</a></div><span class="copy-status" role="status"></span></div>
-   <div class="desk-envelope" aria-hidden="true"><div class="envelope-back"></div><div class="envelope-note"><span>Hello, Moaaz.</span><i></i><i></i><i></i></div><div class="envelope-front"></div><div class="envelope-flap"></div><span class="envelope-caption">From your corner of the world<br />to mine, in Cairo.</span></div>
+   <p class="handwritten-invitation">No perfect introduction needed.<br />Just say hello.</p>
+   <details class="stamp-catalog"><summary>Choose a little stamp <span>(optional)</span></summary><div class="stamp-options" role="group" aria-label="Choose a stamp for your envelope">{[{kind:'role',label:'A role',topic:'A role to talk about'},{kind:'project',label:'A project',topic:'An idea for a project'},{kind:'hello',label:'Just a hello',topic:'Just saying hello'}].map(stamp=><button type="button" data-stamp={stamp.kind} data-stamp-topic={stamp.topic} aria-pressed={stamp.kind==='hello'?'true':'false'}><TopicStamp kind={stamp.kind} /><span>{stamp.label}</span></button>)}</div><p>A tiny finishing touch for your envelope.</p></details>
+   <div class="desk-envelope"><ContactLulu /><div class="envelope-art" aria-hidden="true"><div class="envelope-back"></div><div class="envelope-note"><span>Hello, Moaaz.</span><i></i><i></i><i></i></div><div class="envelope-front"></div><div class="envelope-flap"></div><div class="chosen-stamp">{['role','project','hello'].map(kind=><span data-envelope-stamp={kind} hidden={kind!=='hello'}><TopicStamp kind={kind} /></span>)}</div><span class="ready-seal">Ready to send</span></div><span class="envelope-caption">From your corner of the world<br />to mine, in Cairo.</span></div>
   </header>
   <div class="stationery"><form class="letter-form" action={`mailto:${SITE.email}`} method="get" data-recipient={SITE.email}>
    <div class="letter-address"><div><span>To</span><p>Moaaz Magdy</p><small>Cairo, Egypt</small></div><CairoPostage /></div>
@@ -32,10 +36,15 @@ import { SITE } from '../data/site';
   const count=form.querySelector<HTMLElement>('.letter-count')!;
   const status=form.querySelector<HTMLElement>('.letter-status')!;
   const topics=[...document.querySelectorAll<HTMLButtonElement>('[data-topic]')];
+  const stamps=[...document.querySelectorAll<HTMLButtonElement>('[data-stamp]')];
+  function chooseStamp(kind:string){stamps.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.stamp===kind)));document.querySelectorAll<HTMLElement>('[data-envelope-stamp]').forEach(el=>el.hidden=el.dataset.envelopeStamp!==kind);}
+  const topicKinds:Record<string,string>={'A role to talk about':'role','An idea for a project':'project','Just saying hello':'hello'};
+  stamps.forEach(button=>button.addEventListener('click',()=>{chooseStamp(button.dataset.stamp!);if(!subject.value.trim()){subject.value=button.dataset.stampTopic!;topics.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.topic===subject.value)))}desk.classList.remove('draft-prepared');}));
   const placeholders:Record<string,string>={'A role to talk about':'Tell me a little about the role, the team, and what you’re looking for…','An idea for a project':'What are you working on, and where could I help?','Just saying hello':'A question, a shared interest, or simply a hello…'};
-  topics.forEach(button=>button.addEventListener('click',()=>{subject.value=button.dataset.topic!;topics.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));message.placeholder=placeholders[subject.value];desk.classList.add('is-writing');subject.focus();}));
+  topics.forEach(button=>button.addEventListener('click',()=>{subject.value=button.dataset.topic!;chooseStamp(topicKinds[subject.value]);desk.classList.remove('draft-prepared');topics.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));message.placeholder=placeholders[subject.value];desk.classList.add('is-writing');subject.focus();}));
   subject.addEventListener('input',()=>topics.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.topic===subject.value))));
-  form.addEventListener('focusin',()=>desk.classList.add('is-writing'));
+  form.addEventListener('focusin',()=>{desk.classList.remove('draft-prepared');desk.classList.add('is-writing')});
+  form.addEventListener('input',()=>desk.classList.remove('draft-prepared'));
   message.addEventListener('input',()=>{count.textContent=`${message.value.length} / 2000`;});
   form.addEventListener('submit',event=>{
    event.preventDefault();const fields=new FormData(form);const name=String(fields.get('name')||'').trim(),email=String(fields.get('email')||'').trim(),topic=subject.value.trim(),body=message.value.trim();
@@ -54,6 +63,9 @@ import { SITE } from '../data/site';
  .desk-intro>p{color:#685c4b;font-size:.96rem;line-height:1.9;margin:0 0 30px}
  .conversation>p{font-size:.79rem;color:#685c4b;margin:0 0 12px}.conversation-options{display:flex;flex-wrap:wrap;gap:10px 18px}.conversation-options button{font:inherit;font-size:.82rem;background:none;border:0;border-bottom:1px dashed #b5a181;padding:5px 0;color:#665037;cursor:pointer;transition:color 200ms,border-color 200ms}.conversation-options button:hover,.conversation-options button[aria-pressed=true]{color:#31553c;border-color:#31553c;border-bottom-style:solid}
  .desk-envelope{width:240px;height:200px;position:relative;margin:30px 0 26px 18px;transform:rotate(-8deg);perspective:700px}
+ .handwritten-invitation{font-family:'Cormorant Garamond',Georgia,serif!important;font-style:italic;font-size:1.35rem!important;line-height:1.25!important;color:#796548!important;margin:2px 0 20px!important}
+ .stamp-catalog{margin:0 0 50px;max-width:330px}.stamp-catalog summary{font-size:.8rem;color:#685c4b;cursor:pointer;width:fit-content;padding:5px 0}.stamp-catalog summary span{color:#827563;font-size:.7rem}.stamp-options{display:flex;gap:16px;margin-top:15px}.stamp-options button{border:0;background:none;padding:5px;color:#685c4b;cursor:pointer;transition:transform 180ms}.stamp-options button:hover{transform:translateY(-3px)}.stamp-options button[aria-pressed=true]{outline:1px solid #7b907b;outline-offset:3px;border-radius:2px}.stamp-options button:focus-visible{outline:2px solid #60869a;outline-offset:3px}.stamp-options button>span{display:block;font-size:.7rem;margin-top:6px}.stamp-catalog>p{font-size:.7rem;color:#827563;margin:14px 0 0}
+ .chosen-stamp{position:absolute;right:28px;top:27px;z-index:4;transform:rotate(9deg);pointer-events:none}.chosen-stamp :global(.topic-stamp){width:38px;height:46px}.chosen-stamp [hidden]{display:none}.ready-seal{position:absolute;left:35px;top:80px;z-index:5;border:2px solid #647a5d;border-radius:3px;padding:3px 7px;color:#526d4b;font:14px 'Cormorant Garamond',Georgia,serif;text-transform:uppercase;letter-spacing:.07em;opacity:0;transform:rotate(-9deg) scale(1.15);transition:opacity 300ms ease 700ms,transform 300ms ease 700ms;pointer-events:none}.draft-prepared .ready-seal{opacity:1;transform:rotate(-9deg) scale(1)}.draft-prepared .envelope-flap{transform:rotateX(0);z-index:3}.draft-prepared .envelope-note{transform:translateY(0)}
  .envelope-back{position:absolute;top:15px;left:0;width:220px;height:132px;background:#dcccac;border:1px solid #bcaa87;box-shadow:5px 12px 22px #6c593b18}
  .envelope-front{position:absolute;top:15px;left:0;width:220px;height:132px;background:#eaddc1;clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%)}
  .envelope-front:after{content:'';position:absolute;inset:0;background:#e7d6b4;clip-path:polygon(0 100%,50% 40%,100% 100%)}
@@ -73,7 +85,7 @@ import { SITE } from '../data/site';
  .letter-actions{display:flex;justify-content:space-between;align-items:center;gap:20px;border-top:1px solid #ddd1bc;padding-top:20px}.letter-actions p{color:#74634b;font-size:.67rem;line-height:1.7;margin:0}.open-draft{display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:10px 16px;white-space:nowrap;background:#395640;border:1px solid #395640;color:#fffaf0;font:inherit;font-size:.78rem;cursor:pointer;transition:background 200ms,transform 200ms;box-shadow:1px 4px 7px #39564012}.open-draft:hover{background:#29432e;transform:translateY(-2px)}.open-draft svg{width:19px;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
  .letter-status{color:#4d6249;font-size:.78rem;line-height:1.7;margin:20px 0 0}.letter-status:empty{display:none}
  @media(max-width:1100px){.letter-desk{gap:36px;padding-inline:32px;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}.letter-form{padding:24px}.letter-actions{flex-direction:column;align-items:stretch}.letter-actions p br{display:none}}
- @media(max-width:900px){.letter-desk{grid-template-columns:1fr;max-width:660px;gap:35px}.desk-intro{padding-top:0}.desk-envelope{display:none}.direct-contact{margin-top:22px}.desk-intro>p{margin-bottom:22px}.letter-actions{flex-direction:row;align-items:center}.letter-form{padding:28px 32px}.letter-actions p br{display:block}}
+ @media(max-width:900px){.letter-desk{grid-template-columns:1fr;max-width:660px;gap:35px}.desk-intro{padding-top:0}.desk-envelope{display:block;margin-top:24px;margin-bottom:10px}.envelope-caption{display:none}.direct-contact{margin-top:22px}.desk-intro>p{margin-bottom:22px}.letter-actions{flex-direction:row;align-items:center}.letter-form{padding:28px 32px}.letter-actions p br{display:block}}
  @media(max-width:500px){.letter-desk{padding:0 24px 35px;gap:25px}.letter-form{padding:20px}.sender-fields{grid-template-columns:1fr;gap:0}.letter-address{min-height:118px}.letter-form h2{margin-top:12px}.letter-actions{flex-direction:column;align-items:stretch}.letter-actions p br{display:none}.stationery{transform:rotate(.4deg)}h1{font-size:3rem}.direct-contact>div{gap:20px}}
- @media(prefers-reduced-motion:reduce){.envelope-flap,.envelope-note,.open-draft,input,textarea,.conversation-options button{transition:none}}
+ @media(prefers-reduced-motion:reduce){.envelope-flap,.envelope-note,.open-draft,input,textarea,.conversation-options button,.ready-seal,.stamp-options button{transition:none}}
 </style>

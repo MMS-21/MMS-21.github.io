@@ -1,0 +1,19 @@
+<button class="envelope-lulu" type="button" aria-label="Say hello to Lulu" title="Say hi to Lulu">
+ <canvas width="192" height="208" aria-hidden="true"></canvas>
+ <span>Lulu ♡</span>
+</button>
+<script>
+ const button=document.querySelector<HTMLButtonElement>('.envelope-lulu');
+ if(button){
+  const canvas=button.querySelector('canvas')!,ctx=canvas.getContext('2d')!;
+  const image=new Image(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  let ready=false,timer=0;
+  const paint=(row:number,frame:number)=>{if(!ready)return;ctx.clearRect(0,0,192,208);ctx.drawImage(image,frame*192,row*208,192,208,0,0,192,208)};
+  image.onload=()=>{ready=true;canvas.dataset.loaded='true';paint(0,0)};image.src='/pets/lulu.webp';
+  button.addEventListener('click',()=>{clearInterval(timer);let frame=0;paint(3,reduced.matches?3:0);button.classList.add('waving');timer=window.setInterval(()=>{frame++;if(frame>=8){clearInterval(timer);paint(0,0);button.classList.remove('waving')}else if(!reduced.matches)paint(3,frame)},150)});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInterval(timer);paint(0,0);button.classList.remove('waving')}});
+ }
+</script>
+<style>
+.envelope-lulu{position:absolute;right:-45px;top:-44px;z-index:4;width:96px;padding:0;border:0;background:none;color:#796548;cursor:pointer;transform:rotate(8deg);animation:peek 10s ease-in-out infinite}.envelope-lulu canvas{display:block;width:96px;height:104px;background:url('/pets/lulu-idle.webp') center/contain no-repeat}.envelope-lulu canvas[data-loaded]{background:none}.envelope-lulu span{display:block;font:italic 15px 'Cormorant Garamond',Georgia,serif}.envelope-lulu:focus-visible{outline:2px solid #60869a;outline-offset:4px;border-radius:8px}.envelope-lulu:hover,.envelope-lulu.waving{animation-play-state:paused}@keyframes peek{0%,60%,100%{translate:0 7px}70%,85%{translate:0 -4px}}@media(prefers-reduced-motion:reduce){.envelope-lulu{animation:none}}
+</style>

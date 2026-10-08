@@ -1,0 +1,16 @@
+---
+const { kind = 'hello' } = Astro.props;
+const label = { role: 'New chapter', project: 'Bright idea', hello: 'Little hello' }[kind as 'role'|'project'|'hello'];
+---
+<svg class:list={['topic-stamp', kind]} viewBox="0 0 70 84" aria-hidden="true">
+ <rect x="2" y="2" width="66" height="80" rx="2" fill="var(--stamp-paper)" stroke="var(--stamp-ink)" stroke-dasharray="2 3" />
+ <rect x="7" y="7" width="56" height="70" fill="none" stroke="var(--stamp-ink)" stroke-width=".7" />
+ <text x="35" y="19" text-anchor="middle" font-size="7" fill="var(--stamp-ink)" font-family="Georgia,serif">FROM YOUR CORNER</text>
+ <g fill="none" stroke="var(--stamp-ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+  {kind === 'role' ? <><path d="M20 54V35h30v19Zm9-19v-5h12v5M20 42c10 6 20 6 30 0M32 44h6v5h-6" /></> : kind === 'project' ? <><path d="M29 49c0-5-7-7-7-14a13 13 0 0 1 26 0c0 7-7 9-7 14Zm0 4h12m-10 4h8M35 16v-4M17 25l-4-3m40 3 4-3M16 40h-5m43 0h5" /></> : <><path d="M18 32h34v25H18Zm0 0 17 13 17-13M18 57l12-15m22 15L40 42M31 25c-6-6 4-11 4-5 0-6 10-1 4 5l-4 4Z" /></>}
+ </g>
+ <text x="35" y="69" text-anchor="middle" font-size="8" fill="var(--stamp-ink)" font-family="Georgia,serif">{label}</text>
+</svg>
+<style>
+.topic-stamp{display:block;width:70px;height:84px;--stamp-paper:#dce5e9;--stamp-ink:#506d7b}.role{--stamp-paper:#e9ddc3;--stamp-ink:#816745}.project{--stamp-paper:#dce3d3;--stamp-ink:#546e50}
+</style>
