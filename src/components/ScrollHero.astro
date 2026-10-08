@@ -2,6 +2,7 @@
 import FlowerMenu from './FlowerMenu.astro';
 import WelcomeGarden from './WelcomeGarden.astro';
 import PaperLandmark from './PaperLandmark.astro';
+import FloralAccent from './FloralAccent.astro';
 import { Mascot } from 'page-mascot';
 import { SITE } from '../data/site';
 const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'#about',label:'About'},{href:'/contact/',label:'Contact'}];
@@ -22,7 +23,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <a class="skip-intro" href="#featured-work">Skip introduction</a>
 <div class="paper-background" aria-hidden="true">
       <div class="paper-underlay"></div>
-      {fragments.map((piece,i)=><div class="paper-fragment" style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}vw;--scatter-y:${piece.y}vh;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface">{[0,5,8,13,18,23].includes(i)&&<PaperLandmark index={i%4} />}</div></div>)}
+      {fragments.map((piece,i)=><div class="paper-fragment" style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}vw;--scatter-y:${piece.y}vh;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface">{[0,3,5,8,10,13,18,23].includes(i)&&<PaperLandmark index={[0,3,5,8,10,13,18,23].indexOf(i)} />}</div></div>)}
     </div>
 <section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction">
   <div class="dock-backdrop" aria-hidden="true"></div>
@@ -63,7 +64,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       <p class="hero-location">{SITE.location}</p>
       <div class="bio-intro">
         <div class="question-cue"><p class="margin-note">What I bring to the desk.</p><svg class="question-arrow" viewBox="0 0 100 55" fill="none" aria-hidden="true"><path d="M8 7C72-5 90 17 68 43m-5-13 4 15 15-6" /></svg></div>
-        <div class="question-paper"><span class="binding-holes" aria-hidden="true"></span><p>Business analysis, clear reporting, and practical tools—built to make everyday work easier.</p></div>
+        <div class="notebook-garden"><div class="question-paper"><span class="binding-holes" aria-hidden="true"></span><p>Business analysis, clear reporting, and practical tools—built to make everyday work easier.</p></div><FloralAccent mode="edge" /></div>
       </div>
     </div>
 
@@ -298,6 +299,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .scroll-cue { --cue:1; position:absolute; left:50%; bottom:28px; transform:translateX(-50%); display:flex; align-items:center; flex-direction:column; color:#57472f; text-decoration:none; font-family:'Cormorant Garamond',Georgia,serif; font-size:1.15rem; opacity:var(--cue); }
   .scroll-cue svg { width:28px; height:38px; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; animation:scroll-nudge 2.4s ease-in-out infinite; }
   .opening-cue { z-index:22; }
+  .hero-end-cue { bottom:4px; }
   @keyframes scroll-nudge { 0%,100% { transform:translateY(0) rotate(-4deg); } 50% { transform:translateY(6px) rotate(3deg); } }
   @media(max-width:700px) { .dock-backdrop { display:block; position:fixed; top:0; left:0; width:160px; height:154px; z-index:19; pointer-events:none; background:#faf6ecf5; border-radius:0 0 12px 0; opacity:var(--dock,0); } .hero-illustrations { top:105px; transform:none; } .hero-details { top:315px; } .hero-nav { gap:clamp(10px,3vw,22px); left:0; right:0; } .hero-nav a { font-size:1.22rem; padding-inline:3px; } .question-paper { max-width:310px; } .hero-role { font-size:.95rem; } }
   @media(max-height:700px) and (min-width:701px) { .hero-illustrations { top:90px; } .hero-details { top:285px; } }
@@ -305,5 +307,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .opening-welcome { position:fixed; z-index:18; width:min(450px,calc(100% - 48px)); left:50%; top:calc(50svh + 10px); transform:translateX(-50%); opacity:var(--opening-welcome,1); pointer-events:none; }
   @media(max-height:700px){.opening-welcome{top:calc(50svh - 10px);transform:translateX(-50%) scale(.8);transform-origin:top center}}
   @media(prefers-reduced-motion:reduce){.opening-welcome{display:none}}
+  .notebook-garden{position:relative;max-width:350px;margin:0 auto;opacity:var(--question-note);transform:translateX(-24px)}
+  .notebook-garden .question-paper{transform:translateY(calc(25px * (1 - var(--question-note)))) rotate(-2deg);margin-bottom:0}
+  @media(max-width:700px){.notebook-garden{max-width:310px;transform:translateX(-6px)}}
 </style>
-
