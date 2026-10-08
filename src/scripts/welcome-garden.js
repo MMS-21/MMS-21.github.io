@@ -3,6 +3,9 @@ export function startWelcomeGardens(){
  document.querySelectorAll('.welcome-garden').forEach(host=>{
   const canvas=host.querySelector('canvas'),ctx=canvas.getContext('2d');if(!ctx)return;
   const engine=new Garden(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const arabic=host.classList.contains('arabic-intro');
+  let fontsReady=!arabic;
+  if(arabic)document.fonts.load('76px \"DecoType Thuluth\"').then(()=>{fontsReady=true;wake()}).catch(()=>{fontsReady=true;wake()});
   let width=0,start=0,last=0,raf=0,visible=false;
   const rand=n=>{const v=Math.sin(n*127.1)*43758.5453;return v-Math.floor(v)};
   const branches=Array.from({length:15},(_,i)=>({u:.06+i*.062,phase:rand(i+4)*6.28,side:i%3===0?1:-1,r:8+rand(i+13)*8,delay:rand(i+23)*1800}));
@@ -14,11 +17,12 @@ export function startWelcomeGardens(){
    raf=0;if(!visible||document.hidden)return;
    const reveal=Number(getComputedStyle(host.parentElement).opacity);
    if(reveal<.25){start=0;host.dataset.blooming='false';ctx.clearRect(0,0,width,190);raf=requestAnimationFrame(draw);return;}
+   if(!fontsReady){raf=requestAnimationFrame(draw);return;}
    if(!start){start=now;host.dataset.blooming='true'}
    if(now-last<32){raf=requestAnimationFrame(draw);return;}last=now;
    const elapsed=reduced.matches?10000:now-start,t=now/1000;ctx.clearRect(0,0,width,190);
    branches.forEach((b,i)=>{
-    const age=elapsed-350-b.delay;if(age<=0)return;
+    const age=elapsed-(arabic?950:350)-b.delay;if(age<=0)return;
     const sway=reduced.matches?0:Math.sin(t*.8+b.phase)*3;
     const x=width*b.u,base=89+(rand(i+40)-.5)*30;
     const height=b.side*(36+rand(i+50)*30),lean=(rand(i+60)-.5)*36;

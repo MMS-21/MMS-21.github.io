@@ -34,10 +34,10 @@ const fragments = Array.from({length:24}, (_,i) => ({
     <a class="scroll-cue hero-end-cue" href="#featured-work"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
 
   </div>
-  <div class="opening-welcome"><WelcomeGarden /></div>
+  <div class="opening-welcome"><WelcomeGarden arabic /></div>
   <div class="hero-identity">
     <div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={220} label="Moaaz avatar" /></div></div>
-    <h1><span class="name-english">{SITE.name}</span><span class="name-arabic" lang="ar" dir="rtl">معاذ مجدي الهواري</span></h1>
+    <h1><span class="name-english">{SITE.name}</span></h1>
   </div>
   <div class="navigation-shell">
     <button class="pyramid-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="portfolio-navigation">
@@ -269,7 +269,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   @media(max-width:700px) { .dock-backdrop { display:block; position:fixed; top:0; left:0; width:160px; height:154px; z-index:19; pointer-events:none; background:#faf6ecf5; border-radius:0 0 12px 0; opacity:var(--dock,0); } .hero-illustrations { top:105px; transform:none; } .hero-details { top:315px; } .hero-nav { gap:clamp(10px,3vw,22px); left:0; right:0; } .hero-nav a { font-size:1.22rem; padding-inline:3px; } .question-paper { max-width:310px; } .hero-role { font-size:.95rem; } }
   @media(max-height:700px) and (min-width:701px) { .hero-illustrations { top:90px; } .hero-details { top:285px; } }
   @media(prefers-reduced-motion:reduce) { .scroll-cue svg { animation:none; } .opening-cue,.hero-end-cue { display:none; } .paper-background { --paper-visible:1; } }
-  .opening-welcome { position:fixed; z-index:18; width:min(450px,calc(100% - 48px)); left:50%; top:calc(50svh + 10px); transform:translateX(-50%); opacity:var(--opening-welcome,1); pointer-events:none; }
+  .opening-welcome { position:fixed; z-index:18; width:min(450px,calc(100% - 48px)); left:50%; top:calc(50svh - 45px); transform:translateX(-50%); opacity:var(--opening-welcome,1); pointer-events:none; }
   @media(max-height:700px){.opening-welcome{top:calc(50svh - 10px);transform:translateX(-50%) scale(.8);transform-origin:top center}}
   @media(prefers-reduced-motion:reduce){.opening-welcome{display:none}}
   .notebook-garden{position:relative;max-width:350px;margin:0 auto;opacity:var(--question-note);transform:translateX(-24px)}

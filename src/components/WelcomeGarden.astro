@@ -1,9 +1,12 @@
 ---
-const { word = 'Welcome', follow = 'to my little corner.', compact = false } = Astro.props;
+const { word = 'Welcome', follow = 'to my little corner.', compact = false, arabic = false } = Astro.props;
 const Wrapper = compact ? 'span' : 'div';
 const Word = compact ? 'span' : 'p';
 ---
-<Wrapper class:list={['welcome-garden', { compact }]}><Word class="garden-word" aria-label={`${word} ${follow}`}>{word.split('').map((letter,i)=><span style={`--letter:${i}`}>{letter}</span>)}</Word><span class="welcome-follow" aria-hidden="true">{follow}</span><canvas aria-hidden="true"></canvas></Wrapper>
+<Wrapper class:list={['welcome-garden', { compact, 'arabic-intro': arabic }]}>
+ {arabic ? <><Word class="garden-word arabic-calligraphy" lang="ar" dir="rtl">معاذ مجدي الهواري</Word><svg class="name-underline" viewBox="0 0 340 24" fill="none" aria-hidden="true"><path pathLength="1" d="M7 16C88 5 191 23 332 9" /></svg><span class="welcome-follow"><strong>Welcome</strong> {follow}</span></> : <><Word class="garden-word" aria-label={`${word} ${follow}`}>{word.split('').map((letter,i)=><span style={`--letter:${i}`}>{letter}</span>)}</Word><span class="welcome-follow" aria-hidden="true">{follow}</span></>}
+ <canvas aria-hidden="true"></canvas>
+</Wrapper>
 <script>
  import { startWelcomeGardens } from '../scripts/welcome-garden.js';
  startWelcomeGardens();
@@ -11,4 +14,18 @@ const Word = compact ? 'span' : 'p';
 <style>
 .welcome-garden{position:relative;height:190px;width:100%;max-width:450px;margin:auto;isolation:isolate}.welcome-garden .garden-word{position:absolute;inset:48px 0 auto;margin:0;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.6rem,7vw,5rem);font-weight:500;line-height:1.1;color:#30291f}.welcome-garden span{display:inline-block;opacity:0;transform:translateY(9px);transition:opacity 900ms ease,transform 1200ms cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--letter)*140ms)}.welcome-garden[data-blooming="true"] span{opacity:1;transform:none} .welcome-garden .welcome-follow{position:absolute;top:150px;left:0;right:0;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.45rem;font-style:italic;color:#57472f;transition-delay:1100ms}canvas{position:absolute;inset:0;width:100%;height:190px;pointer-events:none}@media(prefers-reduced-motion:reduce){.welcome-garden span{opacity:1;transform:none;transition:none}}
 .welcome-garden.compact{display:block;height:150px;margin:-20px auto 0}.welcome-garden.compact .garden-word{inset:38px 0 auto;font-size:clamp(4.5rem,7vw,5.5rem);font-style:italic;font-weight:500;letter-spacing:-.025em;opacity:1;transform:none;transition:none}.welcome-garden.compact .welcome-follow{display:none}
+</style>
+
+<style>
+@font-face{font-family:'DecoType Thuluth';src:url('/fonts/decotype-thuluth-iii.ttf') format('truetype');font-weight:400;font-display:swap}
+.arabic-intro{max-width:480px;height:210px}
+.arabic-intro .arabic-calligraphy{font-family:'DecoType Thuluth',serif;font-size:clamp(2rem,3.6vw,2.85rem);font-weight:400;line-height:1.8;padding:8px 0;inset:16px -10px auto;white-space:nowrap;clip-path:inset(0 0 0 100%);opacity:0;transform:translateY(6px);transition:clip-path 2100ms cubic-bezier(.16,1,.3,1),opacity 450ms ease,transform 2100ms cubic-bezier(.16,1,.3,1)}
+.arabic-intro[data-blooming="true"] .arabic-calligraphy{clip-path:inset(0);opacity:1;transform:none}
+.name-underline{position:absolute;top:184px;left:calc(50% - 128px);width:82px;height:18px;overflow:visible}
+.name-underline path{stroke:#718b7a;stroke-width:1.1;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transform:translateY(3px);transition:stroke-dashoffset 1800ms cubic-bezier(.16,1,.3,1) 650ms,transform 1800ms cubic-bezier(.16,1,.3,1) 650ms}
+.arabic-intro[data-blooming="true"] .name-underline path{stroke-dashoffset:0;transform:none}
+.arabic-intro .welcome-follow{top:164px;font-size:1.45rem;transition-delay:1900ms;white-space:nowrap}
+.welcome-follow strong{font-weight:700}
+@media(max-width:700px){.arabic-intro .arabic-calligraphy{font-size:2rem}.arabic-intro .welcome-follow{font-size:1.2rem}.name-underline{top:181px;left:calc(50% - 106px);width:68px}}
+@media(prefers-reduced-motion:reduce){.arabic-intro .arabic-calligraphy{clip-path:none;opacity:1;transform:none;transition:none}.name-underline path{stroke-dashoffset:0;transform:none;transition:none}}
 </style>
