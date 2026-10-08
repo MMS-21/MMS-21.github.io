@@ -1,12 +1,12 @@
 ---
 import { Mascot } from 'page-mascot';
 import { SITE } from '../data/site';
-const links=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'/about/',label:'About'},{href:'/contact/',label:'Contact'}];
+const links=[{href:'/',label:'Home'},{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'/about/',label:'About'},{href:'/contact/',label:'Contact'}];
 ---
 <header class="portfolio-header">
  <div class="header-mascot"><Mascot client:idle directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={72} label="Moaaz avatar" /></div>
  <a class="portfolio-name" href="/" aria-label="Moaaz Magdy — Home">{SITE.name}</a>
-  <nav aria-label="Main">{links.map(link=><a href={link.href} aria-current={Astro.url.pathname.startsWith(link.href)?'page':undefined}>{link.label}<svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path d="M2 6Q43 0 98 4M14 8Q53 3 86 6"/></svg></a>)}</nav>
+  <nav aria-label="Main">{links.map(link=><a href={link.href} aria-current={(link.href==='/'?Astro.url.pathname==='/':Astro.url.pathname.startsWith(link.href))?'page':undefined}>{link.label}<svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path d="M2 6Q43 0 98 4M14 8Q53 3 86 6"/></svg></a>)}</nav>
 </header>
 
 <style>
