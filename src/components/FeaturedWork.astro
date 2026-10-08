@@ -60,9 +60,9 @@ import FloralAccent from './FloralAccent.astro';
 <script>
  const section=document.querySelector<HTMLElement>('#featured-work')!;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const items=Array.from(section.querySelectorAll<HTMLElement>('.desk-heading,.case-papers .work-paper,.workbench-heading,.tool-paper'));
+ const items=Array.from(section.querySelectorAll<HTMLElement>('.desk-heading,.case-papers .work-paper,.workbench-heading,.tool-paper,.all-projects'));
  let queued=false;
- const render=()=>{queued=false;const h=innerHeight;items.forEach(element=>{const top=element.getBoundingClientRect().top;const second=element.matches('.hr-paper')&&!matchMedia('(max-width:700px)').matches;const offset=second?h*.60:0;const progress=reduced.matches?1:Math.max(0,Math.min(1,(h*.86-top-offset)/(h*.31)));element.style.setProperty('--scroll-reveal',progress.toFixed(4));element.inert=progress<.1;});};
+ const render=()=>{queued=false;const h=innerHeight;const desktop=innerWidth>700;const sectionTop=section.getBoundingClientRect().top;const journey=(h*.85-sectionTop)/(h*.8);items.forEach((element,i)=>{const top=element.getBoundingClientRect().top;const progress=reduced.matches?1:desktop?Math.max(0,Math.min(1,(journey-i*.07)/.32)):Math.max(0,Math.min(1,(h*.98-top)/(h*.18)));element.style.setProperty('--scroll-reveal',progress.toFixed(4));element.inert=progress<.1;});};
  const update=()=>{if(!queued){queued=true;requestAnimationFrame(render)}};
  items.forEach(element=>element.classList.add('scroll-reveal'));
  addEventListener('scroll',update,{passive:true});addEventListener('resize',update);reduced.addEventListener('change',update);render();
@@ -77,4 +77,14 @@ import FloralAccent from './FloralAccent.astro';
 .scroll-reveal{opacity:var(--scroll-reveal,1);translate:0 calc((1 - var(--scroll-reveal,1))*35px);transition:opacity 100ms linear,translate 100ms linear}
 .scroll-reveal:focus-within{opacity:1;translate:0}
 }
+</style>
+
+<style>
+@media(min-width:701px){
+.desk-stage{padding-top:25px}.desk-heading{margin-bottom:22px}.desk-heading h2{font-size:3.2rem}
+.case-papers{gap:32px}.customer-paper,.hr-paper{padding:17px 18px 22px}.hr-paper{margin-top:12px}
+.preview img{height:150px}.project-copy{padding:12px 8px 0}.project-copy h3{font-size:1.8rem;margin-bottom:12px}.project-copy>p{font-size:.8rem;line-height:1.6;margin-bottom:16px}.paper-foot{gap:8px}
+.workbench-heading{margin:35px 0 18px;font-size:1.8rem}.tool-papers{gap:24px;margin-bottom:18px}.tool-paper{padding:16px 18px;display:flex}.tool-paper h3{font-size:1.25rem}.tool-link{margin-top:0}.all-projects{padding:10px 0}
+}
+@media(min-width:701px) and (max-height:780px){.desk-stage{padding-top:18px}.desk-heading h2{font-size:2.8rem}.desk-heading{margin-bottom:16px}.preview img{height:110px}.project-copy h3{font-size:1.65rem}.project-copy>p{font-size:.77rem}.workbench-heading{margin-top:28px}.tool-paper{padding:13px 16px}.tool-paper h3{font-size:1.2rem}}
 </style>
