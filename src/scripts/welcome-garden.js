@@ -8,11 +8,9 @@ export function startWelcomeGardens(){
   host.dataset.blooming='false';
   if(arabic)document.fonts.load('76px \"DecoType Thuluth\"').then(()=>{fontsReady=true;wake()}).catch(()=>{fontsReady=true;wake()});
   const canvasHeight=arabic?320:190;
-  const lowerBaseline=200;
   let width=0,start=0,last=0,raf=0,visible=false;
   const rand=n=>{const v=Math.sin(n*127.1)*43758.5453;return v-Math.floor(v)};
   const branches=Array.from({length:15},(_,i)=>({u:.06+i*.062,phase:rand(i+4)*6.28,side:i%3===0?1:-1,r:8+rand(i+13)*8,delay:rand(i+23)*1800}));
-  if(arabic)branches.push(...Array.from({length:8},(_,i)=>({u:.15+i*.1,phase:rand(i+94)*6.28,side:i%2?1:-1,r:6+rand(i+103)*4,delay:3600+i*110,lower:true})));
   const path=(points,closed)=>{ctx.beginPath();ctx.moveTo(...points[0]);for(let i=1;i<points.length-1;i++){const p=points[i],q=points[i+1];ctx.quadraticCurveTo(...p,(p[0]+q[0])/2,(p[1]+q[1])/2)}ctx.lineTo(...points[points.length-1]);if(closed)ctx.closePath()};
   const B={fill:(p,c)=>{path(p,true);ctx.fillStyle=c;ctx.fill()},stroke:(p,c,w)=>{path(p,false);ctx.strokeStyle=c;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke()}};
   const resize=()=>{width=host.clientWidth;const d=Math.min(devicePixelRatio||1,1.5);canvas.width=width*d;canvas.height=canvasHeight*d;ctx.setTransform(d,0,0,d,0,0)};
@@ -25,11 +23,10 @@ export function startWelcomeGardens(){
    if(!start){start=now;host.dataset.blooming='true'}
    if(now-last<32){raf=requestAnimationFrame(draw);return;}last=now;
    const elapsed=reduced.matches?10000:now-start,t=now/1000;ctx.clearRect(0,0,width,canvasHeight);
-   if(arabic){const lineAge=elapsed-3400;const line=Array.from({length:60},(_,i)=>{const u=i/59;return[width*(.12+.76*u),lowerBaseline+Math.sin(u*6.28)*4]});engine.strokeRange(B,line,0,Math.max(0,engine.eo(lineAge/2800)),engine.cc.blue,1.1);}
    branches.forEach((b,i)=>{
     const age=elapsed-(b.lower?0:arabic?1400:350)-b.delay;if(age<=0)return;
     const sway=reduced.matches?0:Math.sin(t*.8+b.phase)*3;
-    const x=width*b.u,base=b.lower?lowerBaseline+Math.sin((b.u-.12)/.76*6.28)*4:89+(rand(i+40)-.5)*30;
+    const x=width*b.u,base=89+(rand(i+40)-.5)*30;
     const height=b.side*(b.lower?16+rand(i+50)*12:36+rand(i+50)*30),lean=(rand(i+60)-.5)*36;
     const points=Array.from({length:40},(_,k)=>{const u=k/39;return[x+lean*u+Math.sin(u*5+b.phase)*10*u+sway*u*u,base+height*u]});
     const growth=engine.eo(age/1600);engine.strokeRange(B,points,0,growth,engine.cc.blue,1.2);
