@@ -6,7 +6,7 @@ const posts=(await getCollection('blog')).sort((a,b)=>b.data.pubDate.valueOf()-a
 const [featured,...rest]=posts;
 const minutes=(body='')=>Math.max(1,Math.ceil(body.trim().split(/\s+/).length/200));
 const date=(d:Date)=>d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
-const category=(tags:string[])=>tags.includes('learning-resources')?'Learning guide':'Build notes';
+const category=(tags:string[])=>tags.includes('people-analytics')?'People analytics':tags.includes('learning-resources')?'Learning guide':'Build notes';
 ---
 <Base title="Writing" description="Practical notes on building AI applications, working with data, and learning by making things." ogImage="/og-writing.png" hideFooter>
  <div class="writing-page">
@@ -46,3 +46,4 @@ const category=(tags:string[])=>tags.includes('learning-resources')?'Learning gu
  @media(max-width:500px){.writing-page{padding:4px 24px 20px}.featured-story{padding:28px 22px}.featured-story figure{max-width:260px}.story-copy h2{font-size:2.15rem}.article-row h3{font-size:1.8rem}}
  @media(prefers-reduced-motion:reduce){.read-link span{transition:none}}
 </style>
+
