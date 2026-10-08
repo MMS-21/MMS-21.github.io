@@ -8,7 +8,7 @@ const papers=[
 ];
 ---
 <div class="analyst-desk" aria-labelledby="desk-introduction-title">
- <header class="desk-message"><h2 id="desk-introduction-title">Making everyday business data<br class="wide-break" /> easier to trust and act on.</h2><p>I reconcile financial, inventory, and logistics records, build recurring reports, and automate repetitive reporting tasks.</p></header>
+ <header class="desk-message"><h2 id="desk-introduction-title">Making everyday business data<br class="wide-break" /> easier to trust and act on.</h2><div class="headline-branch" aria-hidden="true"><svg viewBox="0 0 600 40" preserveAspectRatio="none" fill="none"><path pathLength="1" d="M2 23C130 5 230 38 330 21S490 8 598 23"/></svg><FloralAccent mode="desk-branch" /></div><p>I reconcile financial, inventory, and logistics records, build recurring reports, and automate repetitive reporting tasks.</p></header>
  <div class="working-papers">{papers.map((paper,i)=><article class="working-paper" style={`--paper-index:${i};--angle:${[-3,2,-1][i]}deg`}>
   <PaperLandmark index={paper.index}/><div class="paper-content"><p class="document-type">{paper.type}</p>
   <svg class="working-mark" viewBox="0 0 160 48" fill="none" aria-hidden="true">{i===0?<><path d="M4 9h107M4 24h107M4 39h68M37 4v39M78 4v39"/><path d="m119 25 10 10 23-28"/></>:i===1?<><path d="M6 12h38v27H6zM62 4h37v35H62zM117 18h36v21h-36zM44 26h18M99 26h18"/><path d="m53 21 5 5-5 5m55-10 5 5-5 5"/></>:<><path d="M5 39V9h31v30M51 39V19h31v20M98 39V3h31v36M3 44h135"/><path d="m143 7 10 8-10 8"/></>}</svg>
@@ -24,4 +24,10 @@ const papers=[
 @media(max-width:700px){.analyst-desk{inset:210px 28px 20px}.desk-message{margin-bottom:17px}.desk-message h2{font-size:1.85rem;margin-bottom:10px}.desk-message>p{font-size:.78rem;line-height:1.55}.wide-break{display:none}.working-papers{display:block;padding:0}.working-paper{margin:0 0 12px!important;transform:translateX(calc((1 - var(--paper-reveal,1))*20px)) rotate(calc(var(--angle)*.3))}.paper-content{padding:13px 15px}.document-type{font-size:.56rem;margin-bottom:5px}.working-mark,.handwritten{display:none}.working-paper h3{font-size:1.4rem;margin-bottom:5px}.paper-description{font-size:.73rem;line-height:1.5}.journey-bridge{margin-top:10px}.ink-trail{height:20px}.desk-work-link{margin-top:2px;padding:6px 0}.journey-bridge :global(.floral-accent){inset:-75px 0 auto}}
 @media(max-height:730px) and (min-width:701px){.analyst-desk{top:100px}.desk-message{margin-bottom:12px}.desk-message h2{font-size:2.7rem}.paper-content{padding:16px}.working-mark{height:25px;margin-bottom:10px}.handwritten{margin-top:12px;padding-top:10px}.journey-bridge{margin-top:22px}}
 @media(prefers-reduced-motion:reduce){.analyst-desk{opacity:1;visibility:visible}.working-paper{transition:none}.ink-trail{stroke-dashoffset:0}}
+</style>
+
+<style>
+.analyst-desk{left:180px;right:80px;text-align:center}.desk-message{max-width:760px}.desk-message h2{font-size:clamp(2rem,2.7vw,2.75rem);margin-bottom:0}.desk-message>p{margin-inline:auto}.working-papers{justify-content:center;text-align:left;max-width:990px;margin-inline:auto}.headline-branch{position:relative;height:48px;max-width:600px;margin:5px auto 12px;pointer-events:none}.headline-branch>svg{position:absolute;inset:0;width:100%;height:40px;stroke:#60869a;stroke-width:1.3;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--branch-growth,1))}.headline-branch :global(.floral-accent){inset:-77px 0 auto;height:200px}
+@media(max-width:1000px) and (min-width:701px){.analyst-desk{left:165px;right:55px}.desk-message h2{font-size:2.25rem}.headline-branch{height:38px;margin-bottom:8px}}
+@media(max-width:700px){.analyst-desk{inset:135px 28px 20px}.desk-message h2{font-size:1.8rem}.headline-branch{height:36px;margin:3px auto 8px}.working-papers{text-align:left}.desk-message{margin-bottom:14px}}
 </style>

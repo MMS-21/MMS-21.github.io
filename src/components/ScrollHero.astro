@@ -94,6 +94,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
       const workReveal=animated?ramp(p,.18,.25):1;
       set(hero,'--work-reveal',workReveal);style(hero,'--work-visibility',workReveal>.01?'visible':'hidden');
       set(hero,'--paper-reveal',animated?ramp(p,.25,.55):1);
+      set(hero,'--branch-growth',animated?ramp(p,.25,.60):1);
+      set(identity,'--arabic-visible',1-lift);
       hero.querySelector<HTMLElement>('.analyst-desk')!.inert=workReveal<.9;
       set(hero,'--opening-welcome',animated?1-ramp(p,.025,.07):0);
       for(const [name,a,b,c,d] of moments)set(hero,`--${name}`,animated?ramp(p,a,b)*(1-ramp(p,c,d)):1);
@@ -104,7 +106,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       set(hero,'--dock',dock);
       const mobile=w<=700;
       const initialY=h/2-(mobile?215:240);
-      const finalHeroY=mobile?65:110;
+      const finalHeroY=mobile?65:12;
       const baseY=initialY+(finalHeroY-initialY)*lift;
       const signatureX=mobile?84:103;
       const x=w/2+(signatureX-w/2)*lift;
@@ -286,4 +288,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
 
 <style>
 @media(prefers-reduced-motion:reduce){.hero-identity{top:90px;left:-67px;transform:scale(.48)}.hero-stage{min-height:850px}@media(max-width:700px){.hero-identity{top:20px;left:-86px}.hero-stage{min-height:900px}}}
+</style>
+
+<style>
+.name-arabic{opacity:var(--arabic-visible,1);transition:opacity 180ms linear}.hero-identity[data-docked="true"] .name-arabic{display:none}
 </style>
