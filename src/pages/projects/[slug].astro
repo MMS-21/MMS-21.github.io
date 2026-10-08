@@ -4,7 +4,7 @@ import { PROJECTS } from '../../data/site';
 import RetentionMatrix from '../../components/RetentionMatrix.astro';
 
 export function getStaticPaths() {
-  return PROJECTS.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+  return PROJECTS.filter(p=>p.slug!=='hr-attrition-analysis').map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
 }
 
 const { project } = Astro.props;

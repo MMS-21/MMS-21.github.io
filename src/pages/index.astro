@@ -4,64 +4,18 @@ import ScrollHero from '../components/ScrollHero.astro';
 import AboutTimeline from '../components/AboutTimeline.astro';
 import ScrollRail from '../components/ScrollRail.astro';
 import ContactInvitation from '../components/ContactInvitation.astro';
-const projects=[{slug:'analytics-agent',title:'From raw data to a useful report',detail:'An analytics assistant that checks its work before writing the report.'},{slug:'ai-tell',title:'A closer look at AI-written documents',detail:'A desktop tool for examining authorship signals and document provenance.'},{slug:'ecommerce-clv-churn',title:'Who needs attention first?',detail:'A customer analytics case study, developed from a real project experience.'}];
+import FeaturedWork from '../components/FeaturedWork.astro';
 
 ---
 
 <Base hideHeader hideFooter>
   <ScrollHero />
-  <section class="desk-scene" id="featured-work" tabindex="-1" aria-label="Featured work">
-    <div class="desk-stage">
-    <h2 class="desk-title">Featured work</h2>
-    <div class="desk-papers">
-    <article class="work-paper current-paper">
-
-      <svg class="paper-symbol" viewBox="0 0 100 85" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8h70v68H12z M18 2v78 M30 20h36 M30 28h23 M31 62V40 M31 62h40 M34 53l12-12 10 4 13-17 m-7 0h7v7"/></g></svg>
-      <div class="paper-copy"><h3>On my desk</h3><p class="desk-lead">Less repetitive reporting. More time to think.</p><p>I’m exploring tools that make analysis easier to repeat, inspect, and use—alongside this evolving portfolio.</p><a href="https://github.com/MMS-21">See what I’m building ↗</a><span class="desk-note">Questions first. Tools second.</span></div>
-    </article>
-    <article class="work-paper featured-paper">
-
-      <svg class="paper-symbol" viewBox="0 0 100 85" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 5h65v68H14z M25 18h40 M25 27h24 M25 57h14"/><circle cx="66" cy="45" r="17"/><path d="m78 58 16 19 M58 45l6 6 11-13"/></g></svg>
-      <div class="paper-copy"><h3>Ideas put to work</h3><ul class="desk-projects">{projects.map(p=><li><a href={`/projects/${p.slug}/`}>{p.title}<span aria-hidden="true">↗</span></a><p>{p.detail}</p></li>)}</ul><a href="/projects/">Explore all projects →</a></div>
-    </article>
-    </div>
-    <a class="scroll-cue" href="#about"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
-    </div>
-  </section>
+  <FeaturedWork />
   <AboutTimeline />
   <ContactInvitation />
   <ScrollRail />
 </Base>
 
 <style>
-  :global(main.flush-top:has(.contact-section)) { padding-bottom:0; }
-  .desk-scene { position:relative; margin:0; }
-  .desk-scene[data-animated="true"] { height:320svh; }
-  .desk-stage { position:relative; min-height:850px; padding:110px 30px 90px; }
-  [data-animated="true"] .desk-stage { position:sticky; top:0; height:100svh; min-height:0; }
-  .desk-title { margin:0 0 34px; text-align:center; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(2.4rem,4vw,3.3rem); opacity:var(--desk-title,1); }
-  .desk-papers { display:grid; grid-template-columns:1fr 1fr; gap:54px; max-width:830px; margin:auto; }
-  .work-paper { --land:1; position:relative; align-self:start; padding:26px 30px 30px; background:#fffaf0; box-shadow:3px 10px 20px #59472920; color:#30291f; opacity:var(--land); transform:translate3d(calc(-55px * (1 - var(--land))),calc(-40px * (1 - var(--land))),0) scale(calc(.65 + .35 * var(--land))) rotate(-4deg); transform-origin:top center; }
-  .featured-paper { transform:translate3d(calc(55px * (1 - var(--land))),calc(-40px * (1 - var(--land))),0) scale(calc(.65 + .35 * var(--land))) rotate(3deg); }
-  .current-paper { margin-top:12px; background:#f8f1e2; }
-  .work-paper::before { content:""; position:absolute; inset:0; pointer-events:none; background:url('/img/paper-fibers.svg'); opacity:.5; }
-  .paper-symbol { width:58px; height:54px; margin:0 0 14px; }
-  .paper-copy { position:relative; }
-  .work-paper h3 { font-family:'Cormorant Garamond',Georgia,serif; font-size:2rem; font-weight:500; margin:0 0 18px; }
-  .work-paper p { font-size:.86rem; line-height:1.75; }
-  .work-paper .desk-lead { font-family:Georgia,serif; font-size:1.13rem; line-height:1.5; }
-  .work-paper a { font-size:.84rem; }
-  .desk-note { display:block; margin-top:28px; font-family:'Segoe Print',cursive; font-size:.8rem; transform:rotate(-3deg); color:#766950; }
-  .desk-projects { list-style:none; margin:0 0 20px; padding:0; }
-  .desk-projects li { border-top:1px solid #d7cab1; padding:12px 0; }
-  .desk-projects a { display:flex; justify-content:space-between; gap:12px; color:#30291f; font-weight:650; text-decoration:none; font-size:.9rem; }
-  .desk-projects a:hover { color:var(--accent); }
-  .desk-projects p { margin:5px 0 0; font-size:.76rem; color:#685b47; line-height:1.6; }
-  .scroll-cue { position:absolute; left:50%; bottom:22px; transform:translateX(-50%); display:flex; align-items:center; flex-direction:column; color:#57472f; text-decoration:none; font-family:'Cormorant Garamond',Georgia,serif; font-size:1.15rem; opacity:var(--cue,1); }
-  .scroll-cue svg { width:28px; height:38px; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; animation:scroll-nudge 2.4s ease-in-out infinite; }
-  @keyframes scroll-nudge { 0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(6px) rotate(3deg);} }
-  @media(max-width:1100px) and (min-width:701px) { .desk-stage { padding-left:185px; padding-right:35px; } .desk-papers { gap:30px; } .work-paper { padding:24px; } }
-  @media(max-width:700px) { .desk-scene[data-animated="true"] { height:auto; } [data-animated="true"] .desk-stage { position:relative; height:auto; min-height:0; } .desk-stage { padding:155px 32px 120px; } .desk-papers { grid-template-columns:1fr; gap:54px; max-width:330px; } .desk-title { margin-bottom:35px; } .work-paper { padding:24px; } }
-  @media(max-height:760px) and (min-width:701px) { .desk-stage { padding-top:55px; } .desk-title { margin-bottom:20px; } .paper-symbol { width:42px; height:38px; margin-bottom:8px; } .work-paper { padding:22px; } }
-  @media(prefers-reduced-motion:reduce) { .scroll-cue svg { animation:none; } }
+ :global(main.flush-top:has(.contact-section)){padding-bottom:0}
 </style>

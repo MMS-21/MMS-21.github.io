@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import { PROJECTS } from '../../data/site';
 const featured=PROJECTS.find(p=>p.slug==='ecommerce-clv-churn')!;
 const descriptions:Record<string,{title:string;kind:string;body:string;output:string}>={
+ 'hr-attrition-analysis':{title:'Where should HR focus its retention efforts?',kind:'HR analytics · Case study',body:'Exploring employee attrition across roles, overtime, and experience, and turning the findings into a practical retention briefing.',output:'Power BI · DAX · SQL · Python'},
  'analytics-agent':{title:'From a dataset to a report you can inspect',kind:'AI tooling',body:'An analytics assistant that works through tools and checks its report before writing it.',output:'Python tool loop · Charts · Report validation'},
  'ai-tell':{title:'A closer look at document authorship',kind:'Desktop application',body:'A desktop tool that brings document metadata and writing signals together for closer inspection.',output:'Document analysis · Authorship signals · Desktop interface'},
  'ab-test':{title:'Is the difference worth trusting?',kind:'Statistical analysis',body:'An A/B testing project that makes hypotheses, confidence intervals, and statistical comparisons explicit.',output:'Hypothesis testing · Confidence intervals'},
@@ -14,7 +15,7 @@ const descriptions:Record<string,{title:string;kind:string;body:string;output:st
  <div class="project-collection">
   <header class="collection-intro">
    <h1>Ideas, put to work.</h1>
-   <p>Analysis, dashboards, and tools built around a useful question. Take a look at the work—and the decisions behind it.</p>
+   <p>Analysis, dashboards, and tools built around a useful question. Take a look at the work and the decisions behind it.</p>
    <nav aria-label="Browse projects"><a href="#customer-study">Customer analytics</a><a href="#more-projects">Tools &amp; more</a></nav>
   </header>
   <article class="lead-project" id="customer-study" aria-labelledby="customer-title">

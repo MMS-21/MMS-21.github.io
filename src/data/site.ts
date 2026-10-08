@@ -45,6 +45,17 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    slug: 'hr-attrition-analysis',
+    name: 'Employee Attrition Analysis',
+    tagline: 'Exploring employee attrition across roles, overtime, and experience, and turning the findings into a practical retention briefing.',
+    problem: 'An overall attrition average hides differences between employee groups. Where should HR investigate first?',
+    approach: ['Prepared a star schema for Power BI reporting.', 'Used Python, pandas, and DuckDB to group experience levels and query department and role patterns.', 'Built DAX measures and translated findings into proposed retention actions.'],
+    result: 'An inspectable reporting workflow and retention briefing, supported by checked segment comparisons.',
+    stack: ['Power BI', 'DAX', 'SQL', 'Python', 'pandas', 'DuckDB'],
+    repo: 'https://github.com/MMS-21/hr-attrition-analysis',
+    featured: true,
+  },
+  {
     slug: 'analytics-agent',
     name: 'analytics-agent',
     tagline: 'A pure-Python analytics agent with a hand-rolled tool loop and a report quality gate',

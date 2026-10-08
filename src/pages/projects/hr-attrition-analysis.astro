@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+const github='https://github.com/MMS-21/hr-attrition-analysis';
+const python=`def classify_experience(years):
+    if years < 5:
+        return "Junior"
+    elif years <= 9:
+        return "Mid"
+    return "Senior"
+
+df["ExperienceLevel"] = df["TotalWorkingYears"].apply(
+    classify_experience
+)`;
+const bridge=`sheets = pd.read_excel("prepared_data.xlsx", sheet_name=None)
+
+con = duckdb.connect()
+con.register("DimDepartment", sheets["DimDepartment"])
+con.register("DimJobRole", sheets["DimJobRole"])
+con.register("FactEmployee", sheets["FactEmployee"])
+
+result = con.execute(query).fetchdf()`;
+const sql=`SELECT
+    d.Department,
+    j.JobRoleName AS JobRole,
+    COUNT(*) AS EmployeeCount,
+    COUNT(CASE WHEN f.AttritionFlag = 1 THEN 1 END)
+        AS AttritionCount,
+    100.0 * COUNT(CASE WHEN f.AttritionFlag = 1 THEN 1 END)
+        / NULLIF(COUNT(*), 0) AS AttritionRatePct,
+    AVG(f.MonthlyIncome) AS AvgMonthlyIncome
+FROM FactEmployee f
+INNER JOIN DimDepartment d
+    ON f.DepartmentKey = d.DepartmentKey
+INNER JOIN DimJobRole j
+    ON f.JobRoleKey = j.JobRoleKey
+GROUP BY d.Department, j.JobRoleName
+ORDER BY AttritionCount DESC;`;
+---
+<Base title="Employee Attrition Analysis" description="Exploring employee attrition across roles, overtime, and experience, and turning the findings into a practical retention briefing." hideFooter>
+ <article class="hr-case">
+  <a class="back" href="/projects/">← All projects</a>
+  <header class="case-opening">
+   <h1>Where should HR focus its retention efforts?</h1>
+   <p class="lead">Exploring employee attrition across roles, overtime, and experience, and turning the findings into a practical retention briefing.</p>
+   <div class="case-meta"><span>Power BI · DAX · SQL · Python · DuckDB</span><span>Confidential</span></div>
+   <a class="source-link" href={github}>Explore the code on GitHub ↗</a>
+  </header>
+  <figure class="opening-chart"><a href="/img/hr/attrition-overview.svg" aria-label="Open attrition comparison chart at full size"><img src="/img/hr/attrition-overview.svg" width="960" height="580" alt="Recorded attrition: overall 16.1%, overtime 30.5%, no overtime 10.4%, Sales Representatives 39.8%, Laboratory Technicians 23.9%." /></a><figcaption>Checked analysis preview. Each percentage uses its own group as the denominator. This is an analysis chart, not a screenshot of the Power BI report.</figcaption></figure>
+  <section class="story-row"><h2>The average hides the question.</h2><div><p>Across 1,470 employee records, 237 were marked as leavers, an overall proportion of 16.1%. That average is useful context, but it does not tell HR which groups deserve a closer look.</p><p>I explored differences across roles, overtime, and total working experience, then brought the findings into a reporting workflow and a practical retention briefing.</p></div></section>
+  <section class="story-row"><h2>From records to reporting.</h2><div><p>My work covered data preparation, a Power BI dashboard, DAX measures, SQL analysis, Python segmentation, and stakeholder communication.</p><ol><li>Prepare employee records and department, job role, and employee dimensions.</li><li>Build reporting measures for employee counts, attrition proportions, income comparisons, and overtime.</li><li>Use Python and SQL together to inspect group differences and check the results.</li><li>Translate those comparisons into questions HR can investigate and proposed next steps.</li></ol></div></section>
+  <section class="findings"><h2>Three patterns worth investigating</h2><div class="table-scroll"><table><caption>Selected employee groups in the analysed sample</caption><thead><tr><th scope="col">Group</th><th scope="col">Recorded leavers / group</th><th scope="col">Attrition proportion</th></tr></thead><tbody><tr><th scope="row">Overtime</th><td>127 / 416</td><td>30.5%</td></tr><tr><th scope="row">No overtime</th><td>110 / 1,054</td><td>10.4%</td></tr><tr><th scope="row">Sales Representatives</th><td>33 / 83</td><td>39.8%</td></tr><tr><th scope="row">Under 5 years of total experience</th><td>75 / 228</td><td>32.9%</td></tr></tbody></table></div><p>These differences suggest questions about workload, role progression, compensation, and support for less experienced employees. They do not establish why any individual left.</p><p class="note">Experience means total working years, not time at this employer. These are proportions in the supplied sample, with no confirmed annual observation window.</p></section>
+  <section class="code-section"><h2>Python made the groups useful.</h2><p>I classified total working years into Junior, Mid, and Senior groups, then summarised employee counts. The thresholds were under 5, 5 through 9, and 10 or more years.</p><pre tabindex="0" aria-label="Python experience classification"><code>{python}</code></pre><p>The groups contain 228, 493, and 749 records respectively. Their recorded leaver counts are 75, 82, and 80. The public script adds validation for missing columns, employee uniqueness, flags, and dimension keys.</p></section>
+  <section class="code-section"><h2>Python and SQL, in one workflow.</h2><p>I used pandas to load the prepared tables, registered the DataFrames with an in-memory DuckDB connection, and brought SQL results back into pandas with <code>fetchdf()</code>.</p><pre tabindex="0" aria-label="Python DuckDB integration"><code>{bridge}</code></pre><p>This let me query the prepared data without setting up a separate database server. The workflow reads and analyses data; it does not modify a persistent production database.</p><h3>Joining the business context</h3><p>The query connects employee records to department and role names, then compares leaver counts, group sizes, attrition proportions, and average income. This public version extends my original aggregation with counts and proportions.</p><pre tabindex="0" aria-label="SQL attrition aggregation"><code>{sql}</code></pre><a href={`${github}/blob/main/src/analyse.py`}>Read the runnable workflow ↗</a></section>
+  <section class="story-row"><h2>Power BI brought it together.</h2><div><p>The report includes a Landing Page, Executive Overview, Deep Dive, and Recommendations Preview. It uses prepared employee and dimension tables with DAX measures for the selected reporting context.</p><p>Measures cover employee counts, attrition proportion, retained versus departed income, and the overtime segment. The public repository documents the model and measures; the original report file remains withheld.</p><a href={`${github}/tree/main/powerbi`}>Inspect the model notes and DAX ↗</a></div></section>
+  <section class="story-row"><h2>What I would investigate next.</h2><div><p>Start with workload reviews in overtime-heavy teams, examine compensation and progression for Sales Representatives, and explore onboarding and mentoring needs among less experienced employees.</p><p>Validate these explanations with further evidence before choosing an intervention. Follow-up reporting should assess whether a tested action improves retention.</p><p class="note">This project demonstrates reporting and descriptive analysis. It does not claim a validated prediction model, measured retention improvement, or savings delivered.</p></div></section>
+  <footer class="case-close"><h2>See how the analysis fits together.</h2><p>The repository includes cleaned Python, SQL, DAX, model notes, and checked charts.</p><a href={github}>View the project on GitHub ↗</a><a href="/projects/">Explore more projects →</a></footer>
+ </article>
+</Base>
+<style>
+ .hr-case{max-width:1080px;margin:auto;padding:15px 40px 40px;color:#302d28}
+ a{color:inherit;text-underline-offset:5px}a:hover{color:#70552c}a:focus-visible,pre:focus-visible{outline:2px solid #60869a;outline-offset:5px}
+ .back{font-size:.8rem}.case-opening{max-width:830px;margin:38px 0 45px}
+ h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;letter-spacing:-.025em;text-wrap:balance}
+ h1{font-size:clamp(3rem,6vw,5.1rem);line-height:1.03;margin:0 0 26px}h2{font-size:2.5rem;line-height:1.12;margin:0 0 24px}h3{font-size:2rem;margin:36px 0 15px}
+ p,li{font-size:.97rem;line-height:1.85;color:#665b4c}p{margin:0 0 20px}.lead{font-size:1.15rem;max-width:65ch}
+ .case-meta{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:.75rem;color:#665b4c;border-top:1px solid #cfc3ad;padding-top:18px;margin-top:28px}.source-link{display:inline-block;margin-top:25px;font-size:.9rem}
+ .opening-chart{margin:0 0 65px;padding:18px;background:#fffaf0;box-shadow:3px 12px 28px #59472918;transform:rotate(-.7deg)}img{display:block;width:100%;height:auto}figcaption{font-size:.75rem;line-height:1.7;color:#665b4c;padding:12px 20px}
+ .story-row{display:grid;grid-template-columns:260px 1fr;gap:45px;padding:45px 0;border-top:1px solid #cfc3ad}.story-row p:last-child{margin-bottom:0}ol{padding-left:22px}li{padding-left:6px;margin-bottom:12px}
+ .findings,.code-section{border-top:1px solid #cfc3ad;padding:45px 0}.findings>p,.code-section>p{max-width:72ch}.note{font-size:.82rem;color:#665b4c}
+ .table-scroll{overflow:auto;margin:25px 0}table{width:100%;border-collapse:collapse;text-align:left;font-size:.86rem}caption{text-align:left;font-size:.78rem;color:#665b4c;padding-bottom:14px}th,td{padding:15px 12px;border-bottom:1px solid #d9cfbd;line-height:1.6}thead th{color:#665b4c;font-weight:500}tbody th{font-weight:600}td{font-variant-numeric:tabular-nums}
+ pre{overflow:auto;background:#f2ece1;border:1px solid #d9cfbd;padding:25px;margin:24px 0;font-size:.82rem;line-height:1.8;color:#302d28;tab-size:4}code{font-family:Consolas,monospace}
+ .case-close{padding-top:45px;border-top:1px solid #cfc3ad}.case-close a{display:inline-block;margin:15px 30px 0 0;font-size:.9rem}
+ @media(max-width:800px){.story-row{grid-template-columns:1fr;gap:8px}.hr-case{padding-left:28px;padding-right:28px}.case-opening{margin-top:30px}h2{font-size:2.2rem}.opening-chart{padding:8px}figcaption{padding:12px}pre{padding:18px;font-size:.75rem}th,td{padding:12px 10px;min-width:100px}.case-meta{flex-direction:column;gap:10px}}
+</style>

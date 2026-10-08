@@ -159,20 +159,13 @@ const fragments = Array.from({length:24}, (_,i) => ({
       links.forEach((link,i)=>set(link,'--link',animated?ramp(p,.14+i*.018,.16+i*.018):1));
       nav.inert=(visibleNav<.99)||(collapse>.2&&!open);
       style(shell,'visibility',visibleNav===0?'hidden':'visible');
-      const desktop=w>700;
-      const q=animated?clamp((y-deskTop)/deskEnd):1;
-      set(desk,'--desk-title',desktop&&animated?ramp(q,0,.08):1);
-      papers.forEach((paper,i)=>{
-        const start=i===0?.13:.43,finish=i===0?.33:.63;
-        const local=desktop?q:clamp((y+h*.8-(deskTop+paper.offsetTop))/(h*.5));
-        const t=animated?(desktop?ramp(local,start,finish):ease(local)):1;
-        set(paper,'--land',t);paper.inert=t<.95;
-      });
-      cue(deskCue,animated?(desktop?ramp(q,.78,.84):ramp((y+h-deskTop)/desk.offsetHeight,.88,1)):1);
+      set(desk,'--desk-title',1);
+      papers.forEach(paper=>{set(paper,'--land',1);paper.inert=false;});
+      cue(deskCue,1);
     };
     const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
     const measure=()=>{
-      hero.dataset.animated=String(!reduced.matches);desk.dataset.animated=String(!reduced.matches);
+      hero.dataset.animated=String(!reduced.matches);desk.dataset.animated='false';
       h=innerHeight;w=document.documentElement.clientWidth;end=Math.max(1,hero.offsetHeight-h);
       identityHeight=identity.offsetHeight;shellWidth=shell.offsetWidth;
       links.forEach((link,i)=>{
