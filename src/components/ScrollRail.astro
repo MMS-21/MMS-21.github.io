@@ -47,7 +47,7 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
   }));
   addEventListener('scroll',()=>{
    rail.dataset.moving='true';clearTimeout(timer);
-   timer=setTimeout(()=>{rail.dataset.moving='false';schedule();},140);schedule();
+   timer=setTimeout(()=>{rail.dataset.moving='false';schedule();},850);schedule();
   },{passive:true});
   addEventListener('resize',measure,{passive:true});
   new ResizeObserver(measure).observe(document.body);
@@ -57,11 +57,12 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
 </script>
 <style>
  .scroll-rail { --progress:0; position:fixed; z-index:40; right:14px; top:50%; transform:translateY(-50%); width:44px; height:min(44svh,340px); visibility:hidden; }
- .scroll-rail[data-ready="true"] { visibility:visible; }
+ .scroll-rail[data-ready="true"] { visibility:visible; opacity:.3; transition:opacity 450ms ease; }
+ .scroll-rail[data-moving="true"],.scroll-rail:hover,.scroll-rail:focus-within { opacity:1; }
  .rail-line { position:absolute; left:21.5px; top:0; bottom:0; width:1px; background:#b9b5ae; pointer-events:none; }
  .rail-fill { position:absolute; inset:0; background:#39332b; transform:scaleY(var(--progress)); transform-origin:top; }
- .rail-light { position:absolute; z-index:2; left:-3.5px; top:-4px; width:8px; height:8px; border-radius:50%; background:#c99b51; border:1px solid #75582d; transform:translateY(calc(var(--progress) * min(44svh,340px))); box-shadow:0 0 7px #ce9b4c90,0 0 14px #ce9b4c40; transition:box-shadow 250ms ease,background 250ms ease; }
- [data-arrived="true"] .rail-light { background:#fff1c9; box-shadow:0 0 7px #d99b36,0 0 17px #d99b36b0,0 0 27px #d99b3660; }
+ .rail-light { position:absolute; z-index:2; left:-3.5px; top:-4px; width:8px; height:8px; border-radius:50%; background:#c99b51; border:1px solid #75582d; transform:translateY(calc(var(--progress) * min(44svh,340px))); box-shadow:none; transition:background 250ms ease; }
+ [data-arrived="true"] .rail-light { background:#986f35; box-shadow:none; }
  .rail-stop { position:absolute; left:0; top:calc(var(--stop) * 100% - 22px); width:44px; height:44px; display:grid; place-items:center; text-decoration:none; }
  .rail-dot { width:8px; height:8px; border:2px solid #fcfaf7; border-radius:50%; background:#39332b; box-shadow:0 0 0 1px #39332b20; transition:transform 180ms ease,background 180ms ease; }
  .rail-stop:hover .rail-dot,.rail-stop:focus-visible .rail-dot { transform:scale(1.4); background:#986f35; }

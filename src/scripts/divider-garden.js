@@ -1,6 +1,6 @@
 // Rose contours, leaf geometry and spring easing adapted from Type Garden
 // by Akshat Agarwal: https://type-garden.vercel.app/ (public Copy code source).
-class Garden {
+export class Garden {
   cc = {blue:'#70836a', vein:'#e9eedf', red:'#cbdce6', line:'#537288'};
   spr(t,k=7,w=16){return t<=0?0:1-Math.exp(-t*k)*Math.cos(t*w)}
   eo(t){return t<=0?0:t>=1?1:1-Math.pow(1-t,3)}

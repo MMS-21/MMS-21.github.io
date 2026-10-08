@@ -1,5 +1,6 @@
 ---
 import FlowerMenu from './FlowerMenu.astro';
+import WelcomeGarden from './WelcomeGarden.astro';
 import { Mascot } from 'page-mascot';
 import { SITE } from '../data/site';
 const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'#about',label:'About'},{href:'/contact/',label:'Contact'}];
@@ -60,14 +61,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       <p class="hero-role">Business Analyst</p>
       <p class="hero-location">{SITE.location}</p>
       <div class="bio-intro">
-        <div class="question-cue">
-          <p class="margin-note">Start with the question.</p>
-          <svg class="question-arrow" viewBox="0 0 100 55" fill="none" aria-hidden="true"><path d="M8 7C72-5 90 17 68 43m-5-13 4 15 15-6" /></svg>
-        </div>
-        <div class="question-paper">
-          <span class="binding-holes" aria-hidden="true"></span>
-          <p>Where is the process slowing down—and what can better data help us improve?</p>
-        </div>
+        <div class="welcome-reveal"><WelcomeGarden /></div>
       </div>
     </div>
 
@@ -79,7 +73,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   <div class="navigation-shell">
     <button class="pyramid-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="portfolio-navigation">
       <FlowerMenu />
-      
+
     </button>
     <nav class="hero-nav" id="portfolio-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}</nav>
   </div>
@@ -304,5 +298,6 @@ const fragments = Array.from({length:24}, (_,i) => ({
   @media(max-width:700px) { .dock-backdrop { display:block; position:fixed; top:0; left:0; width:160px; height:154px; z-index:19; pointer-events:none; background:#faf6ecf5; border-radius:0 0 12px 0; opacity:var(--dock,0); } .hero-illustrations { top:105px; transform:none; } .hero-details { top:315px; } .hero-nav { gap:clamp(10px,3vw,22px); left:0; right:0; } .hero-nav a { font-size:1.22rem; padding-inline:3px; } .question-paper { max-width:310px; } .hero-role { font-size:.95rem; } }
   @media(max-height:700px) and (min-width:701px) { .hero-illustrations { top:90px; } .hero-details { top:285px; } }
   @media(prefers-reduced-motion:reduce) { .scroll-cue svg { animation:none; } .opening-cue,.hero-end-cue { display:none; } .paper-background { --paper-visible:1; } }
+  .welcome-reveal { opacity:var(--question-note); transform:translateY(calc(12px * (1 - var(--question-note)))); max-width:450px; margin:0 auto; }
 </style>
 
