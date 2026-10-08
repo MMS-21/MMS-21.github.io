@@ -61,11 +61,13 @@ const fragments = Array.from({length:24}, (_,i) => ({
       <p class="hero-role">Business Analyst</p>
       <p class="hero-location">{SITE.location}</p>
       <div class="bio-intro">
-        <div class="welcome-reveal"><WelcomeGarden /></div>
+        <div class="question-cue"><p class="margin-note">Start with the question.</p><svg class="question-arrow" viewBox="0 0 100 55" fill="none" aria-hidden="true"><path d="M8 7C72-5 90 17 68 43m-5-13 4 15 15-6" /></svg></div>
+        <div class="question-paper"><span class="binding-holes" aria-hidden="true"></span><p>Where is the process slowing down—and what can better data help us improve?</p></div>
       </div>
     </div>
 
   </div>
+  <div class="opening-welcome"><WelcomeGarden /></div>
   <div class="hero-identity">
     <div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={220} label="Moaaz avatar" /></div></div>
     <h1>{SITE.name}</h1>
@@ -122,6 +124,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       scraps.forEach((scrap,i)=>set(scrap,'--assembly',animated?ease(((p-.07)-(i%6)*.006)/.15):1));
       const lift=animated?ramp(p,.07,.13):1;
       set(hero,'--identity',lift);
+      set(hero,'--opening-welcome',animated?1-ramp(p,.025,.07):0);
       for(const [name,a,b,c,d] of moments)set(hero,`--${name}`,animated?ramp(p,a,b)*(1-ramp(p,c,d)):1);
       set(hero,'--depart',0);set(hero,'--handoff',0);
       cue(openingCue,animated?1-ramp(p,0,.025):0);
@@ -129,7 +132,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       const dock=animated?ramp(p,.835,.94):0,scale=1-.62*dock;
       set(hero,'--dock',dock);
       const mobile=w<=700;
-      const initialY=h/2-(mobile?125:140);
+      const initialY=h/2-(mobile?170:185);
       const finalHeroY=mobile?105:Math.max(90,h*.16);
       const baseY=initialY+(finalHeroY-initialY)*lift;
       const x=w/2+(18+340*.38/2-w/2)*dock;
@@ -206,7 +209,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .hero-art { position:relative; width:min(640px,95vw); height:200px; display:grid; place-items:center; margin:auto; }
   .mascot-portrait { position:relative; width:220px; height:220px; }
   .mascot-portrait :global(button:focus-visible) { outline:2px solid var(--accent); outline-offset:2px; border-radius:50%; }
-  h1 { width:100%; text-align:center; margin:0; font-size:clamp(2rem,5vw,2.8rem); letter-spacing:-.035em; }
+  h1 { width:100%; text-align:center; margin:0; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(2.7rem,5vw,3.4rem); letter-spacing:-.025em; }
   .ink-sketch { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
   .doodle { visibility:visible; transform-box:fill-box; transform-origin:center; opacity:calc(var(--reveal) * (1 - var(--handoff,0))); transform:translateY(calc(12px * (1 - var(--reveal)))) scale(calc(.82 + .18 * var(--reveal))); }
   .notebook { --reveal:var(--notebook); clip-path:inset(calc(100% * (1 - var(--reveal))) 0 0 0); }
@@ -276,7 +279,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
     .identity-art { height:130px; }
     .hero-art { height:130px; }
     .mascot-portrait { transform:scale(.65); }
-    h1 { font-size:1.8rem; }
+    h1 { font-size:2.7rem; }
     .hero-details { top:calc(50% - 55px); }
     .question-paper { padding-top:18px; margin-bottom:10px; }
     .question-paper p { font-size:1.05rem; }
@@ -298,6 +301,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
   @media(max-width:700px) { .dock-backdrop { display:block; position:fixed; top:0; left:0; width:160px; height:154px; z-index:19; pointer-events:none; background:#faf6ecf5; border-radius:0 0 12px 0; opacity:var(--dock,0); } .hero-illustrations { top:105px; transform:none; } .hero-details { top:315px; } .hero-nav { gap:clamp(10px,3vw,22px); left:0; right:0; } .hero-nav a { font-size:1.22rem; padding-inline:3px; } .question-paper { max-width:310px; } .hero-role { font-size:.95rem; } }
   @media(max-height:700px) and (min-width:701px) { .hero-illustrations { top:90px; } .hero-details { top:285px; } }
   @media(prefers-reduced-motion:reduce) { .scroll-cue svg { animation:none; } .opening-cue,.hero-end-cue { display:none; } .paper-background { --paper-visible:1; } }
-  .welcome-reveal { opacity:var(--question-note); transform:translateY(calc(12px * (1 - var(--question-note)))); max-width:450px; margin:0 auto; }
+  .opening-welcome { position:fixed; z-index:18; width:min(450px,calc(100% - 48px)); left:50%; top:calc(50svh + 65px); transform:translateX(-50%); opacity:var(--opening-welcome,1); pointer-events:none; }
+  @media(max-height:700px){.opening-welcome{top:calc(50svh + 45px);transform:translateX(-50%) scale(.8);transform-origin:top center}}
+  @media(prefers-reduced-motion:reduce){.opening-welcome{display:none}}
 </style>
 
