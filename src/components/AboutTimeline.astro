@@ -1,4 +1,5 @@
 ---
+import FloralAccent from './FloralAccent.astro';
 // Dates and experience are grounded in Moaaz's final résumé, supplied 7 October 2026.
 const milestones=[
  {date:'2017 — 2022',title:'Building a business foundation',place:'Sadat Academy for Management Sciences',body:'Studied International Business Management, learning how organisations operate and how decisions connect across teams.',highlight:false},
@@ -21,7 +22,7 @@ const milestones=[
   <div class="timeline-window" tabindex="0" aria-label="Experience timeline. Scroll down to follow the milestones, or use the previous and next buttons.">
    <div class="timeline-track">
     <div class="timeline-rail" aria-hidden="true"></div>
-    {milestones.map((m,i)=><article class:list={['milestone',{'above':i%2===0,'highlight':m.highlight}]}><button type="button" class="milestone-dot" aria-label={`Go to ${m.date}: ${m.title}`} title={`${m.date} · ${m.title}`}></button><span class="milestone-stem" aria-hidden="true"></span><div class="milestone-copy"><p class="milestone-date">{m.date}</p><h3>{m.title}</h3><p class="milestone-place">{m.place}</p><p>{m.body}</p>{m.url && <a class="milestone-proof" href={m.url} target="_blank" rel="noopener noreferrer">{m.url.includes('github') ? 'View release ↗' : 'View credential ↗'}</a>}</div></article>)}
+    {milestones.map((m,i)=><article class:list={['milestone',{'above':i%2===0,'highlight':m.highlight}]}><button type="button" class="milestone-dot" aria-label={`Go to ${m.date}: ${m.title}`} title={`${m.date} · ${m.title}`}></button><span class="milestone-stem" aria-hidden="true"></span><FloralAccent mode="timeline" /><div class="milestone-copy"><p class="milestone-date">{m.date}</p><h3>{m.title}</h3><p class="milestone-place">{m.place}</p><p>{m.body}</p>{m.url && <a class="milestone-proof" href={m.url} target="_blank" rel="noopener noreferrer">{m.url.includes('github') ? 'View release ↗' : 'View credential ↗'}</a>}</div></article>)}
    </div>
   </div>
   <div class="timeline-footer"><span>2017 — 2026</span><div class="timeline-controls"><button type="button" aria-label="Previous experience milestone">←</button><button type="button" aria-label="Next experience milestone">→</button></div><a href="/about/">More about me ↗</a></div>
@@ -45,7 +46,7 @@ const milestones=[
    const position=animated?progress*Math.max(0,milestones[milestones.length-1].offsetLeft-140):windowEl.scrollLeft;
    active=milestones.reduce((best,m,i)=>Math.abs(m.offsetLeft-140-position)<Math.abs(milestones[best].offsetLeft-140-position)?i:best,0);
    points.forEach((point,i)=>{if(i===active)point.setAttribute('aria-current','step');else point.removeAttribute('aria-current');});
-   milestones.forEach((m,i)=>{const visible=!animated||position>=Math.max(0,m.offsetLeft-140-windowEl.clientWidth*.65);m.dataset.visible=String(visible);});
+   milestones.forEach((m,i)=>{const visible=!animated||position>=Math.max(0,m.offsetLeft-140-windowEl.clientWidth*.65);m.dataset.visible=String(visible);const bloom=animated?clamp((position+windowEl.clientWidth*.48-(m.offsetLeft-140))/260):clamp((innerHeight*.85-m.getBoundingClientRect().top)/(innerHeight*.4));m.style.setProperty('--garden-progress',String(bloom));});
    buttons[0].disabled=animated?active===0:windowEl.scrollLeft<=0;
    buttons[1].disabled=animated?active===milestones.length-1:windowEl.scrollLeft>=windowEl.scrollWidth-windowEl.clientWidth-2;
   };
@@ -84,7 +85,7 @@ const milestones=[
  @media(max-width:700px) { .milestone .milestone-dot { top:-9px; left:-41px; } }
  .milestone-stem { position:absolute; top:50%; left:5px; width:1px; height:34px; background:#8c692d; transform-origin:top; transform:scaleY(0); transition:transform 600ms cubic-bezier(.16,1,.3,1); }
  .above .milestone-stem { top:calc(50% - 34px); transform-origin:bottom; }
- .milestone-copy { position:absolute; top:calc(50% + 44px); opacity:0; transform:translateY(12px); transition:opacity 650ms ease,transform 650ms cubic-bezier(.16,1,.3,1); }
+ .milestone-copy { z-index:1; position:absolute; top:calc(50% + 44px); opacity:0; transform:translateY(12px); transition:opacity 650ms ease,transform 650ms cubic-bezier(.16,1,.3,1); }
  .above .milestone-copy { top:auto; bottom:calc(50% + 44px); transform:translateY(-12px); }
  [data-visible="true"] .milestone-copy { opacity:1; transform:none; }
  [data-visible="true"] .milestone-stem { transform:scaleY(1); }

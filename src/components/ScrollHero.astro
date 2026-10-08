@@ -1,6 +1,7 @@
 ---
 import FlowerMenu from './FlowerMenu.astro';
 import WelcomeGarden from './WelcomeGarden.astro';
+import PaperLandmark from './PaperLandmark.astro';
 import { Mascot } from 'page-mascot';
 import { SITE } from '../data/site';
 const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'#about',label:'About'},{href:'/contact/',label:'Contact'}];
@@ -21,7 +22,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <a class="skip-intro" href="#featured-work">Skip introduction</a>
 <div class="paper-background" aria-hidden="true">
       <div class="paper-underlay"></div>
-      {fragments.map((piece,i)=><div class="paper-fragment" style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}vw;--scatter-y:${piece.y}vh;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface"></div></div>)}
+      {fragments.map((piece,i)=><div class="paper-fragment" style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}vw;--scatter-y:${piece.y}vh;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface">{[0,5,8,13,18,23].includes(i)&&<PaperLandmark index={i%4} />}</div></div>)}
     </div>
 <section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction">
   <div class="dock-backdrop" aria-hidden="true"></div>
@@ -61,8 +62,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
       <p class="hero-role">Business Analyst</p>
       <p class="hero-location">{SITE.location}</p>
       <div class="bio-intro">
-        <div class="question-cue"><p class="margin-note">Start with the question.</p><svg class="question-arrow" viewBox="0 0 100 55" fill="none" aria-hidden="true"><path d="M8 7C72-5 90 17 68 43m-5-13 4 15 15-6" /></svg></div>
-        <div class="question-paper"><span class="binding-holes" aria-hidden="true"></span><p>Where is the process slowing down—and what can better data help us improve?</p></div>
+        <div class="question-cue"><p class="margin-note">What I bring to the desk.</p><svg class="question-arrow" viewBox="0 0 100 55" fill="none" aria-hidden="true"><path d="M8 7C72-5 90 17 68 43m-5-13 4 15 15-6" /></svg></div>
+        <div class="question-paper"><span class="binding-holes" aria-hidden="true"></span><p>Business analysis, clear reporting, and practical tools—built to make everyday work easier.</p></div>
       </div>
     </div>
 
@@ -132,7 +133,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       const dock=animated?ramp(p,.835,.94):0,scale=1-.62*dock;
       set(hero,'--dock',dock);
       const mobile=w<=700;
-      const initialY=h/2-(mobile?170:185);
+      const initialY=h/2-(mobile?215:240);
       const finalHeroY=mobile?105:Math.max(90,h*.16);
       const baseY=initialY+(finalHeroY-initialY)*lift;
       const x=w/2+(18+340*.38/2-w/2)*dock;
@@ -301,8 +302,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
   @media(max-width:700px) { .dock-backdrop { display:block; position:fixed; top:0; left:0; width:160px; height:154px; z-index:19; pointer-events:none; background:#faf6ecf5; border-radius:0 0 12px 0; opacity:var(--dock,0); } .hero-illustrations { top:105px; transform:none; } .hero-details { top:315px; } .hero-nav { gap:clamp(10px,3vw,22px); left:0; right:0; } .hero-nav a { font-size:1.22rem; padding-inline:3px; } .question-paper { max-width:310px; } .hero-role { font-size:.95rem; } }
   @media(max-height:700px) and (min-width:701px) { .hero-illustrations { top:90px; } .hero-details { top:285px; } }
   @media(prefers-reduced-motion:reduce) { .scroll-cue svg { animation:none; } .opening-cue,.hero-end-cue { display:none; } .paper-background { --paper-visible:1; } }
-  .opening-welcome { position:fixed; z-index:18; width:min(450px,calc(100% - 48px)); left:50%; top:calc(50svh + 65px); transform:translateX(-50%); opacity:var(--opening-welcome,1); pointer-events:none; }
-  @media(max-height:700px){.opening-welcome{top:calc(50svh + 45px);transform:translateX(-50%) scale(.8);transform-origin:top center}}
+  .opening-welcome { position:fixed; z-index:18; width:min(450px,calc(100% - 48px)); left:50%; top:calc(50svh + 10px); transform:translateX(-50%); opacity:var(--opening-welcome,1); pointer-events:none; }
+  @media(max-height:700px){.opening-welcome{top:calc(50svh - 10px);transform:translateX(-50%) scale(.8);transform-origin:top center}}
   @media(prefers-reduced-motion:reduce){.opening-welcome{display:none}}
 </style>
 
