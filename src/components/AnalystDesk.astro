@@ -2,17 +2,17 @@
 import FloralAccent from './FloralAccent.astro';
 import PaperLandmark from './PaperLandmark.astro';
 const papers=[
- {title:'Check the records',type:'Financial reconciliation',text:'Reconcile financial records and investigate discrepancies before they become reporting problems.',note:'Start with numbers you can trust.',index:0},
- {title:'Understand the gaps',type:'Inventory & logistics',text:'Bring inventory and logistics records together to make exceptions and missing information easier to investigate.',note:'Follow the work behind the numbers.',index:4},
- {title:'Make the next step clear',type:'Reporting & automation',text:'Build recurring reports and automate repetitive tasks so teams can spend more time acting on the findings.',note:'Less repetition. More useful answers.',index:6},
+ {title:'Check the records',type:'Financial reconciliation',text:'Reconcile records. Investigate discrepancies.',note:'Start with numbers you can trust.',index:0},
+ {title:'Understand the gaps',type:'Inventory & logistics',text:'Connect inventory and logistics. Find what is missing.',note:'Follow the work behind the numbers.',index:4},
+ {title:'Make the next step clear',type:'Reporting & automation',text:'Build clear reports. Automate repeat work.',note:'Less repetition. More useful answers.',index:6},
 ];
 ---
 <div class="analyst-desk" aria-labelledby="desk-introduction-title">
- <header class="desk-message"><h2 id="desk-introduction-title">Making everyday business data<br class="wide-break" /> easier to trust and act on.</h2><div class="headline-branch" aria-hidden="true"><svg viewBox="0 0 600 40" preserveAspectRatio="none" fill="none"><path pathLength="1" d="M2 23C130 5 230 38 330 21S490 8 598 23"/></svg><FloralAccent mode="desk-branch" /></div><p>I reconcile financial, inventory, and logistics records, build recurring reports, and automate repetitive reporting tasks.</p></header>
- <div class="working-papers">{papers.map((paper,i)=><article class="working-paper" style={`--paper-index:${i};--angle:${[-3,2,-1][i]}deg`}>
+ <header class="desk-message"><h2 id="desk-introduction-title">Making everyday business data<br class="wide-break" /> easier to trust and act on.</h2><div class="headline-branch" aria-hidden="true"><svg viewBox="0 0 600 40" preserveAspectRatio="none" fill="none"><path pathLength="1" d="M2 23C130 5 230 38 330 21S490 8 598 23"/></svg><FloralAccent mode="desk-branch" /></div><p>Reliable records. Clear reports. Less manual work.</p></header>
+ <div class="working-papers">{papers.map((paper,i)=><article class="working-paper" style={`--paper-progress:var(--paper-${i},1);--paper-index:${i};--angle:${[-3,2,-1][i]}deg`}>
   <PaperLandmark index={paper.index}/><div class="paper-content"><p class="document-type">{paper.type}</p>
   <svg class="working-mark" viewBox="0 0 160 48" fill="none" aria-hidden="true">{i===0?<><path d="M4 9h107M4 24h107M4 39h68M37 4v39M78 4v39"/><path d="m119 25 10 10 23-28"/></>:i===1?<><path d="M6 12h38v27H6zM62 4h37v35H62zM117 18h36v21h-36zM44 26h18M99 26h18"/><path d="m53 21 5 5-5 5m55-10 5 5-5 5"/></>:<><path d="M5 39V9h31v30M51 39V19h31v20M98 39V3h31v36M3 44h135"/><path d="m143 7 10 8-10 8"/></>}</svg>
-  <h3>{paper.title}</h3><p class="paper-description">{paper.text}</p><p class="handwritten">{paper.note}</p></div>
+  <h3>{paper.title}</h3><p class="paper-description">{paper.text}</p></div>
  </article>)}</div>
  <div class="journey-bridge"><svg class="ink-trail" viewBox="0 0 760 55" preserveAspectRatio="none" fill="none" aria-hidden="true"><path pathLength="1" d="M4 20C130 45 190 2 300 22S510 43 610 20 710 15 756 35m-13-12 13 12-17 4"/></svg><FloralAccent mode="edge"/><a class="desk-work-link" href="#featured-work">See the work <span aria-hidden="true">↓</span></a></div>
 </div>
@@ -30,4 +30,10 @@ const papers=[
 .analyst-desk{left:180px;right:80px;text-align:center}.desk-message{max-width:760px}.desk-message h2{font-size:clamp(2rem,2.7vw,2.75rem);margin-bottom:0}.desk-message>p{margin-inline:auto}.working-papers{justify-content:center;text-align:left;max-width:990px;margin-inline:auto}.headline-branch{position:relative;height:48px;max-width:600px;margin:5px auto 12px;pointer-events:none}.headline-branch>svg{position:absolute;inset:0;width:100%;height:40px;stroke:#60869a;stroke-width:1.3;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--branch-growth,1))}.headline-branch :global(.floral-accent){inset:-77px 0 auto;height:200px}
 @media(max-width:1000px) and (min-width:701px){.analyst-desk{left:165px;right:55px}.desk-message h2{font-size:2.25rem}.headline-branch{height:38px;margin-bottom:8px}}
 @media(max-width:700px){.analyst-desk{inset:135px 28px 20px}.desk-message h2{font-size:1.8rem}.headline-branch{height:36px;margin:3px auto 8px}.working-papers{text-align:left}.desk-message{margin-bottom:14px}}
+</style>
+
+<style>
+.working-paper{opacity:var(--paper-progress,1);transform:translateY(calc((1 - var(--paper-progress,1))*45px)) rotate(var(--angle));transition:transform 100ms linear,opacity 100ms linear}.paper-description{max-width:26ch}.paper-content{padding-bottom:28px}
+@media(max-width:700px){.working-paper{transform:translateY(calc((1 - var(--paper-progress,1))*24px)) rotate(calc(var(--angle)*.3))}.paper-content{padding-bottom:15px}}
+@media(prefers-reduced-motion:reduce){.working-paper{opacity:1;transform:none;transition:none}}
 </style>

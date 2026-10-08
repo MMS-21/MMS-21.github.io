@@ -94,6 +94,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       const workReveal=animated?ramp(p,.18,.25):1;
       set(hero,'--work-reveal',workReveal);style(hero,'--work-visibility',workReveal>.01?'visible':'hidden');
       set(hero,'--paper-reveal',animated?ramp(p,.25,.55):1);
+      hero.querySelectorAll<HTMLElement>('.working-paper').forEach((paper,i)=>{const progress=animated?ramp(p,.25+i*.13,.36+i*.13):1;set(hero,`--paper-${i}`,progress);paper.inert=progress<.8;});
       set(hero,'--branch-growth',animated?ramp(p,.25,.60):1);
       set(identity,'--arabic-visible',1-lift);
       hero.querySelector<HTMLElement>('.analyst-desk')!.inert=workReveal<.9;
@@ -293,3 +294,5 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <style>
 .name-arabic{opacity:var(--arabic-visible,1);transition:opacity 180ms linear}.hero-identity[data-docked="true"] .name-arabic{display:none}
 </style>
+
+<style>.name-english{color:#40382e;text-shadow:none;text-align:center;translate:6px 0}</style>
