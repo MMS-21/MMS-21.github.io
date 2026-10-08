@@ -1,10 +1,77 @@
 ---
 import Base from '../layouts/Base.astro';
-import ContactForm from '../components/ContactForm.astro';
+import CairoPostage from '../components/CairoPostage.astro';
+import { SITE } from '../data/site';
 ---
-<Base title="Contact" description="Get in touch with Moaaz Magdy.">
- <ContactForm />
+<Base title="Contact" description="A role, a project, or a little hello. Leave Moaaz a letter from wherever you are." hideFooter>
+ <div class="letter-desk" id="connect">
+  <header class="desk-intro"><h1>Good things start<br />with a hello.</h1><p>A role in mind? An idea to explore?<br />There’s room on my desk for both.</p>
+   <div class="conversation"><p>What brings you here?</p><div class="conversation-options" role="group" aria-label="Choose a conversation starter"><button type="button" data-topic="A role to talk about" aria-pressed="false">A role</button><button type="button" data-topic="An idea for a project" aria-pressed="false">A project</button><button type="button" data-topic="Just saying hello" aria-pressed="false">Just a hello</button></div></div>
+   <div class="desk-envelope" aria-hidden="true"><div class="envelope-back"></div><div class="envelope-note"><span>Hello, Moaaz.</span><i></i><i></i><i></i></div><div class="envelope-front"></div><div class="envelope-flap"></div><span class="envelope-caption">From your corner of the world<br />to mine, in Cairo.</span></div>
+   <div class="direct-contact"><p>Or, take the direct route.</p><a href={`mailto:${SITE.email}`}>{SITE.email}</a><div><button type="button" class="copy-email" data-email={SITE.email}>Copy email</button><a href={SITE.links.linkedin}>LinkedIn ↗</a><a href={SITE.links.github}>GitHub ↗</a></div><span class="copy-status" role="status"></span></div>
+  </header>
+  <div class="stationery"><form class="letter-form" action={`mailto:${SITE.email}`} method="get" data-recipient={SITE.email}>
+   <div class="letter-address"><div><span>To</span><p>Moaaz Magdy</p><small>Cairo, Egypt</small></div><CairoPostage /></div>
+   <h2>Dear Moaaz,</h2>
+   <div class="sender-fields"><div class="letter-field"><label for="letter-name">Your name</label><input id="letter-name" name="name" autocomplete="name" maxlength="100" placeholder="Who’s writing?" required /></div><div class="letter-field"><label for="letter-email">Your email</label><input id="letter-email" type="email" name="email" autocomplete="email" maxlength="254" placeholder="Where I can reply" required /></div></div>
+   <div class="letter-field subject-field"><label for="letter-subject">About</label><input id="letter-subject" name="subject" maxlength="150" placeholder="What would you like to talk about?" required /></div>
+   <div class="letter-field message-field"><label for="letter-message">Your note</label><textarea id="letter-message" name="body" rows="5" maxlength="2000" placeholder="Here’s what I have in mind…" aria-describedby="letter-hint" required></textarea><span class="letter-count" aria-hidden="true">0 / 2000</span></div>
+   <div class="letter-signoff"><p>Looking forward to it.</p><span>— Moaaz</span></div>
+   <div class="letter-actions"><p id="letter-hint">This opens a draft in your email app.<br />You review it, then send it from there.</p><button type="submit" class="open-draft">Open email draft <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></button></div>
+   <p class="letter-status" role="status" aria-live="polite"></p>
+  </form></div>
+ </div>
 </Base>
-<style is:global>
- body:not(:has(.scroll-hero)) .contact-section { padding:30px 24px 60px; background:transparent; border:0; }
+<script>
+ const form=document.querySelector<HTMLFormElement>('.letter-form');
+ if(form){
+  const desk=document.querySelector<HTMLElement>('.letter-desk')!;
+  const subject=form.querySelector<HTMLInputElement>('[name="subject"]')!;
+  const message=form.querySelector<HTMLTextAreaElement>('textarea')!;
+  const count=form.querySelector<HTMLElement>('.letter-count')!;
+  const status=form.querySelector<HTMLElement>('.letter-status')!;
+  const topics=[...document.querySelectorAll<HTMLButtonElement>('[data-topic]')];
+  const placeholders:Record<string,string>={'A role to talk about':'Tell me a little about the role, the team, and what you’re looking for…','An idea for a project':'What are you working on, and where could I help?','Just saying hello':'A question, a shared interest, or simply a hello…'};
+  topics.forEach(button=>button.addEventListener('click',()=>{subject.value=button.dataset.topic!;topics.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));message.placeholder=placeholders[subject.value];desk.classList.add('is-writing');subject.focus();}));
+  subject.addEventListener('input',()=>topics.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.topic===subject.value))));
+  form.addEventListener('focusin',()=>desk.classList.add('is-writing'));
+  message.addEventListener('input',()=>{count.textContent=`${message.value.length} / 2000`;});
+  form.addEventListener('submit',event=>{
+   event.preventDefault();const fields=new FormData(form);const name=String(fields.get('name')||'').trim(),email=String(fields.get('email')||'').trim(),topic=subject.value.trim(),body=message.value.trim();
+   if(!name||!topic||!body){status.textContent='Add your name, a subject, and a note before opening the draft.';return;}
+   desk.classList.remove('is-writing');desk.classList.add('draft-prepared');
+   location.href=`mailto:${form.dataset.recipient}?subject=${encodeURIComponent(topic)}&body=${encodeURIComponent(`${body}\n\nFrom: ${name}\nReply to: ${email}`)}`;
+   status.textContent='Your draft is ready to open. Nothing has been sent. If your email app does not open, use the direct email link and copy your note.';
+  });
+  document.querySelector<HTMLButtonElement>('.copy-email')?.addEventListener('click',async event=>{const button=event.currentTarget as HTMLButtonElement;const result=document.querySelector<HTMLElement>('.copy-status')!;try{await navigator.clipboard.writeText(button.dataset.email!);result.textContent='Email address copied.';}catch{result.textContent='You can select and copy the email address above.';}});
+ }
+</script>
+<style>
+ .letter-desk{position:relative;max-width:1180px;margin:auto;padding:12px 48px 50px 40px;display:grid;grid-template-columns:.8fr 1.45fr;gap:54px;align-items:start;color:#322f27;isolation:isolate}
+ .desk-intro{padding-top:30px}h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.8rem,4vw,3.8rem);line-height:1.05;letter-spacing:-.025em;margin:0 0 24px;text-wrap:balance}
+ .desk-intro>p{color:#685c4b;font-size:.96rem;line-height:1.9;margin:0 0 30px}
+ .conversation>p{font-size:.79rem;color:#685c4b;margin:0 0 12px}.conversation-options{display:flex;flex-wrap:wrap;gap:10px 18px}.conversation-options button{font:inherit;font-size:.82rem;background:none;border:0;border-bottom:1px dashed #b5a181;padding:5px 0;color:#665037;cursor:pointer;transition:color 200ms,border-color 200ms}.conversation-options button:hover,.conversation-options button[aria-pressed=true]{color:#31553c;border-color:#31553c;border-bottom-style:solid}
+ .desk-envelope{width:240px;height:200px;position:relative;margin:64px 0 26px 18px;transform:rotate(-8deg);perspective:700px}
+ .envelope-back{position:absolute;top:15px;left:0;width:220px;height:132px;background:#dcccac;border:1px solid #bcaa87;box-shadow:5px 12px 22px #6c593b18}
+ .envelope-front{position:absolute;top:15px;left:0;width:220px;height:132px;background:#eaddc1;clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%)}
+ .envelope-front:after{content:'';position:absolute;inset:0;background:#e7d6b4;clip-path:polygon(0 100%,50% 40%,100% 100%)}
+ .envelope-flap{position:absolute;left:0;top:15px;width:220px;height:80px;background:#dfcdaa;clip-path:polygon(0 0,100% 0,50% 95%);transform-origin:top center;transition:transform 800ms cubic-bezier(.16,1,.3,1);z-index:3}
+ .envelope-note{position:absolute;top:25px;left:20px;width:180px;height:100px;background:#fffaf0;padding:15px 18px;transition:transform 900ms cubic-bezier(.16,1,.3,1);font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:1.35rem;box-shadow:0 3px 5px #6c593b0a}.envelope-note i{display:block;height:1px;background:#c6bba8;margin-top:10px}.envelope-note i:last-child{width:65%}
+ .is-writing .envelope-flap{transform:rotateX(175deg);z-index:0}.is-writing .envelope-note{transform:translateY(-53px)}
+ .envelope-caption{position:absolute;top:164px;left:13px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:1.15rem;line-height:1.2;color:#796548}
+ .direct-contact{padding-top:15px;font-size:.82rem}.direct-contact>p{color:#76644c;margin:0 0 10px}.direct-contact>a{color:#55472f;overflow-wrap:anywhere}.direct-contact>div{display:flex;flex-wrap:wrap;gap:17px;margin-top:14px}.direct-contact>div a,.copy-email{color:#67573e;font-size:.77rem}.copy-email{background:none;border:0;border-bottom:1px solid #9b8d76;padding:0;font:inherit;font-size:.77rem;cursor:pointer}.copy-status{display:block;min-height:22px;font-size:.75rem;color:#31553c;margin-top:8px}
+ .stationery{position:relative;transform:rotate(1deg);background:#fffcf4;border:1px solid #dfd3bc;box-shadow:4px 16px 35px #67512d12}
+ .stationery:before{content:'';position:absolute;inset:6px 5px -7px -6px;transform:rotate(-2deg);border:1px solid #e5dbc9;background:#f6f0e4;z-index:-1}
+ .letter-form{padding:28px 34px 30px;background:#fffcf4}.letter-address{display:flex;justify-content:space-between;gap:12px;min-height:140px}.letter-address>div:first-child{padding-top:12px}.letter-address span{font-size:.7rem;color:#796548}.letter-address p{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.55rem;line-height:1.2;margin:5px 0}.letter-address small{color:#73634e;font-size:.75rem}
+ .letter-form h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.1rem;font-weight:500;margin:8px 0 22px;line-height:1.1}
+ .sender-fields{display:grid;grid-template-columns:1fr 1fr;gap:22px}.letter-field{position:relative;min-width:0;margin-bottom:22px}.letter-field label{display:block;font-size:.72rem;color:#74634b;margin-bottom:3px}
+ input,textarea{display:block;width:100%;font:inherit;font-size:.88rem;line-height:1.7;background:transparent;color:#322f27;border:0;border-bottom:1px solid #cbbda4;border-radius:0;padding:7px 0;caret-color:#48694e;transition:border-color 200ms}input{min-height:40px}input::placeholder,textarea::placeholder{color:#7b715f;opacity:1}input:focus,textarea:focus{outline:2px solid #69816b;outline-offset:5px;border-color:#48694e}
+ textarea{resize:vertical;min-height:155px;line-height:31px;background:repeating-linear-gradient(transparent 0,transparent 30px,#d9cfbc 30px,#d9cfbc 31px);background-position:0 8px;border:0;padding:8px 0 3px}.message-field{margin-bottom:10px}.letter-count{display:block;text-align:right;font-size:.67rem;color:#756750;font-variant-numeric:tabular-nums;margin-top:5px}
+ .letter-signoff{margin:8px 0 24px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:1.25rem;color:#796548}.letter-signoff p{margin:0}.letter-signoff span{font-size:1.5rem}
+ .letter-actions{display:flex;justify-content:space-between;align-items:center;gap:20px;border-top:1px solid #ddd1bc;padding-top:20px}.letter-actions p{color:#74634b;font-size:.67rem;line-height:1.7;margin:0}.open-draft{display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:10px 16px;white-space:nowrap;background:#395640;border:1px solid #395640;color:#fffaf0;font:inherit;font-size:.78rem;cursor:pointer;transition:background 200ms,transform 200ms;box-shadow:1px 4px 7px #39564012}.open-draft:hover{background:#29432e;transform:translateY(-2px)}.open-draft svg{width:19px;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+ .letter-status{color:#4d6249;font-size:.78rem;line-height:1.7;margin:20px 0 0}.letter-status:empty{display:none}.letter-desk ::selection{background:#dce5cd;color:#304a36}
+ @media(max-width:1100px){.letter-desk{gap:30px;padding-inline:28px;grid-template-columns:.8fr 1.4fr}.letter-form{padding:24px}.letter-actions{flex-direction:column;align-items:stretch}.letter-actions p br{display:none}}
+ @media(max-width:900px){.letter-desk{grid-template-columns:1fr;max-width:660px;gap:35px}.desk-intro{padding-top:0}.desk-envelope{display:none}.direct-contact{margin-top:22px}.desk-intro>p{margin-bottom:22px}.letter-actions{flex-direction:row;align-items:center}.letter-form{padding:28px 32px}.letter-actions p br{display:block}}
+ @media(max-width:500px){.letter-desk{padding:0 24px 35px;gap:25px}.letter-form{padding:20px}.sender-fields{grid-template-columns:1fr;gap:0}.letter-address{min-height:118px}.letter-form h2{margin-top:12px}.letter-actions{flex-direction:column;align-items:stretch}.letter-actions p br{display:none}.stationery{transform:rotate(.4deg)}h1{font-size:3rem}.direct-contact>div{gap:20px}}
+ @media(prefers-reduced-motion:reduce){.envelope-flap,.envelope-note,.open-draft,input,textarea,.conversation-options button{transition:none}}
 </style>
