@@ -3,7 +3,7 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
 ---
 <nav class="scroll-rail" aria-label="Page sections">
  <div class="rail-line" aria-hidden="true"><span class="rail-fill"></span><span class="rail-light"></span></div>
- {stops.map((stop,i)=><a href={`#${stop.id}`} class="rail-stop" style={`--stop:${i/(stops.length-1)}`} aria-label={`Go to ${stop.label}`}><span class="rail-dot" aria-hidden="true"></span><span class="rail-label">{stop.label}</span></a>)}
+ {stops.map((stop,i)=><a href={stop.id==='connect'?'/contact/':`#${stop.id}`} data-section={stop.id} class="rail-stop" style={`--stop:${i/(stops.length-1)}`} aria-label={`Go to ${stop.label}`}><span class="rail-dot" aria-hidden="true"></span><span class="rail-label">{stop.label}</span></a>)}
 </nav>
 <script>
  const rail=document.querySelector<HTMLElement>('.scroll-rail');
@@ -29,7 +29,7 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
   const measure=()=>{
    const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
    targets=links.map((link,i)=>{
-    const el=document.querySelector<HTMLElement>(link.hash)!;
+    const el=document.getElementById(link.dataset.section!)!;
     if(el.id==='hero-story'){
      const hero=el.closest<HTMLElement>('.scroll-hero')!;
      return reduced.matches?hero.offsetTop:hero.offsetTop+(hero.offsetHeight-innerHeight)*.62;
@@ -41,6 +41,7 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
    schedule();
   };
   links.forEach((link,i)=>link.addEventListener('click',event=>{
+   if(!link.hash)return;
    event.preventDefault();measure();history.replaceState(null,'',link.hash);
    scrollTo({top:targets[i],behavior:reduced.matches?'instant':'smooth'});
    document.querySelector<HTMLElement>(link.hash)?.focus({preventScroll:true});
