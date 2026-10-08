@@ -5,6 +5,7 @@ export function startWelcomeGardens(){
   const engine=new Garden(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const arabic=host.classList.contains('arabic-intro');
   let fontsReady=!arabic;
+  host.dataset.blooming='false';
   if(arabic)document.fonts.load('76px \"DecoType Thuluth\"').then(()=>{fontsReady=true;wake()}).catch(()=>{fontsReady=true;wake()});
   const canvasHeight=arabic?320:190;
   let width=0,start=0,last=0,raf=0,visible=false;

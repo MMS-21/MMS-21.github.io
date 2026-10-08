@@ -7,12 +7,12 @@ import FloralAccent from './FloralAccent.astro';
   <div class="case-papers">
    <article class="work-paper customer-paper">
     <a class="preview" href="/projects/ecommerce-clv-churn/" aria-label="Explore the customer retention case study"><img src="/img/ecommerce/segment-revenue.svg" width="900" height="734" loading="lazy" alt="Customer segments compared by customer share and historical revenue share." /></a>
-    <div class="project-copy"><h3><a href="/projects/ecommerce-clv-churn/">Which customers should we focus on?</a></h3><p>Connecting customer value, buying patterns, and churn risk to a clearer retention priority.</p><div class="paper-foot"><span>Python · Customer analytics</span><a href="/projects/ecommerce-clv-churn/">Read the case study →</a></div></div>
+    <div class="project-copy"><h3><a href="/projects/ecommerce-clv-churn/">Which customers should we focus on?</a></h3><p>Customer value and churn risk, turned into retention priorities.</p><div class="paper-foot"><span>Python · Customer analytics</span><a href="/projects/ecommerce-clv-churn/">Read the case study →</a></div></div>
     <FloralAccent mode="edge" />
    </article>
    <article class="work-paper hr-paper">
     <a class="preview" href="/projects/hr-attrition-analysis/" aria-label="Explore the employee attrition case study"><img src="/img/hr/attrition-overview.svg" width="960" height="580" loading="lazy" alt="Recorded attrition shares compared across overtime and job roles, with employee counts for context." /></a>
-    <div class="project-copy"><h3><a href="/projects/hr-attrition-analysis/">Where should HR focus its retention efforts?</a></h3><p>Exploring employee attrition across roles, overtime, and experience, and turning the findings into a practical retention briefing.</p><div class="paper-foot"><span>Power BI · SQL · Python</span><a href="/projects/hr-attrition-analysis/">Read the case study →</a></div></div>
+    <div class="project-copy"><h3><a href="/projects/hr-attrition-analysis/">Where should HR focus its retention efforts?</a></h3><p>Attrition patterns across roles and overtime, with clear retention priorities.</p><div class="paper-foot"><span>Power BI · SQL · Python</span><a href="/projects/hr-attrition-analysis/">Read the case study →</a></div></div>
     <FloralAccent mode="edge" />
    </article>
   </div>
@@ -61,11 +61,21 @@ import FloralAccent from './FloralAccent.astro';
  const section=document.querySelector<HTMLElement>('#featured-work')!;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const items=Array.from(section.querySelectorAll<HTMLElement>('.desk-heading,.case-papers .work-paper,.workbench-heading,.tool-papers,.all-projects'));
- let queued=false;
- const render=()=>{queued=false;const h=innerHeight;const desktop=innerWidth>700;const sectionTop=section.getBoundingClientRect().top;const journey=(h*.98-sectionTop)/(h*.95);items.forEach((element,i)=>{const top=element.getBoundingClientRect().top;const progress=reduced.matches?1:desktop?Math.max(0,Math.min(1,(journey-i*.14)/.14)):Math.max(0,Math.min(1,(h*.98-top)/(h*.18)));element.style.setProperty('--scroll-reveal',progress.toFixed(4));element.inert=progress<.1;});};
- const update=()=>{if(!queued){queued=true;requestAnimationFrame(render)}};
- items.forEach(element=>element.classList.add('scroll-reveal'));
- addEventListener('scroll',update,{passive:true});addEventListener('resize',update);reduced.addEventListener('change',update);render();
+ // A timed entrance stays legible even when a visitor scrolls quickly.
+ const observer=new IntersectionObserver(entries=>{
+  for(const entry of entries){
+   if(!entry.isIntersecting)continue;
+   entry.target.classList.add('revealed');
+   observer.unobserve(entry.target);
+  }
+ },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+ items.forEach((element,i)=>{
+  element.style.setProperty('--reveal-delay',`${i===2?180:0}ms`);
+  element.classList.add('reveal-ready');
+  observer.observe(element);
+ });
+ const finish=()=>{if(reduced.matches)items.forEach(element=>element.classList.add('revealed'))};
+ reduced.addEventListener('change',finish);finish();
 </script>
 
 <style>
@@ -74,8 +84,8 @@ import FloralAccent from './FloralAccent.astro';
 
 <style>
 @media(prefers-reduced-motion:no-preference){
-.scroll-reveal{opacity:var(--scroll-reveal,1);translate:0 calc((1 - var(--scroll-reveal,1))*35px);transition:opacity 100ms linear,translate 100ms linear}
-.scroll-reveal:focus-within{opacity:1;translate:0}
+.reveal-ready{opacity:0;translate:0 24px;transition:opacity 1100ms cubic-bezier(.22,.61,.36,1),translate 1400ms cubic-bezier(.22,.61,.36,1);transition-delay:var(--reveal-delay,0ms)}
+.reveal-ready.revealed,.reveal-ready:focus-within{opacity:1;translate:0}
 }
 </style>
 
@@ -87,4 +97,15 @@ import FloralAccent from './FloralAccent.astro';
 .workbench-heading{margin:35px 0 18px;font-size:1.8rem}.tool-papers{gap:24px;margin-bottom:18px}.tool-paper{padding:16px 18px;display:flex}.tool-paper h3{font-size:1.25rem}.tool-link{margin-top:0}.all-projects{padding:10px 0}
 }
 @media(min-width:701px) and (max-height:780px){.desk-stage{padding-top:18px}.desk-heading h2{font-size:2.8rem}.desk-heading{margin-bottom:16px}.preview img{height:110px}.project-copy h3{font-size:1.65rem}.project-copy>p{font-size:.77rem}.workbench-heading{margin-top:28px}.tool-paper{padding:13px 16px}.tool-paper h3{font-size:1.2rem}}
+</style>
+
+<style>
+/* Let the evidence lead, with the caption held to a compact footprint. */
+.case-papers .preview img{height:250px}
+.case-papers .project-copy{padding:14px 6px 0}
+.case-papers .project-copy h3{font-size:1.65rem;line-height:1.12;margin-bottom:9px}
+.case-papers .project-copy>p{font-size:.78rem;line-height:1.5;margin-bottom:12px}
+.case-papers .paper-foot{gap:7px}
+@media(min-width:701px) and (max-height:780px){.case-papers .preview img{height:220px}}
+@media(max-width:700px){.case-papers .preview img{height:auto;max-height:340px}.case-papers .project-copy h3{font-size:1.65rem}}
 </style>
