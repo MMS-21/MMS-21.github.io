@@ -1,5 +1,4 @@
 ---
-import FlowerMenu from './FlowerMenu.astro';
 import AnalystDesk from './AnalystDesk.astro';
 import WelcomeGarden from './WelcomeGarden.astro';
 import PaperLandmark from './PaperLandmark.astro';
@@ -41,10 +40,10 @@ const fragments = Array.from({length:24}, (_,i) => ({
   </div>
   <div class="navigation-shell">
     <button class="pyramid-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="portfolio-navigation">
-      <FlowerMenu />
+      <svg class="cat-paw" viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="10" cy="18" rx="4.5" ry="6" transform="rotate(-25 10 18)"/><ellipse cx="19" cy="10" rx="4.5" ry="6" transform="rotate(-8 19 10)"/><ellipse cx="30" cy="10" rx="4.5" ry="6" transform="rotate(8 30 10)"/><ellipse cx="39" cy="18" rx="4.5" ry="6" transform="rotate(25 39 18)"/><path d="M13 31c2-3 4-10 11-10s9 7 11 10c5 8-1 13-7 10-3-1-5-1-8 0-6 3-12-2-7-10Z"/></svg>
 
     </button>
-    <nav class="hero-nav" id="portfolio-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}</nav>
+    <nav class="hero-nav" id="portfolio-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}<button class="lulu-control" type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button></nav>
   </div>
 </section>
 <script>
@@ -114,10 +113,10 @@ const fragments = Array.from({length:24}, (_,i) => ({
       const top=baseY+(12-baseY)*dock;
       style(identity,'transform',`translate3d(${(x-170).toFixed(2)}px,${top.toFixed(2)}px,0) scale(${scale.toFixed(4)})`);
       identity.dataset.docked=String(dock>.99);
-      const collapse=animated?ramp(p,.835,.94):0;
+      const collapse=animated?ramp(p,.835,.94):1;
       set(shell,'--collapse',collapse);
       links.forEach((link,i)=>{
-        const fold=animated?ramp(collapse,i*.12,.52+i*.12):0;
+        const fold=animated?ramp(collapse,i*.12,.52+i*.12):1;
         set(link,'--fold',fold);
       });
       const navY=mobile?24:42;
@@ -209,6 +208,14 @@ const fragments = Array.from({length:24}, (_,i) => ({
   .navigation-shell[data-collapsed="true"] .hero-nav { pointer-events:none; }
   .navigation-shell[data-collapsed="true"] .hero-nav a { pointer-events:none; }
   .pyramid-toggle { position:absolute; top:0; left:50%; transform:translateX(-50%); opacity:var(--collapse); border:0; background:transparent; color:#292522; padding:2px 6px; min-height:44px; min-width:44px; cursor:pointer; display:flex; align-items:center; flex-direction:column; gap:3px; pointer-events:none; }
+  .cat-paw{width:30px;height:30px;fill:none;stroke:#526d79;stroke-width:1.5;transition:transform 220ms ease}
+  .pyramid-toggle:hover .cat-paw{transform:rotate(-10deg)}
+  .pyramid-toggle:focus-visible{outline:2px solid #60869a;outline-offset:3px;border-radius:12px}
+  .lulu-control{display:none;border:0;border-top:1px solid #d9cdb8;background:transparent;color:#57472f;padding:13px 16px 8px;margin-top:8px;text-align:left;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;cursor:pointer;min-height:44px}
+  .navigation-shell[data-open="true"] .lulu-control{display:block;pointer-events:auto}
+  .lulu-control:hover{color:#302d28;background:#f3ecdf}
+  .lulu-control:focus-visible{outline:2px solid #60869a;outline-offset:2px}
+  @media(max-width:700px){.navigation-shell[data-open="true"] .hero-nav{width:148px;transform:translateX(calc(-50% + 12px))}}
   .pyramid-toggle :global(.stepped-pyramid) { width:38px; height:29px; overflow:visible; transition:transform 350ms ease,color 350ms ease; }
   .pyramid-toggle .pyramid-underline { width:40px; height:6px; stroke:#79613e; stroke-width:1.5; stroke-linecap:round; }
   .pyramid-toggle span { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.15rem; }
