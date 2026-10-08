@@ -63,7 +63,7 @@ import FloralAccent from './FloralAccent.astro';
   const paper=entry.target;
   if(entry.isIntersecting){paper.classList.add('arriving');if(!paper.closest('.case-papers'))observer.unobserve(paper)}
   else if(entry.intersectionRatio===0&&paper.closest('.case-papers'))paper.classList.remove('arriving');
- }},{threshold:.18});
+ }},{threshold:[0,.18]});
  document.querySelectorAll<HTMLElement>('#featured-work .work-paper').forEach(paper=>{if(paper.closest('.case-papers')&&!reduced.matches)paper.classList.add('reveal-ready');observer.observe(paper)});
 </script>
 
