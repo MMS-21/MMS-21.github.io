@@ -1,6 +1,7 @@
 <div class="tour-pointer" data-tour-spotlight hidden aria-hidden="true">
  <svg viewBox="0 0 64 64" fill="none"><path d="M58 8C42 0 28 33 4 32M13 25l-9 7 10 6" /></svg>
 </div>
+<div class="tour-hint" data-tour-hint hidden aria-live="polite"></div>
 <div class="tour-dust" data-tour-dust hidden aria-hidden="true"></div>
 <section class="tour-card" data-tour-card hidden role="dialog" aria-modal="false" aria-labelledby="tour-title" aria-describedby="tour-description">
  <h2 id="tour-title">Welcome to my little corner.</h2>
@@ -19,6 +20,7 @@
  startWelcomeTour();
 </script>
 <style>
+.tour-hint{position:fixed;z-index:71;pointer-events:none;padding:6px 10px;background:#fffaf0 url('/img/paper-fibers.svg');border:1px solid #d9cdb8;border-radius:6px;box-shadow:0 3px 10px #59472918;color:#31596d;font:500 .76rem Manrope,sans-serif;white-space:nowrap}
 .tour-pointer{position:fixed;z-index:70;pointer-events:none;width:64px;height:64px;color:#426b7d;animation:tour-arrow-wiggle 2800ms ease-in-out infinite}
 @keyframes tour-arrow-wiggle{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-3px) rotate(3deg)}}
 @media(prefers-reduced-motion:reduce){.tour-pointer{animation:none}}
@@ -47,5 +49,12 @@
 :global(body.tour-active){padding-bottom:var(--tour-space,350px)}
 [hidden]{display:none!important}
 @media(max-width:700px){.tour-card{right:16px;bottom:max(16px,env(safe-area-inset-bottom));padding:20px}.tour-card h2{font-size:1.4rem}.tour-card button{padding-inline:9px}}
+@media(max-width:700px){
+ :global(body.tour-active) .tour-card{padding:8px 12px;display:grid;grid-template-columns:1fr auto;gap:0 8px}
+ :global(body.tour-active) .tour-card h2,:global(body.tour-active) .tour-card p,:global(body.tour-active) .tour-card .tour-action{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);padding:0;margin:0;min-height:0}
+ :global(body.tour-active) .tour-actions{grid-column:1 / -1}
+ :global(body.tour-active) .tour-progress{margin:0;align-self:center}
+ :global(body.tour-active) .tour-card .tour-sound{margin:0}
+}
 @media(max-height:500px){.tour-card{bottom:10px;padding:14px;width:320px;max-height:calc(100svh - 20px);overflow:auto}.tour-card p{margin-bottom:8px}.tour-progress{margin-top:4px}}
 </style>

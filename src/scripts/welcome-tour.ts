@@ -1,6 +1,8 @@
 export function startWelcomeTour() {
  const card=document.querySelector<HTMLElement>('[data-tour-card]'); if(!card)return;
  const light=document.querySelector<HTMLElement>('[data-tour-spotlight]')!;
+ const hint=document.querySelector<HTMLElement>('[data-tour-hint]')!;
+ const hints=['Welcome','About me','How I work','Latest projects','My experience','Site menu','Contact me'];
  const dust=document.querySelector<HTMLElement>('[data-tour-dust]')!;
  const soundButton=card.querySelector<HTMLButtonElement>('[data-tour-sound]')!;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -54,13 +56,13 @@ export function startWelcomeTour() {
   frame=0; if(card.hidden||!active)return;
   const selector=step===0?(document.querySelector<HTMLElement>('.scroll-hero')?.dataset.animated==='true'?'.opening-welcome .arabic-calligraphy':'.mobile-welcome .arabic-calligraphy'):steps[step].target;
   const target=document.querySelector<HTMLElement>(selector);
-  if(!target){light.hidden=true;dust.hidden=true;return}
+  if(!target){light.hidden=true;hint.hidden=true;dust.hidden=true;return}
   // Heading boxes span the column. Point to the actual lettering instead.
   let r=target.getBoundingClientRect();
   let lines=[r];
   if(target.matches('h1,h2,h3,.arabic-calligraphy')){const range=document.createRange();range.selectNodeContents(target);r=range.getBoundingClientRect();lines=Array.from(range.getClientRects()).filter((line,index,all)=>line.width>0&&!all.slice(0,index).some(previous=>Math.abs(previous.top-line.top)<2&&Math.abs(previous.left-line.left)<2));}
   else if(target.matches('.pyramid-toggle')){r=target.querySelector('svg')!.getBoundingClientRect();lines=[r];}
-  if(!r.width||r.bottom<8||r.top>innerHeight-60){light.hidden=true;dust.hidden=true;return}
+  if(!r.width||r.bottom<8||r.top>innerHeight-60){light.hidden=true;hint.hidden=true;dust.hidden=true;return}
   const side=r.right+74<innerWidth?'right':r.left>74?'left':r.top>74?'above':'below';
   const path=light.querySelector('path')!;
   const horizontal=side==='right'||side==='left';
@@ -71,6 +73,11 @@ export function startWelcomeTour() {
   const y=horizontal?r.top+r.height/2-32:side==='above'?r.top-62:r.bottom-2;
   light.style.left=`${x}px`;light.style.top=`${y}px`;
   light.hidden=false;
+  hint.textContent=hints[step];hint.hidden=false;
+  const hintX=side==='left'?x-hint.offsetWidth+24:x+32;
+  const hintY=horizontal?y+64:side==='above'?y-8:y+64;
+  hint.style.left=`${Math.max(12,Math.min(innerWidth-hint.offsetWidth-12,hintX))}px`;
+  hint.style.top=`${Math.max(12,Math.min(innerHeight-hint.offsetHeight-12,hintY))}px`;
   // Each line gets its own small dust trail; scrolling only repositions it.
   if(burstPending){
    dust.replaceChildren();
@@ -108,7 +115,7 @@ export function startWelcomeTour() {
   skip.textContent=active?'End tour':'I’ll explore';back.hidden=!active||step===0;
   progress.textContent=active?`${step+1} of ${steps.length}`:'A walk through the site';
   action.hidden=!active||!steps[step].href;action.href=steps[step].href;action.textContent=steps[step].label;
-  if(!active){light.hidden=true;return}
+  if(!active){light.hidden=true;hint.hidden=true;return}
   document.body.classList.add('tour-active');
   document.body.style.setProperty('--tour-space',`${card.offsetHeight+40}px`);
   silence();clearTimeout(burstTimer);dust.hidden=true;dust.replaceChildren();burstPending=false;
@@ -117,7 +124,7 @@ export function startWelcomeTour() {
   visit();requestAnimationFrame(()=>{notify(step===5);schedule();next.focus({preventScroll:true})});
  }
  function finish(){
-  active=false;clearTimeout(burstTimer);card.hidden=true;light.hidden=true;dust.hidden=true;dust.replaceChildren();burstPending=false;silence();seen();notify();
+  active=false;clearTimeout(burstTimer);card.hidden=true;light.hidden=true;hint.hidden=true;dust.hidden=true;dust.replaceChildren();burstPending=false;silence();seen();notify();
   document.body.classList.remove('tour-active');document.body.style.removeProperty('--tour-space');
   if(frame)cancelAnimationFrame(frame);frame=0;restore?.focus({preventScroll:true});
  }
