@@ -31,10 +31,15 @@ export function startWelcomeTour() {
   if(target.matches('h1,h2,h3')){const range=document.createRange();range.selectNodeContents(target);r=range.getBoundingClientRect();}
   else if(target.matches('.pyramid-toggle'))r=target.querySelector('svg')!.getBoundingClientRect();
   if(!r.width||r.bottom<8||r.top>innerHeight-60){light.hidden=true;return}
-  const right=r.right+72<innerWidth;
-  light.dataset.side=right?'right':'left';
-  light.style.left=`${Math.max(4,Math.min(innerWidth-68,right?r.right+4:r.left-68))}px`;
-  light.style.top=`${Math.max(8,Math.min(innerHeight-60,r.top+r.height/2-36))}px`;
+  const side=r.right+74<innerWidth?'right':r.left>74?'left':r.top>74?'above':'below';
+  const path=light.querySelector('path')!;
+  const horizontal=side==='right'||side==='left';
+  path.setAttribute('d',horizontal?'M58 8C42 0 28 33 4 32M13 25l-9 7 10 6':side==='above'?'M52 4Q28 4 32 56M24 46l8 10 8-10':'M52 60Q28 60 32 8M24 18l8-10 8 10');
+  light.dataset.side=side;
+  // The arrow tip lands six pixels outside the target edge, in every orientation.
+  const x=side==='right'?r.right+2:side==='left'?r.left-66:r.left+r.width/2-32;
+  const y=horizontal?r.top+r.height/2-32:side==='above'?r.top-62:r.bottom-2;
+  light.style.left=`${x}px`;light.style.top=`${y}px`;
   light.hidden=false;
  }
  function schedule(){if(!frame)frame=requestAnimationFrame(spotlight)}
