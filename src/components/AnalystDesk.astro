@@ -1,4 +1,5 @@
 ---
+import SectionTitle from './SectionTitle.astro';
 import FloralAccent from './FloralAccent.astro';
 import PaperLandmark from './PaperLandmark.astro';
 const papers=[
@@ -8,7 +9,7 @@ const papers=[
 ];
 ---
 <div class="analyst-desk" id="work-routine" tabindex="-1" aria-labelledby="desk-introduction-title">
- <header class="desk-message"><h2 id="desk-introduction-title">Making everyday business data<br class="wide-break" /> easier to trust and act on.</h2><div class="headline-branch" aria-hidden="true"><svg viewBox="0 0 600 40" preserveAspectRatio="none" fill="none"><path pathLength="1" d="M2 23C130 5 230 38 330 21S490 8 598 23"/></svg><FloralAccent mode="desk-branch" /></div><p>Reliable records. Clear reports. Less manual work.</p></header>
+ <header class="desk-message"><SectionTitle kind="workflow"><h2 id="desk-introduction-title">Making everyday business data<br class="wide-break" /> easier to trust and act on.</h2></SectionTitle><div class="headline-branch" aria-hidden="true"><svg viewBox="0 0 600 40" preserveAspectRatio="none" fill="none"><path pathLength="1" d="M2 23C130 5 230 38 330 21S490 8 598 23"/></svg><FloralAccent mode="desk-branch" /></div><p>Reliable records. Clear reports. Less manual work.</p></header>
  <div class="working-papers">{papers.map((paper,i)=><article class="working-paper" style={`--paper-progress:var(--paper-${i},1);--paper-index:${i};--angle:${[-3,2,-1][i]}deg`}>
   <PaperLandmark index={paper.index}/><div class="paper-content"><span class="workflow-step" aria-label={`Step ${i+1}`}>{i+1}</span><p class="document-type">{paper.type}</p>
   <svg class="working-mark" viewBox="0 0 160 48" fill="none" aria-hidden="true">{i===0?<><path d="M4 9h107M4 24h107M4 39h68M37 4v39M78 4v39"/><path d="m119 25 10 10 23-28"/></>:i===1?<><path d="M6 12h38v27H6zM62 4h37v35H62zM117 18h36v21h-36zM44 26h18M99 26h18"/><path d="m53 21 5 5-5 5m55-10 5 5-5 5"/></>:<><path d="M5 39V9h31v30M51 39V19h31v20M98 39V3h31v36M3 44h135"/><path d="m143 7 10 8-10 8"/></>}</svg>

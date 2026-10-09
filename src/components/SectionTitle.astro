@@ -1,0 +1,41 @@
+---
+interface Props { kind: 'intro' | 'workflow' | 'projects' | 'experience' }
+const { kind } = Astro.props;
+---
+<div class:list={['section-title', `section-title-${kind}`]}>
+ <span class="section-symbol" aria-hidden="true">
+  <svg viewBox="0 0 80 80" fill="none">
+   <g class="symbol-drawing">
+    {kind === 'intro' && <><circle cx="33" cy="32" r="19"/><path d="m47 47 18 19m-14-17-4 4"/><g class="symbol-detail"><path d="M23 35l7-7 7 5 8-11"/><path d="M39 22h6v6"/></g></>}
+    {kind === 'workflow' && <><path d="M12 62h56M17 56V38h10v18m9 0V27h10v29m9 0V15h10v41"/><g class="symbol-detail"><path d="m17 28 21-12 17-5m-6-3 6 3-3 6"/></g></>}
+    {kind === 'projects' && <><path d="M10 58V23h23l7 8h29v27z"/><path d="m10 58 8-20h53l-7 25H14"/><g class="symbol-detail"><path d="M25 29V15h28v16M31 21h16M31 26h10"/></g></>}
+    {kind === 'experience' && <><circle cx="40" cy="40" r="26"/><path d="M40 8v8m0 48v8M8 40h8m48 0h8"/><g class="symbol-detail compass-needle"><path d="m49 24-4 21-20 11 10-21zM35 35l10 10"/></g></>}
+   </g>
+   <g class="symbol-rays"><path d="M8 12 4 7M25 7V2m39 13 5-5"/></g>
+  </svg>
+ </span>
+ <slot />
+</div>
+<style>
+.section-title{display:flex;align-items:center;justify-content:center;gap:16px;max-width:100%;margin:0 0 16px}
+.section-title :global(h2){margin:0;min-width:0}
+.section-symbol{display:block;flex:0 0 62px;width:62px;height:62px;color:#79613e;transition:color 400ms,scale 500ms}
+svg{width:100%;height:100%;overflow:visible;stroke:currentColor;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.symbol-drawing{transform-origin:40px 40px;animation:symbol-float 4.8s ease-in-out infinite}
+.symbol-detail{transform-origin:40px 40px;animation:symbol-detail 5.5s ease-in-out infinite}
+.symbol-rays{opacity:.5;animation:symbol-rays 3.8s ease-in-out infinite}
+.section-title-projects .symbol-drawing{animation-delay:-1.2s}
+.section-title-experience .symbol-drawing{animation-delay:-2.4s}
+.section-title-experience .compass-needle{animation:compass-seek 6s ease-in-out infinite}
+.section-title:hover .section-symbol{color:#426b7d;scale:1.08}
+.section-title:hover .symbol-drawing{animation-duration:1.6s}
+.section-title:hover .symbol-detail{animation-duration:1.8s}
+.section-title:hover .symbol-rays{opacity:1;animation-duration:1.2s}
+@keyframes symbol-float{0%,100%{transform:translateY(2px) rotate(-4deg)}50%{transform:translateY(-3px) rotate(3deg)}}
+@keyframes symbol-detail{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes symbol-rays{0%,100%{opacity:.25}50%{opacity:.9}}
+@keyframes compass-seek{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(14deg)}}
+.section-title-experience{justify-content:flex-start}
+@media(max-width:700px){.section-title{gap:10px}.section-symbol{flex-basis:40px;width:40px;height:40px}}
+@media(prefers-reduced-motion:reduce){.symbol-drawing,.symbol-detail,.symbol-rays,.section-title-experience .compass-needle{animation:none!important}.section-symbol{transition:none}.section-title:hover .section-symbol{scale:1}}
+</style>

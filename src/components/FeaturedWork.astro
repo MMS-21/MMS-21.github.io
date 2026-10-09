@@ -1,9 +1,10 @@
 ---
+import SectionTitle from './SectionTitle.astro';
 import FloralAccent from './FloralAccent.astro';
 ---
 <section class="desk-scene" id="featured-work" tabindex="-1" aria-labelledby="featured-heading">
  <div class="desk-stage">
-  <header class="desk-heading"><h2 id="featured-heading">Currently on the workbench</h2></header>
+  <header class="desk-heading"><SectionTitle kind="projects"><h2 id="featured-heading">Currently on the workbench</h2></SectionTitle></header>
   <div class="case-papers">
    <article class="work-paper customer-paper">
     <a class="preview" href="/projects/ecommerce-clv-churn/" aria-label="Explore the customer retention case study"><img src="/img/ecommerce/segment-revenue.svg" width="900" height="734" loading="lazy" alt="Customer segments compared by customer share and historical revenue share." /></a>
