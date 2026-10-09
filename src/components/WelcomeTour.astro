@@ -19,7 +19,9 @@
  startWelcomeTour();
 </script>
 <style>
-.tour-pointer{position:fixed;z-index:70;pointer-events:none;width:64px;height:64px;color:#426b7d}
+.tour-pointer{position:fixed;z-index:70;pointer-events:none;width:64px;height:64px;color:#426b7d;animation:tour-arrow-wiggle 2800ms ease-in-out infinite}
+@keyframes tour-arrow-wiggle{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-3px) rotate(3deg)}}
+@media(prefers-reduced-motion:reduce){.tour-pointer{animation:none}}
 .tour-pointer svg{width:100%;height:100%;overflow:visible}
 .tour-pointer path{stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .tour-pointer[data-side="left"] svg{transform:scaleX(-1)}
