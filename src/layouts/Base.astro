@@ -82,6 +82,7 @@ const person = {
       href={new URL('rss.xml', Astro.site)}
     />
     <meta name="author" content={SITE.name} />
+    <meta name="google-site-verification" content="gID2a2NCEtEtQQKILCCoTH5TifVEAfCbGyRensYqgrU" />
     <script type="application/ld+json" set:html={JSON.stringify(person).replace(/</g, '\\u003c')} />
   </head>
   <body class:list={{'has-portfolio-header':!hideHeader}}>
