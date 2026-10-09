@@ -28,6 +28,12 @@ const fragments = Array.from({length:24}, (_,i) => ({
     </div>
 <section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction">
   <div class="dock-backdrop" aria-hidden="true"></div>
+  <div class="mobile-welcome">
+    <p class="mobile-signature">{SITE.name}</p>
+    <WelcomeGarden arabic />
+    <p class="mobile-role">{SITE.role}</p>
+    <div class="mobile-welcome-actions"><button type="button" data-tour-start>Show me around</button><a href="#hero-story">Meet Moaaz</a></div>
+  </div>
   <div class="hero-stage" id="hero-story" tabindex="-1">
     <HeroIntroduction />
     <AnalystDesk />
@@ -48,6 +54,20 @@ const fragments = Array.from({length:24}, (_,i) => ({
     <nav class="hero-nav" id="portfolio-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path pathLength="1" d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}<button class="lulu-control" type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button><button class="lulu-control tour-replay" type="button" data-tour-replay>Take a tour</button></nav>
   </div>
 </section>
+<style>
+ .mobile-welcome{display:none}
+ @media(max-width:700px),(max-height:760px),(prefers-reduced-motion:reduce){
+  .mobile-welcome{display:flex;position:relative;flex-direction:column;align-items:center;text-align:center;padding:150px 36px 44px;background:#fcfaf7;min-height:520px;box-sizing:border-box}
+  .mobile-signature{font:500 1.5rem 'Cormorant Garamond',Georgia,serif;margin:0;color:#40382e}
+  .mobile-welcome :global(.welcome-garden){height:210px;width:100%;max-width:390px}
+  .mobile-welcome :global(.arabic-calligraphy){font-size:clamp(1.6rem,7vw,2.6rem);inset:12px -10px auto}
+  .mobile-welcome :global(.welcome-follow){top:130px;font-size:1.35rem;opacity:1;transform:none}
+  .mobile-role{font:400 .9rem Manrope,sans-serif;color:#426475;margin:0 0 18px}
+  .mobile-welcome-actions{display:flex;gap:24px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .mobile-welcome-actions button,.mobile-welcome-actions a{font:400 .85rem Manrope,sans-serif;color:#31596d;background:none;border:0;border-bottom:1px solid #8299a2;min-height:44px;padding:10px 0;text-decoration:none;cursor:pointer}
+  .mobile-welcome-actions :focus-visible{outline:2px solid #426b7d;outline-offset:5px}
+ }
+</style>
 <script>
   const hero=document.querySelector<HTMLElement>('.scroll-hero');
   if(hero){
