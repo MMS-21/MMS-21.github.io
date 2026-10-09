@@ -7,27 +7,31 @@ export function startWelcomeTour() {
  let soundOn=true;
  try{soundOn=localStorage.getItem('portfolio-tour-sound')!=='off'}catch{}
  let audio:AudioContext|null=null,burstPending=false,burstTimer=0;
- const tones=new Set<OscillatorNode>();
+ let clip:Promise<AudioBuffer>|null=null,soundVersion=0;
+ const tones=new Set<AudioBufferSourceNode>();
  function soundLabel(){soundButton.textContent=soundOn?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(soundOn));soundButton.setAttribute('aria-label',soundOn?'Mute tour sound':'Enable tour sound')}
  soundLabel();
  function primeSound(){
   if(!soundOn)return;
-  try{audio??=new AudioContext();if(audio.state==='suspended')void audio.resume().catch(()=>{})}catch{}
+  try{
+   audio??=new AudioContext();if(audio.state==='suspended')void audio.resume().catch(()=>{});
+   const context=audio;
+   clip??=fetch('/audio/tour-sparkle.mp3').then(response=>{if(!response.ok)throw new Error('Sparkle audio unavailable');return response.arrayBuffer()}).then(bytes=>context.decodeAudioData(bytes));
+   void clip.catch(()=>{clip=null});
+  }catch{}
  }
- function silence(){for(const tone of tones){try{tone.stop()}catch{}}tones.clear()}
- function chime(){
+ function silence(){soundVersion++;for(const tone of tones){try{tone.stop()}catch{}}tones.clear()}
+ async function chime(){
   silence();if(!soundOn||!audio||audio.state!=='running'||document.hidden)return;
-  const context=audio,start=context.currentTime;
-  [1046.5,1568,2093].forEach((frequency,index)=>{
-   const at=start+index*.075;
-   [1,2.76].forEach((partial,part)=>{
-    const tone=context.createOscillator(),gain=context.createGain();
-    tone.type='sine';tone.frequency.value=frequency*partial;
-    gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(part?.002:.014,at+.035);gain.gain.exponentialRampToValueAtTime(.0001,at+.85);
-    tone.connect(gain);gain.connect(context.destination);tones.add(tone);
-    tone.onended=()=>{tones.delete(tone);tone.disconnect();gain.disconnect()};tone.start(at);tone.stop(at+.9);
-   });
-  });
+  const context=audio,version=soundVersion;
+  try{
+   const buffer=await clip;
+   if(!buffer||version!==soundVersion||!soundOn||document.hidden)return;
+   const tone=context.createBufferSource(),gain=context.createGain();
+   tone.buffer=buffer;gain.gain.value=.25;
+   tone.connect(gain);gain.connect(context.destination);tones.add(tone);
+   tone.onended=()=>{tones.delete(tone);tone.disconnect();gain.disconnect()};tone.start();
+  }catch{}
  }
  soundButton.addEventListener('click',()=>{soundOn=!soundOn;try{localStorage.setItem('portfolio-tour-sound',soundOn?'on':'off')}catch{}soundLabel();if(soundOn){primeSound();chime()}else silence()});
  const title=card.querySelector('h2')!, description=card.querySelector('p')!;
@@ -80,7 +84,7 @@ export function startWelcomeTour() {
     for(let i=0;i<count;i++){
      const star=document.createElementNS('http://www.w3.org/2000/svg','svg');
      star.classList.add('dust-star');star.setAttribute('viewBox','0 0 16 16');
-     star.style.setProperty('--x',`${(i+.5)/count*100}%`);star.style.setProperty('--size',`${i%3===0?10:6}px`);star.style.setProperty('--delay',`${i/count*.9}s`);
+     star.style.setProperty('--x',`${(i+.5)/count*100}%`);star.style.setProperty('--size',`${i%3===0?15:9}px`);star.style.setProperty('--delay',`${i/count*.9}s`);
      const shape=document.createElementNS('http://www.w3.org/2000/svg','path');
      shape.setAttribute('d',i%3===0?'M8 0L10 6L16 8L10 10L8 16L6 10L0 8L6 6Z':'M8 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8');shape.setAttribute('fill','currentColor');star.append(shape);group.append(star);
     }

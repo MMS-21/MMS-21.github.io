@@ -25,9 +25,9 @@
 .tour-pointer[data-side="left"] svg{transform:scaleX(-1)}
 .tour-dust{position:fixed;inset:0;z-index:69;pointer-events:none;overflow:hidden}
 .tour-dust :global(.dust-line){position:absolute;height:32px;pointer-events:none}
-.tour-dust :global(.dust-star){position:absolute;top:0;left:var(--x);width:var(--size);height:var(--size);color:#ab7c31;opacity:0;filter:drop-shadow(0 0 2px #f5dc94);animation:dust-twinkle 3200ms ease-out var(--delay) both}
-.tour-dust :global(.dust-star:nth-child(3n)){color:#60869a}
-@keyframes dust-twinkle{0%{opacity:0;transform:translateY(8px) scale(.25) rotate(-20deg)}20%{opacity:1;transform:translateY(0) scale(1) rotate(0)}50%{opacity:.75}100%{opacity:0;transform:translateY(-14px) scale(.25) rotate(35deg)}}
+.tour-dust :global(.dust-star){position:absolute;top:0;left:var(--x);width:var(--size);height:var(--size);color:#fff4b0;stroke:#b77b1c;stroke-width:.65;paint-order:stroke fill;opacity:0;filter:drop-shadow(0 0 2px #946118) drop-shadow(0 0 5px #e6ad36) drop-shadow(0 0 9px #ffe5a0);animation:dust-twinkle 3200ms ease-out var(--delay) both}
+.tour-dust :global(.dust-star:nth-child(3n)){color:#e9faff;stroke:#4c85a5;filter:drop-shadow(0 0 2px #355e76) drop-shadow(0 0 5px #76b9db) drop-shadow(0 0 9px #c5ecff)}
+@keyframes dust-twinkle{0%{opacity:0;transform:translateY(8px) scale(.25) rotate(-20deg)}15%,65%{opacity:1;transform:translateY(0) scale(1) rotate(0)}100%{opacity:0;transform:translateY(-14px) scale(.25) rotate(35deg)}}
 @media(prefers-reduced-motion:reduce){.tour-dust :global(.dust-star){animation:none;opacity:.65;filter:none;transform:none}}
 .tour-card .tour-sound{display:block;margin:4px 0 0 auto;padding:4px 0;min-height:44px;background:none;color:#57472f;font-size:.68rem;text-decoration:underline;text-underline-offset:4px}
 .tour-card{position:fixed;z-index:72;right:24px;bottom:24px;width:min(360px,calc(100vw - 32px));padding:24px;background:#fffaf0 url('/img/paper-fibers.svg');color:#302d28;border:1px solid #d9cdb8;box-shadow:3px 12px 30px #59472924;box-sizing:border-box}
