@@ -1,6 +1,7 @@
 <div class="tour-pointer" data-tour-spotlight hidden aria-hidden="true">
  <svg viewBox="0 0 64 64" fill="none"><path d="M58 8C42 0 28 33 4 32M13 25l-9 7 10 6" /></svg>
 </div>
+<div class="tour-dust" data-tour-dust hidden aria-hidden="true"></div>
 <section class="tour-card" data-tour-card hidden role="dialog" aria-modal="false" aria-labelledby="tour-title" aria-describedby="tour-description">
  <h2 id="tour-title">Welcome to my little corner.</h2>
  <p id="tour-description" aria-live="polite">A short walk through the site, at your own pace.</p>
@@ -11,6 +12,7 @@
   <button type="button" class="tour-next" data-tour-next>Show me around</button>
  </div>
  <span class="tour-progress" data-tour-progress>1 of 4</span>
+ <button type="button" class="tour-sound" data-tour-sound aria-pressed="true" aria-label="Mute tour sound">Sound on</button>
 </section>
 <script>
  import { startWelcomeTour } from '../scripts/welcome-tour';
@@ -21,6 +23,13 @@
 .tour-pointer svg{width:100%;height:100%;overflow:visible}
 .tour-pointer path{stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .tour-pointer[data-side="left"] svg{transform:scaleX(-1)}
+.tour-dust{position:fixed;inset:0;z-index:69;pointer-events:none;overflow:hidden}
+.tour-dust :global(.dust-line){position:absolute;height:32px;pointer-events:none}
+.tour-dust :global(.dust-star){position:absolute;top:0;left:var(--x);width:var(--size);height:var(--size);color:#ab7c31;opacity:0;filter:drop-shadow(0 0 2px #f5dc94);animation:dust-twinkle 1800ms ease-out var(--delay) both}
+.tour-dust :global(.dust-star:nth-child(3n)){color:#60869a}
+@keyframes dust-twinkle{0%{opacity:0;transform:translateY(8px) scale(.25) rotate(-20deg)}20%{opacity:1;transform:translateY(0) scale(1) rotate(0)}50%{opacity:.75}100%{opacity:0;transform:translateY(-14px) scale(.25) rotate(35deg)}}
+@media(prefers-reduced-motion:reduce){.tour-dust :global(.dust-star){animation:none;opacity:.65;filter:none;transform:none}}
+.tour-card .tour-sound{display:block;margin:4px 0 0 auto;padding:4px 0;min-height:44px;background:none;color:#57472f;font-size:.68rem;text-decoration:underline;text-underline-offset:4px}
 .tour-card{position:fixed;z-index:72;right:24px;bottom:24px;width:min(360px,calc(100vw - 32px));padding:24px;background:#fffaf0 url('/img/paper-fibers.svg');color:#302d28;border:1px solid #d9cdb8;box-shadow:3px 12px 30px #59472924;box-sizing:border-box}
 .tour-card h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:500;line-height:1.1;margin:0 0 10px;text-wrap:balance}
 .tour-card p{font-family:Manrope,sans-serif;font-size:.8rem;line-height:1.65;color:#493e2f;margin:0 0 10px}

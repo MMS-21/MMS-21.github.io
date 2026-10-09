@@ -1,6 +1,35 @@
 export function startWelcomeTour() {
  const card=document.querySelector<HTMLElement>('[data-tour-card]'); if(!card)return;
  const light=document.querySelector<HTMLElement>('[data-tour-spotlight]')!;
+ const dust=document.querySelector<HTMLElement>('[data-tour-dust]')!;
+ const soundButton=card.querySelector<HTMLButtonElement>('[data-tour-sound]')!;
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ let soundOn=true;
+ try{soundOn=localStorage.getItem('portfolio-tour-sound')!=='off'}catch{}
+ let audio:AudioContext|null=null,burstPending=false;
+ const tones=new Set<OscillatorNode>();
+ function soundLabel(){soundButton.textContent=soundOn?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(soundOn));soundButton.setAttribute('aria-label',soundOn?'Mute tour sound':'Enable tour sound')}
+ soundLabel();
+ function primeSound(){
+  if(!soundOn)return;
+  try{audio??=new AudioContext();if(audio.state==='suspended')void audio.resume().catch(()=>{})}catch{}
+ }
+ function silence(){for(const tone of tones){try{tone.stop()}catch{}}tones.clear()}
+ function chime(){
+  silence();if(!soundOn||!audio||audio.state!=='running'||document.hidden)return;
+  const context=audio,start=context.currentTime;
+  [1046.5,1568,2093].forEach((frequency,index)=>{
+   const at=start+index*.075;
+   [1,2.76].forEach((partial,part)=>{
+    const tone=context.createOscillator(),gain=context.createGain();
+    tone.type='sine';tone.frequency.value=frequency*partial;
+    gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(part?.006:.024,at+.012);gain.gain.exponentialRampToValueAtTime(.0001,at+.7);
+    tone.connect(gain);gain.connect(context.destination);tones.add(tone);
+    tone.onended=()=>{tones.delete(tone);tone.disconnect();gain.disconnect()};tone.start(at);tone.stop(at+.75);
+   });
+  });
+ }
+ soundButton.addEventListener('click',()=>{soundOn=!soundOn;try{localStorage.setItem('portfolio-tour-sound',soundOn?'on':'off')}catch{}soundLabel();if(soundOn){primeSound();chime()}else silence()});
  const title=card.querySelector('h2')!, description=card.querySelector('p')!;
  const next=card.querySelector<HTMLButtonElement>('[data-tour-next]')!;
  const skip=card.querySelector<HTMLButtonElement>('[data-tour-skip]')!;
@@ -23,14 +52,15 @@ export function startWelcomeTour() {
  function seen(){try{localStorage.setItem(key,'1')}catch{}}
  function spotlight(){
   frame=0; if(card.hidden||!active)return;
-  const selector=step===0&&document.querySelector<HTMLElement>('.scroll-hero')?.dataset.animated==='true'?'.opening-welcome':steps[step].target;
+  const selector=step===0?(document.querySelector<HTMLElement>('.scroll-hero')?.dataset.animated==='true'?'.opening-welcome .arabic-calligraphy':'.mobile-welcome .arabic-calligraphy'):steps[step].target;
   const target=document.querySelector<HTMLElement>(selector);
-  if(!target){light.hidden=true;return}
+  if(!target){light.hidden=true;dust.hidden=true;return}
   // Heading boxes span the column. Point to the actual lettering instead.
   let r=target.getBoundingClientRect();
-  if(target.matches('h1,h2,h3')){const range=document.createRange();range.selectNodeContents(target);r=range.getBoundingClientRect();}
-  else if(target.matches('.pyramid-toggle'))r=target.querySelector('svg')!.getBoundingClientRect();
-  if(!r.width||r.bottom<8||r.top>innerHeight-60){light.hidden=true;return}
+  let lines=[r];
+  if(target.matches('h1,h2,h3,.arabic-calligraphy')){const range=document.createRange();range.selectNodeContents(target);r=range.getBoundingClientRect();lines=Array.from(range.getClientRects()).filter((line,index,all)=>line.width>0&&!all.slice(0,index).some(previous=>Math.abs(previous.top-line.top)<2&&Math.abs(previous.left-line.left)<2));}
+  else if(target.matches('.pyramid-toggle')){r=target.querySelector('svg')!.getBoundingClientRect();lines=[r];}
+  if(!r.width||r.bottom<8||r.top>innerHeight-60){light.hidden=true;dust.hidden=true;return}
   const side=r.right+74<innerWidth?'right':r.left>74?'left':r.top>74?'above':'below';
   const path=light.querySelector('path')!;
   const horizontal=side==='right'||side==='left';
@@ -41,6 +71,25 @@ export function startWelcomeTour() {
   const y=horizontal?r.top+r.height/2-32:side==='above'?r.top-62:r.bottom-2;
   light.style.left=`${x}px`;light.style.top=`${y}px`;
   light.hidden=false;
+  // Each line gets its own small dust trail; scrolling only repositions it.
+  if(burstPending){
+   dust.replaceChildren();
+   lines.forEach(line=>{
+    const group=document.createElement('div');group.className='dust-line';
+    const count=reduced.matches?3:Math.min(14,Math.max(5,Math.round(line.width/25)));
+    for(let i=0;i<count;i++){
+     const star=document.createElementNS('http://www.w3.org/2000/svg','svg');
+     star.classList.add('dust-star');star.setAttribute('viewBox','0 0 16 16');
+     star.style.setProperty('--x',`${(i+.5)/count*100}%`);star.style.setProperty('--size',`${i%3===0?10:6}px`);star.style.setProperty('--delay',`${i/count*.55}s`);
+     const shape=document.createElementNS('http://www.w3.org/2000/svg','path');
+     shape.setAttribute('d',i%3===0?'M8 0L10 6L16 8L10 10L8 16L6 10L0 8L6 6Z':'M8 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8');shape.setAttribute('fill','currentColor');star.append(shape);group.append(star);
+    }
+    dust.append(group);
+   });
+   burstPending=false;chime();
+  }
+  dust.hidden=false;
+  Array.from(dust.children).forEach((group,index)=>{const line=lines[index];if(!line)return;const el=group as HTMLElement;el.style.left=`${line.left}px`;el.style.top=`${line.bottom+4}px`;el.style.width=`${line.width}px`});
  }
  function schedule(){if(!frame)frame=requestAnimationFrame(spotlight)}
  function visit(){
@@ -62,26 +111,31 @@ export function startWelcomeTour() {
   if(!active){light.hidden=true;return}
   document.body.classList.add('tour-active');
   document.body.style.setProperty('--tour-space',`${card.offsetHeight+40}px`);
+  silence();dust.hidden=true;burstPending=true;
   visit();requestAnimationFrame(()=>{notify(step===5);schedule();next.focus({preventScroll:true})});
  }
  function finish(){
-  active=false;card.hidden=true;light.hidden=true;seen();notify();
+  active=false;card.hidden=true;light.hidden=true;dust.hidden=true;dust.replaceChildren();burstPending=false;silence();seen();notify();
   document.body.classList.remove('tour-active');document.body.style.removeProperty('--tour-space');
   if(frame)cancelAnimationFrame(frame);frame=0;restore?.focus({preventScroll:true});
  }
  function begin(){
+  primeSound();
   clearTimeout(timer);restore=document.activeElement instanceof HTMLElement?document.activeElement:null;
   if(restore?.closest('#portfolio-navigation')||restore?.closest('[data-tour-card]'))restore=paw;
   if(paw.getAttribute('aria-expanded')==='true')paw.click();
   seen();active=true;step=0;render();
  }
- next.addEventListener('click',()=>{if(!active)begin();else if(step===steps.length-1)finish();else{step++;render()}});
- back.addEventListener('click',()=>{step=Math.max(0,step-1);render()});
+ next.addEventListener('click',()=>{primeSound();if(!active)begin();else if(step===steps.length-1)finish();else{step++;render()}});
+ back.addEventListener('click',()=>{primeSound();step=Math.max(0,step-1);render()});
  skip.addEventListener('click',finish);
  document.querySelectorAll('[data-tour-replay], [data-tour-start]').forEach(button=>button.addEventListener('click',begin));
  action.addEventListener('click',seen);
  addEventListener('keydown',event=>{if(event.key==='Escape'&&!card.hidden){event.preventDefault();finish()}});
  addEventListener('scroll',schedule,{passive:true});
+ document.fonts.ready.then(schedule);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)silence()});
+ addEventListener('pagehide',()=>{silence();void audio?.close().catch(()=>{})});
  addEventListener('resize',()=>{if(active){visit();notify(step===5);schedule()}});
  let show=true;try{show=localStorage.getItem(key)!=='1'}catch{}
  if(show)timer=window.setTimeout(()=>{if(document.hidden)return;render()},4000);
