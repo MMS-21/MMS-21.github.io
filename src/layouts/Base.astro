@@ -27,6 +27,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 // Must be absolute: consumers resolve og:image relative to the *scraping* host,
 // not the page, and a root-relative path renders as a broken image preview.
 const ogImageUrl = new URL(ogImage, Astro.site);
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': new URL('#person', Astro.site).href,
+  name: SITE.name,
+  url: Astro.site?.href,
+  jobTitle: SITE.role,
+  homeLocation: { '@type': 'Place', name: SITE.location },
+  sameAs: [SITE.links.github, SITE.links.linkedin],
+};
 ---
 
 <!doctype html>
@@ -72,6 +82,7 @@ const ogImageUrl = new URL(ogImage, Astro.site);
       href={new URL('rss.xml', Astro.site)}
     />
     <meta name="author" content={SITE.name} />
+    <script type="application/ld+json" set:html={JSON.stringify(person).replace(/</g, '\\u003c')} />
   </head>
   <body class:list={{'has-portfolio-header':!hideHeader}}>
     <a class="skip" href="#main">Skip to content</a>

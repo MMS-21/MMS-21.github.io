@@ -3,7 +3,7 @@
 
 export const SITE = {
   name: 'Moaaz Magdy',
-  title: 'Moaaz Magdy | A little curiosity goes a long way',
+  title: 'Moaaz Magdy',
   description:
     'A little curiosity goes a long way. Explore my projects, experiments, and notes. Say hi to Lulu along the way.',
   role: 'Data & Business Analyst',
