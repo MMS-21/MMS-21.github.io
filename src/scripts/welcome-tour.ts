@@ -24,11 +24,18 @@ export function startWelcomeTour() {
  function spotlight(){
   frame=0; if(card.hidden||!active)return;
   const selector=step===0&&document.querySelector<HTMLElement>('.scroll-hero')?.dataset.animated==='true'?'.opening-welcome':steps[step].target;
-  const target=document.querySelector<HTMLElement>(selector),r=target?.getBoundingClientRect();
-  const bottom=Math.min(r?.bottom??0,card.getBoundingClientRect().top-12,innerHeight-8);
-  const top=Math.max(8,r?.top??0);
-  if(r&&r.width&&bottom>top){light.hidden=false;light.style.left=`${Math.max(4,r.left-6)}px`;light.style.top=`${top}px`;light.style.width=`${Math.min(innerWidth-8,r.width+12)}px`;light.style.height=`${bottom-top}px`}
-  else light.hidden=true;
+  const target=document.querySelector<HTMLElement>(selector);
+  if(!target){light.hidden=true;return}
+  // Heading boxes span the column. Point to the actual lettering instead.
+  let r=target.getBoundingClientRect();
+  if(target.matches('h1,h2,h3')){const range=document.createRange();range.selectNodeContents(target);r=range.getBoundingClientRect();}
+  else if(target.matches('.pyramid-toggle'))r=target.querySelector('svg')!.getBoundingClientRect();
+  if(!r.width||r.bottom<8||r.top>innerHeight-60){light.hidden=true;return}
+  const right=r.right+72<innerWidth;
+  light.dataset.side=right?'right':'left';
+  light.style.left=`${Math.max(4,Math.min(innerWidth-68,right?r.right+4:r.left-68))}px`;
+  light.style.top=`${Math.max(8,Math.min(innerHeight-60,r.top+r.height/2-36))}px`;
+  light.hidden=false;
  }
  function schedule(){if(!frame)frame=requestAnimationFrame(spotlight)}
  function visit(){
