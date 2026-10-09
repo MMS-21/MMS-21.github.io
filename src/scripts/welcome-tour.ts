@@ -6,7 +6,7 @@ export function startWelcomeTour() {
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  let soundOn=true;
  try{soundOn=localStorage.getItem('portfolio-tour-sound')!=='off'}catch{}
- let audio:AudioContext|null=null,burstPending=false;
+ let audio:AudioContext|null=null,burstPending=false,burstTimer=0;
  const tones=new Set<OscillatorNode>();
  function soundLabel(){soundButton.textContent=soundOn?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(soundOn));soundButton.setAttribute('aria-label',soundOn?'Mute tour sound':'Enable tour sound')}
  soundLabel();
@@ -23,9 +23,9 @@ export function startWelcomeTour() {
    [1,2.76].forEach((partial,part)=>{
     const tone=context.createOscillator(),gain=context.createGain();
     tone.type='sine';tone.frequency.value=frequency*partial;
-    gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(part?.006:.024,at+.012);gain.gain.exponentialRampToValueAtTime(.0001,at+.7);
+    gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(part?.002:.014,at+.035);gain.gain.exponentialRampToValueAtTime(.0001,at+.85);
     tone.connect(gain);gain.connect(context.destination);tones.add(tone);
-    tone.onended=()=>{tones.delete(tone);tone.disconnect();gain.disconnect()};tone.start(at);tone.stop(at+.75);
+    tone.onended=()=>{tones.delete(tone);tone.disconnect();gain.disconnect()};tone.start(at);tone.stop(at+.9);
    });
   });
  }
@@ -76,11 +76,11 @@ export function startWelcomeTour() {
    dust.replaceChildren();
    lines.forEach(line=>{
     const group=document.createElement('div');group.className='dust-line';
-    const count=reduced.matches?3:Math.min(14,Math.max(5,Math.round(line.width/25)));
+    const count=reduced.matches?3:Math.min(18,Math.max(7,Math.round(line.width/19)));
     for(let i=0;i<count;i++){
      const star=document.createElementNS('http://www.w3.org/2000/svg','svg');
      star.classList.add('dust-star');star.setAttribute('viewBox','0 0 16 16');
-     star.style.setProperty('--x',`${(i+.5)/count*100}%`);star.style.setProperty('--size',`${i%3===0?10:6}px`);star.style.setProperty('--delay',`${i/count*.55}s`);
+     star.style.setProperty('--x',`${(i+.5)/count*100}%`);star.style.setProperty('--size',`${i%3===0?10:6}px`);star.style.setProperty('--delay',`${i/count*.9}s`);
      const shape=document.createElementNS('http://www.w3.org/2000/svg','path');
      shape.setAttribute('d',i%3===0?'M8 0L10 6L16 8L10 10L8 16L6 10L0 8L6 6Z':'M8 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8');shape.setAttribute('fill','currentColor');star.append(shape);group.append(star);
     }
@@ -111,11 +111,13 @@ export function startWelcomeTour() {
   if(!active){light.hidden=true;return}
   document.body.classList.add('tour-active');
   document.body.style.setProperty('--tour-space',`${card.offsetHeight+40}px`);
-  silence();dust.hidden=true;burstPending=true;
+  silence();clearTimeout(burstTimer);dust.hidden=true;dust.replaceChildren();burstPending=false;
+  // Let visitors locate the arrow before revealing its dust and synchronized chime.
+  burstTimer=window.setTimeout(()=>{if(active&&!document.hidden){burstPending=true;schedule()}},750);
   visit();requestAnimationFrame(()=>{notify(step===5);schedule();next.focus({preventScroll:true})});
  }
  function finish(){
-  active=false;card.hidden=true;light.hidden=true;dust.hidden=true;dust.replaceChildren();burstPending=false;silence();seen();notify();
+  active=false;clearTimeout(burstTimer);card.hidden=true;light.hidden=true;dust.hidden=true;dust.replaceChildren();burstPending=false;silence();seen();notify();
   document.body.classList.remove('tour-active');document.body.style.removeProperty('--tour-space');
   if(frame)cancelAnimationFrame(frame);frame=0;restore?.focus({preventScroll:true});
  }

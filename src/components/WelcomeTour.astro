@@ -25,7 +25,7 @@
 .tour-pointer[data-side="left"] svg{transform:scaleX(-1)}
 .tour-dust{position:fixed;inset:0;z-index:69;pointer-events:none;overflow:hidden}
 .tour-dust :global(.dust-line){position:absolute;height:32px;pointer-events:none}
-.tour-dust :global(.dust-star){position:absolute;top:0;left:var(--x);width:var(--size);height:var(--size);color:#ab7c31;opacity:0;filter:drop-shadow(0 0 2px #f5dc94);animation:dust-twinkle 1800ms ease-out var(--delay) both}
+.tour-dust :global(.dust-star){position:absolute;top:0;left:var(--x);width:var(--size);height:var(--size);color:#ab7c31;opacity:0;filter:drop-shadow(0 0 2px #f5dc94);animation:dust-twinkle 3200ms ease-out var(--delay) both}
 .tour-dust :global(.dust-star:nth-child(3n)){color:#60869a}
 @keyframes dust-twinkle{0%{opacity:0;transform:translateY(8px) scale(.25) rotate(-20deg)}20%{opacity:1;transform:translateY(0) scale(1) rotate(0)}50%{opacity:.75}100%{opacity:0;transform:translateY(-14px) scale(.25) rotate(35deg)}}
 @media(prefers-reduced-motion:reduce){.tour-dust :global(.dust-star){animation:none;opacity:.65;filter:none;transform:none}}
