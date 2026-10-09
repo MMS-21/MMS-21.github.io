@@ -75,7 +75,7 @@ export function startWelcomeTour() {
   light.hidden=false;
   hint.textContent=hints[step];hint.hidden=false;
   const hintX=x+68+hint.offsetWidth<=innerWidth-12?x+68:x-hint.offsetWidth-4;
-  const hintY=y+24-hint.offsetHeight/2;
+  const hintY=y+16-hint.offsetHeight/2;
   hint.style.left=`${Math.max(12,Math.min(innerWidth-hint.offsetWidth-12,hintX))}px`;
   hint.style.top=`${Math.max(12,Math.min(innerHeight-hint.offsetHeight-12,hintY))}px`;
   // Each line gets its own small dust trail; scrolling only repositions it.
