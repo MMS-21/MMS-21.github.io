@@ -1,5 +1,5 @@
 ---
-const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introduction'},{id:'featured-work',label:'Featured work'},{id:'about',label:'About me'},{id:'connect',label:'Get in touch'}];
+const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introduction'},{id:'work-routine',label:'How I work'},{id:'featured-work',label:'Featured work'},{id:'about',label:'About me'},{id:'connect',label:'Get in touch'}];
 ---
 <nav class="scroll-rail" aria-label="Page sections">
  <div class="rail-line" aria-hidden="true"><span class="rail-fill"></span><span class="rail-light"></span></div>
@@ -30,9 +30,10 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
    const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
    targets=links.map((link,i)=>{
     const el=document.getElementById(link.dataset.section!)!;
-    if(el.id==='hero-story'){
+    if(el.id==='hero-story'||el.id==='work-routine'){
      const hero=el.closest<HTMLElement>('.scroll-hero')!;
-     return reduced.matches?hero.offsetTop:hero.offsetTop+(hero.offsetHeight-innerHeight)*.62;
+     if(hero.dataset.animated!=='true')return el.getBoundingClientRect().top+scrollY;
+     return hero.offsetTop+(hero.offsetHeight-innerHeight)*(el.id==='hero-story'?.30:.82);
     }
     // Land after the desk's paper reveals, so a section shortcut shows its content.
     const reveal=el.id==='featured-work'&&el.dataset.animated==='true'&&innerWidth>700?(el.offsetHeight-innerHeight)*.66:0;

@@ -1,0 +1,30 @@
+---
+import { SITE } from '../data/site';
+---
+<div class="hero-introduction" aria-labelledby="hero-introduction-title">
+  <h2 id="hero-introduction-title">Hi, I’m {SITE.name}.</h2>
+  <p class="introduction-role">Data &amp; Business Analyst</p>
+  <p class="introduction-copy">I’m Moaaz, a Data &amp; Business Analyst working across customer analytics, dashboards, and reporting automation. I build and use <button class="tools-explainer" type="button" popovertarget="hero-ai-tools" aria-label="Learn what I mean by AI tools">AI tools<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 9v5m0-9v1"/></svg></button> to support that work.</p>
+  <div class="introduction-actions"><a href="/projects/">Explore my work <span aria-hidden="true">↗</span></a><a href="/contact/">Get in touch <span aria-hidden="true">↗</span></a></div>
+  <a class="workflow-cue" href="#work-routine">How I work <svg viewBox="0 0 32 42" fill="none" aria-hidden="true"><path d="M12 3c13 8 11 22 5 33m-7-8 7 9 9-6"/></svg></a>
+</div>
+<div class="ai-tools-panel" id="hero-ai-tools" popover aria-labelledby="ai-tools-title">
+  <button class="tools-close" type="button" popovertarget="hero-ai-tools" popovertargetaction="hide" aria-label="Close AI tools explanation" autofocus><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+  <h2 id="ai-tools-title">What I mean by AI tools</h2>
+  <p>Software I build and use to support specific analytical tasks. These are two examples of my work:</p>
+  <h3><a href="https://github.com/MMS-21/sina-agent">Sina Agent <span aria-hidden="true">↗</span></a></h3>
+  <p>An agent for analysis, research, and study workflows. For example, asking it to investigate trends in a revenue CSV.</p>
+  <h3><a href="/projects/analytics-agent/">Analytics Agent <span aria-hidden="true">↗</span></a></h3>
+  <p>A Python agent that answers questions about customer data using analytical tools, then assembles charts and a report. For example, comparing churn risk across customer segments.</p>
+  <p class="tools-note">AI helps with the workflow. The data, calculations, and conclusions still need checking.</p>
+</div>
+<style>
+.hero-introduction{position:absolute;inset:150px 80px 60px 180px;max-width:800px;margin:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:#30291f;opacity:var(--intro-reveal,1);visibility:var(--intro-visibility,visible);transform:translateY(calc(20px * (1 - var(--intro-reveal,1))))}
+h2{font:500 clamp(2.8rem,5.2vw,4.8rem)/1.05 'Cormorant Garamond',Georgia,serif;letter-spacing:-.025em;text-wrap:balance;margin:0 0 16px}.introduction-role{font-size:1.05rem;color:#426475;margin:0 0 24px}.introduction-copy{font-size:clamp(1rem,1.5vw,1.15rem);line-height:1.85;max-width:58ch;margin:0;text-wrap:pretty}
+.tools-explainer{font:inherit;display:inline-flex;align-items:center;gap:5px;color:#31596d;background:none;padding:0;border:0;border-bottom:1px dashed currentColor;cursor:pointer}.tools-explainer svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.5}.introduction-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 32px;margin-top:32px}.introduction-actions a{display:inline-flex;align-items:center;gap:16px;min-height:44px;color:#31596d;text-decoration:none;border-bottom:1px solid #8299a2}.introduction-actions a:first-child{color:#30291f;border-color:#79613e}.introduction-actions a:hover,.tools-explainer:hover{color:#705832}.workflow-cue{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:40px;color:#57472f;text-decoration:none;font:500 1.2rem 'Cormorant Garamond',Georgia,serif}.workflow-cue svg{height:38px;width:32px;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.ai-tools-panel{box-sizing:border-box;width:min(560px,calc(100% - 40px));max-height:calc(100svh - 48px);overflow:auto;padding:36px;background:#fffaf0 url('/img/paper-fibers.svg');color:#30291f;border:1px solid #c5b69d;box-shadow:4px 16px 45px #59472935}.ai-tools-panel::backdrop{background:#30291f35}.ai-tools-panel h2{font-size:2rem;margin:0 35px 20px 0}.ai-tools-panel h3{font:500 1.5rem 'Cormorant Garamond',Georgia,serif;margin:24px 0 6px}.ai-tools-panel p{font-size:.92rem;line-height:1.75;margin:0}.ai-tools-panel a{color:#31596d;text-underline-offset:5px}.ai-tools-panel .tools-note{margin-top:24px;color:#605441;font-size:.82rem}.tools-close{position:absolute;right:12px;top:12px;display:grid;place-items:center;width:44px;height:44px;border:0;background:none;cursor:pointer;color:#57472f}.tools-close svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.5}a:focus-visible,button:focus-visible{outline:2px solid #426b7d;outline-offset:5px}
+@media(max-width:1000px){.hero-introduction{left:150px;right:55px}}
+@media(max-width:700px),(max-height:760px),(prefers-reduced-motion:reduce){.hero-introduction{position:relative;inset:auto;max-width:740px;padding:160px 36px 72px;opacity:1;visibility:visible;transform:none}.introduction-copy{font-size:1rem}.workflow-cue{margin-top:32px}}
+@media(max-width:700px){h2{font-size:2.8rem}.introduction-role{font-size:.95rem}.ai-tools-panel{padding:30px 24px}}
+@media(prefers-reduced-motion:reduce){.hero-introduction{padding-top:180px}}
+</style>

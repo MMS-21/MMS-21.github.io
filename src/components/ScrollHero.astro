@@ -1,5 +1,6 @@
 ---
 import AnalystDesk from './AnalystDesk.astro';
+import HeroIntroduction from './HeroIntroduction.astro';
 import WelcomeGarden from './WelcomeGarden.astro';
 import PaperLandmark from './PaperLandmark.astro';
 import FloralAccent from './FloralAccent.astro';
@@ -28,6 +29,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction">
   <div class="dock-backdrop" aria-hidden="true"></div>
   <div class="hero-stage" id="hero-story" tabindex="-1">
+    <HeroIntroduction />
     <AnalystDesk />
     <a class="scroll-cue opening-cue" href="#hero-story"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
     <a class="scroll-cue hero-end-cue" href="#featured-work"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
@@ -84,17 +86,20 @@ const fragments = Array.from({length:24}, (_,i) => ({
     ] as const;
     const cue=(el:HTMLElement,value:number)=>{set(el,'--cue',value);el.inert=value<.8;};
     const render=()=>{
-      frame=0; const y=scrollY,animated=!reduced.matches,p=animated?clamp(y/end):.62;
+      frame=0; const y=scrollY,animated=!reduced.matches&&w>700&&h>760,p=animated?clamp(y/end):.78;
       // The original scattered-paper geometry and assembly stay intact, behind a clean opening cover.
       set(background,'--paper-visible',animated?ramp(p,.025,.07):1);
       scraps.forEach((scrap,i)=>set(scrap,'--assembly',animated?ease(((p-.07)-(i%6)*.006)/.15):1));
       const lift=animated?ramp(p,.07,.13):1;
       set(hero,'--identity',lift);
-      const workReveal=animated?ramp(p,.18,.25):1;
+      const introReveal=animated?ramp(p,.18,.24)*(1-ramp(p,.43,.49)):1;
+      set(hero,'--intro-reveal',introReveal);style(hero,'--intro-visibility',introReveal>.01?'visible':'hidden');
+      hero.querySelector<HTMLElement>('.hero-introduction')!.inert=introReveal<.8;
+      const workReveal=animated?ramp(p,.49,.55):1;
       set(hero,'--work-reveal',workReveal);style(hero,'--work-visibility',workReveal>.01?'visible':'hidden');
-      set(hero,'--paper-reveal',animated?ramp(p,.25,.55):1);
-      hero.querySelectorAll<HTMLElement>('.working-paper').forEach((paper,i)=>{const progress=animated?ramp(p,.25+i*.13,.36+i*.13):1;set(hero,`--paper-${i}`,progress);paper.inert=progress<.8;});
-      set(hero,'--branch-growth',animated?ramp(p,.25,.60):1);
+      set(hero,'--paper-reveal',animated?ramp(p,.55,.80):1);
+      hero.querySelectorAll<HTMLElement>('.working-paper').forEach((paper,i)=>{const progress=animated?ramp(p,.55+i*.085,.63+i*.085):1;set(hero,`--paper-${i}`,progress);paper.inert=progress<.8;});
+      set(hero,'--branch-growth',animated?ramp(p,.53,.80):1);
       set(identity,'--arabic-visible',1-lift);
       hero.querySelector<HTMLElement>('.analyst-desk')!.inert=workReveal<.9;
       set(hero,'--opening-welcome',animated?1-ramp(p,.025,.07):0);
@@ -106,7 +111,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       set(hero,'--dock',dock);
       const mobile=w<=700;
       const initialY=h/2-(mobile?215:240);
-      const finalHeroY=mobile?45:12;
+      const finalHeroY=12;
       const baseY=initialY+(finalHeroY-initialY)*lift;
       const signatureX=mobile?84:103;
       const x=w/2+(signatureX-w/2)*lift;
@@ -137,7 +142,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
     };
     const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
     const measure=()=>{
-      hero.dataset.animated=String(!reduced.matches);desk.dataset.animated='false';
+      hero.dataset.animated=String(!reduced.matches&&innerWidth>700&&innerHeight>760);desk.dataset.animated='false';
       h=innerHeight;w=document.documentElement.clientWidth;end=Math.max(1,hero.offsetHeight-h);
       identityHeight=identity.offsetHeight;shellWidth=shell.offsetWidth;
       links.forEach((link,i)=>{
@@ -146,7 +151,10 @@ const fragments = Array.from({length:24}, (_,i) => ({
       });
       deskTop=desk.offsetTop;deskEnd=Math.max(1,desk.offsetHeight-h);schedule();
     };
-    openingCue.addEventListener('click',e=>{e.preventDefault();scrollTo({top:end*.075,behavior:reduced.matches?'instant':'smooth'});});
+    openingCue.addEventListener('click',e=>{if(hero.dataset.animated!=='true')return;e.preventDefault();scrollTo({top:end*.30,behavior:'smooth'});});
+    hero.querySelector<HTMLAnchorElement>('.workflow-cue')!.addEventListener('click',e=>{if(hero.dataset.animated!=='true')return;e.preventDefault();history.replaceState(null,'','#work-routine');scrollTo({top:end*.82,behavior:'smooth'});});
+    const landOnChapter=()=>{if(hero.dataset.animated!=='true')return;if(location.hash==='#hero-story')scrollTo({top:end*.30,behavior:'instant'});if(location.hash==='#work-routine')scrollTo({top:end*.82,behavior:'instant'});};
+    document.fonts.ready.then(landOnChapter);addEventListener('hashchange',landOnChapter);
     addEventListener('scroll',schedule,{passive:true});addEventListener('resize',measure,{passive:true});
     reduced.addEventListener('change',measure);new ResizeObserver(measure).observe(document.body);document.fonts.ready.then(measure);measure();
   }
@@ -154,7 +162,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <style>
   .scroll-hero { --assembly:1; --identity:1; --role:1; --location:1; --question-line:1; --question-curve:1; --question-note:1; --notebook:1; --arrow-one:1; --arrow-two:1; --lens:1; --nav:1; position:relative; margin:0; }
   .hero-stage { position:relative; min-height:840px; height:100svh; isolation:isolate; overflow:hidden; text-align:center; }
-  .scroll-hero[data-animated="true"] { height:480svh; }
+  .scroll-hero[data-animated="true"] { height:580svh; }
   [data-animated="true"] .hero-stage { position:sticky; top:0; min-height:0; }
   @font-face { font-family:'Cormorant Garamond'; src:url('/fonts/cormorant-garamond-medium.ttf') format('truetype'); font-weight:500; font-display:swap; }
   .paper-background { --assembly:1; position:fixed; inset:0; z-index:-1; pointer-events:none; contain:strict; opacity:var(--paper-visible,0); }
@@ -303,3 +311,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
 </style>
 
 <style>.name-english{color:#40382e;text-shadow:none;text-align:center;translate:6px 0}</style>
+
+<style>
+@media(max-width:700px),(max-height:760px),(prefers-reduced-motion:reduce){.scroll-hero{height:auto}.hero-stage{height:auto;min-height:0;overflow:visible}.opening-welcome,.opening-cue,.hero-end-cue{display:none}.paper-background{opacity:1}.hero-identity{position:fixed;top:0;left:0}.navigation-shell{position:fixed}}
+</style>
