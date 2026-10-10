@@ -8,8 +8,24 @@ import FloralAccent from './FloralAccent.astro';
 <p>A role, a project, or just a little hello.</p>
 <span class="invitation-link">Write to Moaaz <span aria-hidden="true">↗</span></span>
 </a>
+<a class="back-introduction" href="#hero-story">Back to introduction <span aria-hidden="true">↑</span></a>
 </section>
+<script>
+ document.querySelector<HTMLAnchorElement>('.back-introduction')?.addEventListener('click',event=>{
+  const hero=document.querySelector<HTMLElement>('.scroll-hero');
+  const intro=document.querySelector<HTMLElement>('.hero-introduction');
+  if(!hero||!intro)return;
+  event.preventDefault();
+  const top=hero.dataset.animated==='true'?hero.offsetTop+(hero.offsetHeight-innerHeight)*.30:intro.getBoundingClientRect().top+scrollY;
+  history.replaceState(null,'','#hero-story');
+  scrollTo({top,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  document.getElementById('hero-story')?.focus({preventScroll:true});
+ });
+</script>
 <style>
+.contact-section{flex-direction:column}
+.back-introduction{display:inline-flex;align-items:center;gap:10px;min-height:44px;margin-top:30px;color:#426b7d;font-size:.78rem;text-decoration:underline;text-underline-offset:5px}
+.back-introduction:focus-visible{outline:2px solid #426b7d;outline-offset:5px}
 .desk-invitation>svg{animation:letter-float 4.8s ease-in-out infinite}
 .desk-invitation:hover>svg{animation-duration:1.6s;color:#426b7d}
 @keyframes letter-float{0%,100%{transform:translateY(2px) rotate(-6deg)}50%{transform:translateY(-5px) rotate(2deg)}}
