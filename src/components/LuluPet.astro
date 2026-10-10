@@ -1,9 +1,23 @@
-<aside class="lulu" data-lulu aria-label="Lulu, the site cat">
+---
+import { COMPANIONS } from '../data/companions';
+---
+<aside class="lulu" data-lulu aria-label="Lulu, your site companion">
  <div class="lulu-stage">
   <span class="lulu-hint" id="lulu-intro-hint" hidden><span>Tap or click to say hi ♡</span><span class="lulu-name"><svg viewBox="0 0 34 24" fill="none" aria-hidden="true"><path d="M3 3c0 13 14 5 23 15m-8-2 8 3-1-8" /></svg>Lulu</span></span>
   <button class="lulu-character" type="button" aria-label="Say hello to Lulu" title="Click to say hello. Drag to move.">
    <canvas width="192" height="208" aria-hidden="true"></canvas>
   </button>
+  <button class="companion-trigger" type="button" data-companion-trigger aria-label="Choose your companion" aria-expanded="false" aria-controls="companion-picker">
+   <span class="companion-portraits" aria-hidden="true">{COMPANIONS.slice(1,4).map(pet=><img src={pet.portrait} alt="" width="32" height="35" />)}</span>
+   <span class="companion-label"><span class="desktop-label">Choose your companion</span><span class="mobile-label">Choose pet</span></span>
+   <svg class="companion-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m5 6 3 3 3-3" /></svg>
+   <svg class="companion-swap" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 8h14m-4-4 4 4-4 4M19 16H5m4-4-4 4 4 4" /></svg>
+  </button>
+ </div>
+ <div class="companion-picker" id="companion-picker" role="group" aria-labelledby="companion-picker-title" hidden>
+  <div class="companion-picker-heading"><h2 id="companion-picker-title">Choose your companion</h2><button type="button" data-companion-close aria-label="Close companion picker"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg></button></div>
+  <div class="companion-options">{COMPANIONS.map(pet=><button type="button" data-companion={pet.id} aria-pressed={pet.id==='lulu'}><img src={pet.portrait} alt="" width="48" height="52" /><span>{pet.name}</span><svg class="companion-check" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" /></svg></button>)}</div>
+  <p class="companion-status" role="status" aria-live="polite">Lulu is keeping you company.</p>
  </div>
 </aside>
 <script>
@@ -19,7 +33,14 @@
 .lulu-name{display:flex;align-items:center;justify-content:center;gap:2px;margin-top:2px;font-size:14px}.lulu-name svg{width:28px;height:20px;stroke:#8c806d;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
 canvas{display:block;width:100%;height:100%;background:url('/pets/lulu-idle.webp') center/contain no-repeat}
 canvas[data-loaded]{background:none}
+.companion-trigger{position:absolute;left:var(--tools-x,calc(100% - 7px));top:46px;display:flex;align-items:center;gap:8px;width:241px;min-height:48px;padding:5px 10px 5px 5px;border:1px solid #c4b79e;background:#faf6ec;color:#57472f;font:12px/1.35 'Manrope',sans-serif;text-align:left;cursor:pointer}
+.companion-trigger:hover,.companion-trigger[aria-expanded=true]{border-color:#426b7d;background:#fffaf0}.companion-portraits{display:flex;flex:none;align-items:center}.companion-portraits img{width:32px;height:35px;object-fit:contain}.companion-portraits img+img{margin-left:-9px}.companion-label{flex:1}.companion-chevron{width:16px;height:16px;flex:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.companion-swap{display:none;width:22px;height:22px;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}.mobile-label{display:none}
+.lulu[data-chosen] .companion-trigger{width:44px;min-height:44px;padding:10px}.lulu[data-chosen] .companion-portraits,.lulu[data-chosen] .companion-label,.lulu[data-chosen] .companion-chevron{display:none}.lulu[data-chosen] .companion-swap{display:block}
+.lulu[data-tools-left] .companion-trigger{left:auto;right:calc(100% - 7px)}.lulu[data-tools-below] .companion-trigger{top:calc(100% + 4px)}.lulu[data-tour] .companion-trigger,.lulu[data-dragging] .companion-trigger{visibility:hidden}
+.companion-picker{position:absolute;left:var(--picker-x,16px);top:var(--picker-y,200px);width:min(320px,calc(100vw - 24px));padding:16px;border:1px solid #b5a68c;background:#faf6ec url('/img/paper-fibers.svg');pointer-events:auto;color:#57472f}
+.companion-picker-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}.companion-picker h2{margin:0;flex:1;font:500 24px/1.1 'Cormorant Garamond',Georgia,serif}.companion-picker-heading button{display:grid;place-items:center;width:36px;height:36px;padding:7px;border:0;background:none;color:inherit;cursor:pointer}.companion-picker-heading svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.4}
+.companion-options{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.companion-options button{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:86px;padding:8px 4px;border:1px solid transparent;background:none;color:inherit;font:12px/1.3 'Manrope',sans-serif;cursor:pointer}.companion-options img{object-fit:contain}.companion-options button:hover{background:#e9e3d7}.companion-options button[aria-pressed=true]{border-color:#426b7d;background:#e8eeeb;color:#304f5c}.companion-check{display:none;position:absolute;top:5px;right:5px;width:14px;height:14px;stroke:currentColor;stroke-width:1.6}.companion-options button[aria-pressed=true] .companion-check{display:block}.companion-status{min-height:2.6em;margin:12px 0 0;font:11px/1.4 'Manrope',sans-serif;color:#655b4c}
 [hidden]{display:none!important}button:focus-visible{outline:2px solid #60869a;outline-offset:3px;border-radius:8px}
-@media(max-width:700px){.lulu-stage{width:88px;height:95px}}
+@media(max-width:700px){.lulu-stage{width:88px;height:95px}.companion-trigger{top:32px;width:191px}.desktop-label{display:none}.mobile-label{display:inline}}
 @media(prefers-reduced-motion:reduce){.lulu-stage{will-change:auto}}
 </style>

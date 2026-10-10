@@ -1,4 +1,5 @@
 // The supplied Lulu atlas has eight 192x208 frames in each of nine state rows.
+import { COMPANIONS } from '../data/companions';
 type State='idle'|'right'|'left'|'wave'|'jump'|'play';
 type Perch={key:string;left:number;right:number;y:number;floor:boolean};
 type Trip={fromX:number;fromY:number;toX:number;toY:number;start:number;duration:number;arc:number;perch:Perch};
@@ -8,13 +9,18 @@ export function startLulu(){
  const stage=host.querySelector<HTMLElement>('.lulu-stage')!;
  const button=host.querySelector<HTMLButtonElement>('.lulu-character')!;
  const hint=host.querySelector<HTMLElement>('.lulu-hint')!;
+ const chooser=host.querySelector<HTMLButtonElement>('[data-companion-trigger]')!;
+ const picker=host.querySelector<HTMLElement>('.companion-picker')!;
+ const status=host.querySelector<HTMLElement>('.companion-status')!;
+ const options=Array.from(host.querySelectorAll<HTMLButtonElement>('[data-companion]'));
+ let companion:typeof COMPANIONS[number]=COMPANIONS[0],pickerOpen=false,loadRequest=0;
  let greeted=false;
  const control=document.querySelector<HTMLButtonElement>('[data-lulu-toggle]')!;
  const canvas=host.querySelector('canvas')!,ctx=canvas.getContext('2d');if(!ctx)return;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const shell=document.querySelector<HTMLElement>('.navigation-shell');
  const rows:Record<State,number>={idle:0,right:1,left:2,wave:3,jump:4,play:6};
- const image=new Image();
+ let image=new Image();
  let visible=true,loaded=false,state:State='wave',since=performance.now();
  let x=16,footY=scrollY+innerHeight-12,raf=0,last=0,drawn=-1,nextAction=since+3600;
  let hovered=false,dragging=false,moved=false,clicks=0,decisions=0,touring=false,tourWasVisible=true;
@@ -30,6 +36,11 @@ export function startLulu(){
  function position(){
   const px=clampX(x),py=footY-scrollY-height()*.96;
   stage.style.setProperty('--lulu-x',`${px.toFixed(1)}px`);stage.style.setProperty('--lulu-y',`${py.toFixed(1)}px`);host.dataset.perch=current.key;
+  const triggerWidth=chooser.offsetWidth||241;
+  const preferred=px+width()-7+triggerWidth>innerWidth-8?px-triggerWidth+7:px+width()-7;
+  stage.style.setProperty('--tools-x',`${Math.max(8,Math.min(innerWidth-triggerWidth-8,preferred))-px}px`);
+  host.toggleAttribute('data-tools-below',py<54);
+  if(pickerOpen){const bounds=chooser.getBoundingClientRect(),panelWidth=picker.offsetWidth,panelHeight=picker.offsetHeight;host.style.setProperty('--picker-x',`${Math.max(12,Math.min(innerWidth-panelWidth-12,bounds.left))}px`);const above=bounds.top-panelHeight-10;host.style.setProperty('--picker-y',`${Math.max(12,Math.min(innerHeight-panelHeight-12,above>=12?above:bounds.bottom+10))}px`)}
   const intro=document.querySelector('#pre-hero')?.getBoundingClientRect();
   hint.hidden=greeted||touring||dragging||!intro||intro.top < -innerHeight*.35||intro.top>innerHeight*.2||py<65;
   if(!hint.hidden){const center=px+width()/2,offset=Math.max(93,Math.min(innerWidth-93,center))-center;hint.style.setProperty('--hint-offset',`${offset}px`);button.setAttribute('aria-describedby','lulu-intro-hint')}
@@ -37,7 +48,7 @@ export function startLulu(){
  }
  function paint(now:number){
   if(!loaded)return;
-  const frame=reduced.matches?0:Math.max(0,Math.floor((now-since)/150))%8,key=rows[state]*8+frame;
+  const frame=reduced.matches?0:Math.max(0,Math.floor((now-since)/150))%companion.frames[rows[state]],key=rows[state]*8+frame;
   if(key===drawn)return;drawn=key;ctx!.clearRect(0,0,192,208);ctx!.drawImage(image,frame*192,rows[state]*208,192,208,0,0,192,208);
  }
  function land(now:number,perch:Perch){current=perch;footY=perch.y;trip=null;walkTo=null;change(hovered?'play':'idle',now);nextAction=now+2800+decisions%3*700}
@@ -106,7 +117,7 @@ export function startLulu(){
   raf=0;if(!visible||document.hidden||!loaded)return;
   const dt=Math.min((now-last)/1000,.05);last=now;
   if(reduced.matches){trip=null;walkTo=null;if(!(touring&&current.key==='tour')){current=floor();footY=current.y}change('idle',now);position();paint(now);return}
-  const menuOpen=shell?.dataset.open==='true';
+  const menuOpen=shell?.dataset.open==='true'||pickerOpen||chooser.matches(':hover');
   if(!dragging){
    if(current.floor&&!trip)footY=scrollY+innerHeight-12;
    if(trip){
@@ -122,14 +133,22 @@ export function startLulu(){
   position();paint(now);raf=requestAnimationFrame(tick);
  }
  function wake(){if(raf)cancelAnimationFrame(raf);raf=0;last=performance.now();if(visible&&!document.hidden&&loaded)raf=requestAnimationFrame(tick)}
- function setVisible(value:boolean){visible=value;host.hidden=!value;control.textContent=value?'Hide Lulu':'Show Lulu';control.setAttribute('aria-pressed',String(value));try{sessionStorage.setItem('lulu-hidden',value?'0':'1')}catch{}if(value)scan();wake()}
+ function setVisible(value:boolean){visible=value;host.hidden=!value;if(!value)setPicker(false,false);if(control){control.textContent=`${value?'Hide':'Show'} ${companion.name}`;control.setAttribute('aria-pressed',String(value))}try{sessionStorage.setItem('lulu-hidden',value?'0':'1')}catch{}if(value)scan();wake()}
  try{visible=sessionStorage.getItem('lulu-hidden')!=='1'}catch{}
  setVisible(visible);
- control.addEventListener('click',()=>setVisible(!visible));
+ control?.addEventListener('click',()=>setVisible(!visible));
+ function setPicker(value:boolean,restoreFocus=true){pickerOpen=value;picker.hidden=!value;chooser.setAttribute('aria-expanded',String(value));if(value){trip=null;walkTo=null;current=floor();footY=current.y;change('idle',performance.now());position();options.find(el=>el.dataset.companion===companion.id)?.focus()}else{nextAction=performance.now()+3600;if(restoreFocus)chooser.focus()}wake()}
+ function updateCompanion(){host.dataset.companion=companion.id;host.setAttribute('aria-label',`${companion.name}, your site companion`);button.setAttribute('aria-label',`Say hello to ${companion.name}`);const name=hint.querySelector('.lulu-name');if(name?.lastChild)name.lastChild.textContent=companion.name;status.textContent=`${companion.name} is keeping you company.`;options.forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.companion===companion.id)));if(control)control.textContent=`${visible?'Hide':'Show'} ${companion.name}`}
+ function choose(id:string,remember:boolean){const next=COMPANIONS.find(pet=>pet.id===id);if(!next)return;const request=++loadRequest,candidate=new Image();status.textContent=`Getting ${next.name} ready…`;picker.setAttribute('aria-busy','true');candidate.onload=()=>{if(request!==loadRequest)return;image=candidate;companion=next;loaded=true;drawn=-1;canvas.dataset.loaded='true';host.dataset.ready='true';picker.removeAttribute('aria-busy');if(remember){host.dataset.chosen='true';try{localStorage.setItem('portfolio-companion',next.id)}catch{}}updateCompanion();trip=null;walkTo=null;change('wave',performance.now());since=performance.now();reactUntil=since+1200;scan();paint(since);wake();if(remember)setPicker(false)};candidate.onerror=()=>{if(request!==loadRequest)return;picker.removeAttribute('aria-busy');status.textContent=`${next.name} could not load. Please try again.`;if(!loaded)host.dataset.ready='fallback'};candidate.src=next.sprite}
+ chooser.addEventListener('click',()=>setPicker(!pickerOpen));
+ host.querySelector('[data-companion-close]')?.addEventListener('click',()=>setPicker(false));
+ options.forEach(el=>el.addEventListener('click',()=>choose(el.dataset.companion!,true)));
+ document.addEventListener('pointerdown',event=>{if(pickerOpen&&!picker.contains(event.target as Node)&&!chooser.contains(event.target as Node))setPicker(false,false)});
+ document.addEventListener('keydown',event=>{if(pickerOpen&&event.key==='Escape'){event.preventDefault();setPicker(false)}});
  window.addEventListener('portfolio:tour',((event:CustomEvent<{active:boolean;greet:boolean;footY:number}>)=>{
   const detail=event.detail;
   if(detail.active&&!touring)tourWasVisible=visible;
-  touring=detail.active;trip=null;walkTo=null;
+  touring=detail.active;host.toggleAttribute('data-tour',touring);if(touring&&pickerOpen)setPicker(false,false);trip=null;walkTo=null;
   if(detail.greet){setVisible(true);x=innerWidth<=700?24:Math.max(24,innerWidth-520);footY=scrollY+Math.max(height()+24,detail.footY);current={key:'tour',left:x,right:x+width(),y:footY,floor:false};change('wave',performance.now());reactUntil=performance.now()+1200}
   else if(current.key==='tour'){current=floor();footY=current.y;change('idle',performance.now())}
   if(!touring&&!tourWasVisible)setVisible(false);
@@ -154,8 +173,8 @@ export function startLulu(){
  addEventListener('scroll',scheduleScan,{passive:true});addEventListener('resize',scheduleScan);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)scan();wake()});
  reduced.addEventListener('change',()=>{trip=null;walkTo=null;current=floor();footY=current.y;change('idle',performance.now());nextAction=performance.now()+3600;wake()});
- image.onload=()=>{loaded=true;canvas.dataset.loaded='true';host.dataset.ready='true';scan();paint(performance.now());wake()};
- image.onerror=()=>{host.dataset.ready='fallback'};image.src='/pets/lulu.webp';
+ let saved='lulu';try{saved=localStorage.getItem('portfolio-companion')||'lulu';if(COMPANIONS.some(pet=>pet.id===saved)&&localStorage.getItem('portfolio-companion'))host.dataset.chosen='true'}catch{}
+ choose(COMPANIONS.some(pet=>pet.id===saved)?saved:'lulu',false);
   document.fonts.ready.then(scheduleScan);
   // Revisit surfaces after scroll reveals and timeline transitions have settled.
   window.setInterval(()=>{if(visible&&!document.hidden&&!dragging&&!trip&&!touring)scan()},2400);
