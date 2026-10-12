@@ -36,7 +36,7 @@ def section(label):
  y-=7;c.setStrokeColor(HexColor('#d8cfc2'));c.setLineWidth(.45);c.line(24,y,571,y);y-=14
  c.setFont('Courier',6.7);c.setFillColor(muted);c.drawString(24,y-8,label.upper())
 def item(title,meta,body):
- paragraph(title,'title',3);paragraph(meta,'meta',4);paragraph(body,'body',7)
+ paragraph(title,'title',3);paragraph(meta,'meta',4);paragraph(body,'body',6)
 
 c.setFillColor(ink);c.setFont('Courier-Bold',7.5);c.drawString(24,y,'MOAAZ MAGDY')
 c.setFont('Helvetica',6.7)
@@ -71,7 +71,8 @@ for label,values in [
  ('Programming &amp; data','Python, SQL, R; pandas, NumPy, matplotlib, seaborn; PostgreSQL, SQL Server, MySQL'),
  ('AI &amp; automation','AI agent development, LLM integration, prompt engineering, APIs, webhook automation'),
  ('Version control &amp; development','Git, GitHub, React, TypeScript, FastAPI, Electron'),
- ('Business systems','ERP systems (user level); reporting, reconciliation and workflow coordination')]:
+ ('Project coordination','Task tracking and collaboration in GitHub'),
+ ('Business systems','Custom company ERP (user level); reporting and reconciliation')]:
  paragraph(f'<b>{label}</b> · {values}','body',4)
 paragraph('<b>Languages</b> · English: Professional working proficiency · Arabic: Native','body',3)
 assert y>40, f'Resume overflows: final baseline {y}'
