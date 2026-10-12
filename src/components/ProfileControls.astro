@@ -2,9 +2,9 @@
 import { SITE } from '../data/site';
 ---
 <aside class="profile-controls" aria-label="Profile links and preferences">
- <button class="pet-paper" data-lulu-toggle aria-pressed="true">Hide Lulu</button>
+ 
  <div class="profile-links"><a href={SITE.links.linkedin}>LinkedIn</a><a href={SITE.links.github}>GitHub</a><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={`mailto:${SITE.email}`}>Email</a></div>
- <button id="paper-sound-toggle" aria-pressed="true">Sound on</button>
+ <div class="profile-preferences"><button class="pet-paper" data-lulu-toggle aria-pressed="true">Hide Lulu</button><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
 </aside>
  <dialog id="resume-sheet" aria-labelledby="resume-title" aria-describedby="resume-help">
   <button class="close-sheet" aria-label="Close résumé">Close <small>Esc</small></button>
@@ -52,4 +52,12 @@ import { SITE } from '../data/site';
 
 @media(max-width:700px){.profile-controls{top:160px;left:18px;gap:16px}.profile-controls button,.profile-controls a{font-size:9px}.profile-links{gap:6px}}
 @media(prefers-reduced-motion:reduce){.profile-controls .pet-paper{transition:none}}
+</style>
+
+<style is:global>
+body:has(.profile-controls){--profile-sans:"Söhne",system-ui,-apple-system,sans-serif;font-family:var(--profile-sans);font-weight:400}
+.profile-controls{top:32px;right:48px;left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:16px;color:#514c45}.profile-links{display:flex;align-items:center;gap:24px}.profile-controls button,.profile-controls a{font:400 12px/20px var(--profile-sans);letter-spacing:.065em;text-transform:none;white-space:nowrap}.profile-preferences{display:flex;align-items:center;gap:24px}.profile-controls .pet-paper{font:400 11px/18px var(--profile-sans);letter-spacing:.04em;transform:none;border:0;background:none;box-shadow:none;padding:0}.profile-controls .pet-paper:hover{transform:none;text-decoration:underline;text-underline-offset:4px}#paper-sound-toggle{font-size:11px}
+body:has(.profile-controls) .introduction-copy,body:has(.profile-controls) .introduction-role,body:has(.profile-controls) .introduction-actions,body:has(.profile-controls) .tools-explainer,body:has(.profile-controls) .section-label{font-family:var(--profile-sans);font-weight:400}
+@media(max-width:900px){.profile-controls{right:28px;top:24px}.profile-links{gap:16px}.profile-controls button,.profile-controls a{font-size:11px}}
+@media(max-width:700px){.profile-controls{right:20px;left:130px;top:22px;gap:10px}.profile-links{justify-content:flex-end;flex-wrap:wrap;gap:8px 14px}.profile-preferences{gap:18px}.profile-controls button,.profile-controls a{font-size:10px;letter-spacing:.035em}}
 </style>
