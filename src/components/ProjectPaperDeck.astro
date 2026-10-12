@@ -28,3 +28,13 @@ import { projectPapers as papers } from '../data/project-papers';
 @media(prefers-reduced-motion:reduce){#case-drawer[open]{animation:none}.project-paper{transition:none}}
 
 </style>
+
+<style is:global>
+#case-drawer,#works-collection{pointer-events:auto;overflow-y:auto;touch-action:pan-y}
+#case-drawer{height:calc(100svh - 48px);inset:24px 0 0;max-width:1100px;padding:30px 40px 48px}
+#case-drawer .drawer-heading{align-items:center;margin-bottom:22px}
+#case-drawer .drawer-heading h2{font-size:clamp(30px,3.4vw,48px);max-width:24ch}
+#case-drawer #drawer-chart{max-height:52svh}
+#case-drawer #drawer-content{margin-top:22px;max-width:65ch;font-size:14px;line-height:1.75}
+@media(max-width:650px){#case-drawer{padding:24px;width:calc(100% - 24px)}#case-drawer .drawer-heading{display:block}#case-drawer .drawer-heading a{display:inline-block;margin-top:16px}}
+</style>

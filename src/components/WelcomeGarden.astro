@@ -1,10 +1,10 @@
 ---
-const { word = 'Welcome', follow = 'to my little corner.', compact = false, arabic = false } = Astro.props;
+const { word = 'Welcome', follow = 'to my little corner.', compact = false, arabic = false, hideFollow = false } = Astro.props;
 const Wrapper = compact ? 'span' : 'div';
 const Word = compact ? 'span' : 'p';
 ---
 <Wrapper class:list={['welcome-garden', { compact, 'arabic-intro': arabic }]}>
- {arabic ? <><Word class="garden-word arabic-calligraphy" lang="ar" dir="rtl">معاذ مجدي الهواري</Word><span class="welcome-follow"><strong>Welcome</strong> {follow}</span></> : <><Word class="garden-word" aria-label={`${word} ${follow}`}>{word.split('').map((letter,i)=><span style={`--letter:${i}`}>{letter}</span>)}</Word><span class="welcome-follow" aria-hidden="true">{follow}</span></>}
+ {arabic ? <><Word class="garden-word arabic-calligraphy" lang="ar" dir="rtl">معاذ مجدي الهواري</Word>{!hideFollow&&<span class="welcome-follow"><strong>Welcome</strong> {follow}</span>}</> : <><Word class="garden-word" aria-label={`${word} ${follow}`}>{word.split('').map((letter,i)=><span style={`--letter:${i}`}>{letter}</span>)}</Word><span class="welcome-follow" aria-hidden="true">{follow}</span></>}
  <canvas aria-hidden="true"></canvas>
 </Wrapper>
 <script>

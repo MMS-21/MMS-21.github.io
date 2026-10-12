@@ -30,7 +30,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   <div class="dock-backdrop" aria-hidden="true"></div>
   <div class="mobile-welcome">
     <p class="mobile-signature">{SITE.name}</p>
-    <WelcomeGarden arabic />
+    <WelcomeGarden arabic hideFollow />
     <p class="mobile-role">{SITE.role}</p>
     <div class="mobile-welcome-actions"><button type="button" data-tour-start>Show me around</button><a href="#hero-story">Meet Moaaz</a></div>
   </div>
@@ -41,11 +41,12 @@ const fragments = Array.from({length:24}, (_,i) => ({
     <a class="scroll-cue hero-end-cue" href="#featured-work"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
 
   </div>
-  <div class="opening-welcome"><WelcomeGarden arabic /></div>
+  <div class="opening-welcome"><WelcomeGarden arabic hideFollow /></div>
   <div class="hero-identity">
-    <div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={86} label="Moaaz avatar" /></div></div>
-    <h1><span class="name-english">{SITE.name}</span></h1><button class="identity-pet" type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button>
+    <div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={132} label="Moaaz avatar" /></div></div>
+    <h1><span class="name-english">{SITE.name}</span></h1>
   </div>
+  <button class="identity-pet" type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button>
   <div class="navigation-shell">
 
     <nav class="hero-nav" id="portfolio-navigation" aria-label="Main" hidden></nav>
@@ -362,3 +363,11 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <style>.identity-pet{position:fixed;left:auto;right:48px;top:100px;z-index:25}@media(max-width:700px){.identity-pet{position:fixed;right:18px;top:92px}}</style>
 
 <style>.hero-identity[data-introducing="false"] h1{order:-1}.hero-identity .identity-pet{position:static;order:2;left:auto;right:auto;top:auto;z-index:auto}</style>
+
+<style>
+.identity-art,.mascot-portrait{width:132px;height:132px}.hero-identity{width:144px}.hero-identity[data-introducing="true"]{top:calc(50svh - 265px)!important}.identity-pet{position:fixed;left:82px;right:auto;top:210px;transform:translateX(-50%) rotate(-3deg);z-index:25}.identity-pet:hover{transform:translateX(-50%) rotate(2deg) translateY(-2px)}
+@media(max-width:700px),(max-height:760px),(prefers-reduced-motion:reduce){.hero-identity[data-introducing="true"]{top:30px!important}.identity-art :global(astro-island){scale:1;transform-origin:center}.identity-pet{left:58px;top:215px}.identity-art,.mascot-portrait{width:132px;height:132px}}
+@media(max-width:700px){.identity-pet{left:58px;top:210px}}
+</style>
+
+<style>.identity-pet{left:114px}@media(max-width:700px),(max-height:760px),(prefers-reduced-motion:reduce){.identity-pet{left:88px}}</style>

@@ -9,13 +9,19 @@ import { SITE } from '../data/site';
  <dialog id="resume-sheet" aria-labelledby="resume-title" aria-describedby="resume-help">
   <button class="close-sheet" aria-label="Close résumé">Close <small>Esc</small></button>
   <h2 id="resume-title" class="sr-only">Moaaz Magdy résumé</h2>
-  <div class="resume-paper" role="img" aria-label="Moaaz Magdy résumé: education, experience, selected projects, skills and languages.">
+  <div class="resume-paper" role="group" aria-label="Moaaz Magdy résumé">
    <div class="resume-panel resume-middle" aria-hidden="true"></div>
    <div class="resume-panel resume-bottom" aria-hidden="true"></div>
    <div class="resume-panel resume-top" aria-hidden="true"></div>
+   <nav class="resume-hotspots" aria-label="Résumé contact links">
+    <a href="/" aria-label="Portfolio website" style="left:26.3%;width:17%"></a>
+    <a href={SITE.links.github} aria-label="GitHub" style="left:47%;width:9%"></a>
+    <a href={SITE.links.linkedin} aria-label="LinkedIn" style="left:58.8%;width:10%"></a>
+    <a href={`mailto:${SITE.email}`} aria-label="Email Moaaz" style="left:78%;width:19%"></a>
+   </nav>
   </div>
   <a class="resume-download" href="/moaaz-magdy-resume.pdf?v=b0ba518" download="Moaaz-Magdy-Resume.pdf">Download PDF <span aria-hidden="true">↗</span></a>
-  <p id="resume-help" class="sr-only">Preview of Moaaz Magdy’s résumé. Download the PDF for selectable text and links. Press Escape or click outside the paper to close.</p>
+  <p id="resume-help" class="sr-only">Preview of Moaaz Magdy’s résumé. The contact links at the top are clickable. Download the PDF for selectable text. Press Escape or click outside the paper to close.</p>
  </dialog>
 <script>
  import { paperSound, installClickSounds } from '../scripts/paper-sound';
@@ -61,4 +67,15 @@ body:has(.profile-controls){--profile-sans:"Söhne",system-ui,-apple-system,sans
 body:has(.profile-controls) .introduction-copy,body:has(.profile-controls) .introduction-role,body:has(.profile-controls) .introduction-actions,body:has(.profile-controls) .tools-explainer,body:has(.profile-controls) .section-label{font-family:var(--profile-sans);font-weight:400}
 @media(max-width:900px){.profile-controls{right:28px;top:24px}.profile-links{gap:16px}.profile-controls button,.profile-controls a{font-size:11px}}
 @media(max-width:700px){.profile-controls{right:20px;left:130px;top:22px;gap:10px}.profile-links{justify-content:flex-end;flex-wrap:wrap;gap:8px 14px}.profile-preferences{gap:18px}.profile-controls button,.profile-controls a{font-size:10px;letter-spacing:.035em}}
+</style>
+
+<style is:global>
+@font-face{font-family:"Söhne Breit";src:local('Test Söhne Breit Extraleicht Kursiv');font-style:italic;font-weight:200;font-display:swap}
+.profile-controls button,.profile-controls a{font-family:"Söhne Breit",system-ui,sans-serif;font-weight:200;font-style:italic;letter-spacing:.02em}
+.resume-hotspots{position:absolute;inset:0;z-index:4;pointer-events:none;animation:resume-links-in 1s linear both}
+.resume-hotspots a{position:absolute;top:2.7%;height:2.3%;pointer-events:auto;min-height:12px}
+.resume-hotspots a:hover{background:#60869a15;outline:1px solid #60869a55}.resume-hotspots a:focus-visible{outline:2px solid #426b7d;outline-offset:2px}
+@keyframes resume-links-in{0%,95%{visibility:hidden}100%{visibility:visible}}
+#resume-sheet.closing .resume-hotspots{visibility:hidden;animation:none}
+@media(prefers-reduced-motion:reduce){.resume-hotspots{animation:none}}
 </style>

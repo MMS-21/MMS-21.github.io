@@ -1,3 +1,4 @@
+import { projectPapers } from '../data/project-papers';
 import { paperSound, installClickSounds } from './paper-sound';
 installClickSounds();
 const papers = [...document.querySelectorAll<HTMLElement>('.project-paper')];
@@ -56,9 +57,9 @@ async function openCase(index:number,trigger:HTMLElement){if(drawer.open)return;
  const origin=trigger.querySelector('img')?.getBoundingClientRect()??image.getBoundingClientRect();
  document.querySelector('#drawer-title')!.textContent=link.textContent;document.querySelector<HTMLAnchorElement>('#drawer-link')!.href=link.href;
  const chart=document.querySelector<HTMLImageElement>('#drawer-chart')!;chart.src=image.src;chart.alt=image.alt;
- const content=document.querySelector<HTMLElement>('#drawer-content')!;content.textContent='Loading the case study…';drawer.showModal();drawer.scrollTop=0;lock();rustle('open');
+ const content=document.querySelector<HTMLElement>('#drawer-content')!;content.replaceChildren();const summary=document.createElement('p');summary.textContent=projectPapers[index].summary;content.append(summary);drawer.showModal();drawer.scrollTop=0;lock();rustle('open');
  if(!reduced.matches){const target=chart.getBoundingClientRect();chart.animate([{transformOrigin:'0 0',transform:`translate(${origin.left-target.left}px,${origin.top-target.top}px) scale(${origin.width/target.width},${origin.height/target.height})`},{transformOrigin:'0 0',transform:'none'}],{duration:600,easing:'cubic-bezier(.16,1,.3,1)'});}
- try{const response=await fetch(link.href);if(!response.ok)throw Error();const doc=new DOMParser().parseFromString(await response.text(),'text/html'),main=doc.querySelector('main');if(token!==request||!drawer.open)return;content.replaceChildren();if(main){const article=main.querySelector('article')||main;article.querySelectorAll('script,header,.back').forEach(el=>el.remove());content.append(article)}else content.textContent='Use the full case study link to continue.'}catch{if(token===request)content.textContent='The preview could not load. Open the full case study above.'}
+
 }
 document.querySelector<HTMLElement>('#expand-study')!.addEventListener('click',e=>void openCase(front,e.currentTarget as HTMLElement));
 let collectionY=0,collectionBusy=false;
