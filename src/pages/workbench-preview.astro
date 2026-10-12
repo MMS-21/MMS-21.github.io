@@ -32,7 +32,7 @@ const papers = [
  </main>
  <LuluPet />
  <dialog id="case-drawer" aria-labelledby="drawer-title"><button class="close-sheet" aria-label="Close case study">← Go back <small>Esc</small></button><div class="drawer-heading"><h2 id="drawer-title"></h2><a id="drawer-link">Read the full case study ↗</a></div><img id="drawer-chart" alt=""/><div id="drawer-content" aria-live="polite"></div></dialog>
- <dialog id="resume-sheet" aria-labelledby="resume-title"><button class="close-sheet" aria-label="Close résumé">← Go back <small>Esc</small></button><h2 id="resume-title">Moaaz Magdy</h2><p>Data &amp; Business Analyst · Cairo, Egypt</p><p>Your résumé preview will appear here when your PDF is added.</p><a href="mailto:moaz.magdy220@gmail.com">Request my résumé ↗</a></dialog>
+ <dialog id="resume-sheet" aria-labelledby="resume-title"><button class="close-sheet" aria-label="Close résumé">← Go back <small>Esc</small></button><h2 id="resume-title" class="sr-only">Moaaz Magdy résumé</h2><img class="resume-page" src="/img/resume-preview.png" alt="Moaaz Magdy résumé: experience, projects, education, training and skills." width="1012" height="1432"/><a class="resume-download" href="/moaaz-magdy-resume.pdf" download>Download PDF ↗</a></dialog>
 </body>
 </html>
 <style is:global>
@@ -64,4 +64,8 @@ for(const sheet of [drawer,resume]){sheet.querySelector('.close-sheet')!.addEven
 
 <style is:global>
 .project-image img{aspect-ratio:auto;height:auto;object-fit:contain}.stack{height:510px}#drawer-content article{max-width:1000px;margin:45px auto;font-size:14px;line-height:1.8}#drawer-content h2{font-size:36px;margin:45px 0 14px}#drawer-content h3{font:500 26px Cormorant,Georgia,serif;margin:25px 0 10px}#drawer-content p{max-width:72ch}#drawer-content img,#drawer-content svg{max-width:100%;height:auto}#drawer-content pre{overflow:auto;padding:20px;background:#eee8dc;font-size:12px}#drawer-content table{display:block;overflow:auto;border-collapse:collapse}#drawer-content td,#drawer-content th{padding:10px;border-bottom:1px solid #d3c9b8}#drawer-content figure{margin:30px 0}#drawer-content .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:25px}@media(max-width:650px){.stack{height:calc(81vw + 120px)}#drawer-content .case-grid{grid-template-columns:1fr}}
+</style>
+
+<style is:global>
+#resume-sheet{width:min(650px,94vw);padding:20px;max-height:94svh;overflow:auto}#resume-sheet .close-sheet{margin:0 0 15px 10px}.resume-page{display:block;width:100%;height:auto}.resume-download{display:block;width:fit-content;margin:18px auto 5px;padding:10px 20px;font-size:12px;color:#fcfaf7;background:#302c29;border-radius:30px;text-decoration:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 </style>
