@@ -10,10 +10,11 @@ const papers = [
 <html lang="en">
 <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width"/><meta name="robots" content="noindex"/><title>Workbench preview | Moaaz Magdy</title></head>
 <body>
+ <div class="side-painting" aria-hidden="true"></div>
  <div class="paper-surface" aria-hidden="true"></div>
  <header class="fixed-menu">
   <div class="identity"><a href="/">Moaaz Magdy</a><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={86} label="Moaaz avatar" /><button class="pet-paper" data-lulu-toggle aria-pressed="true">Hide Lulu</button></div>
-  <nav aria-label="Primary"><a href="#work" aria-current="page">Work</a><a href="/about/">About</a><a href="/writing/">Writing</a><a href="/contact/">Contact</a></nav>
+  <nav aria-label="Primary"><span class="menu-label">Menu</span><a href="#work" aria-current="page">Work</a><a href="/about/">About</a><a href="/writing/">Writing</a><a href="/contact/">Contact</a></nav>
   <div class="contact-links"><span>Contact</span><div><a href="https://www.linkedin.com/in/moaaz-magdy">LinkedIn</a><a href="https://github.com/MMS-21">GitHub</a><button id="resume-open">Résumé</button><a href="mailto:moaz.magdy220@gmail.com">Email</a></div></div>
  </header>
  <main id="work">
@@ -122,4 +123,14 @@ for(const sheet of [drawer,resume]){sheet.querySelector('.close-sheet')!.addEven
 .tool-art{position:relative;aspect-ratio:1.6;overflow:hidden;color:#557b87;background:#e7eeee80}.document-art{color:#8b7355;background:#ece6db90}.tool-art svg{display:block;width:100%;height:100%}.tool-art>span{position:absolute;bottom:12px;left:18px;font:8px ui-monospace,monospace;letter-spacing:.09em;opacity:.7}.tool-copy{padding:20px 20px 22px}.tool-copy h3{font:500 28px/1.1 Cormorant,Georgia,serif;letter-spacing:-.02em;margin:0 0 9px;display:flex;justify-content:space-between;align-items:center}.tool-copy h3 span{font:16px Manrope,sans-serif;transition:translate .3s}.tool-paper:hover h3 span{translate:2px -2px}.tool-copy p{font-size:11px;margin:0 0 13px;color:var(--muted)}.tool-copy small{font-size:9px;color:#817568}.report-bars,.document-lens{transform-origin:center;transition:transform .4s}.tool-paper:hover .report-bars{transform:translateY(-4px)}.tool-paper:hover .document-lens{transform:translate(3px,-3px)}
 @media(max-width:650px){.tool-papers{grid-template-columns:1fr;gap:26px}.tool-art{aspect-ratio:1.8}.identity>a{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.tool-paper,.tool-copy h3 span,.report-bars,.document-lens{transition:none}.tool-paper:hover,.tool-paper:focus-visible{transform:none}}
+</style>
+
+<style is:global>
+@font-face{font-family:"Departure Mono";src:url('/fonts/departure-mono.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+.identity>a,.contact-links,.contact-links a,.contact-links button,.menu-label{font:400 11px/15px "Departure Mono",ui-monospace,SFMono-Regular,Menlo,monospace;color:lab(45.3389% 3.09339 7.00407);text-transform:uppercase;letter-spacing:0}
+.contact-links>span{color:inherit}.contact-links>div{gap:9px}.menu-label{display:block;margin-bottom:12px}nav{padding-top:0}
+.introduction h1{font-family:"Exposure VAR","Iowan Old Style",Palatino,Cormorant,Georgia,serif;font-size:96px;line-height:96px;font-weight:400;color:lab(17.524% 0 0);letter-spacing:-.03em}.introduction h1 em{font-weight:400}
+body{isolation:isolate}.side-painting{position:fixed;z-index:-1;pointer-events:none;right:-100px;top:-80px;width:clamp(350px,40vw,650px);height:calc(100svh + 160px);background:url('/img/workbench-painting.jpg') center/cover no-repeat;transform:rotate(9deg);transform-origin:70% 50%;opacity:.34;mix-blend-mode:multiply;mask-image:linear-gradient(to right,transparent,black 34%);-webkit-mask-image:linear-gradient(to right,transparent,black 34%)}
+@media(max-width:1100px){.introduction h1{font-size:76px;line-height:76px}.side-painting{right:-180px;opacity:.25}}
+@media(max-width:650px){.introduction h1{font-size:clamp(44px,10vw,64px);line-height:1}.menu-label{display:none}.side-painting{right:-230px;width:400px;opacity:.17}}
 </style>
