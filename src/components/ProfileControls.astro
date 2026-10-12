@@ -4,7 +4,7 @@ import { SITE } from '../data/site';
 <aside class="profile-controls" aria-label="Profile links and preferences">
 
  <div class="profile-links"><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={SITE.links.linkedin}>LinkedIn</a><a href={`mailto:${SITE.email}`}>Email</a><a href={SITE.links.github}>GitHub</a></div>
- <div class="profile-preferences"><button type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
+ <div class="profile-preferences"><button class="lulu-paper-note" type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
 </aside>
  <dialog id="resume-sheet" aria-labelledby="resume-title" aria-describedby="resume-help">
   <button class="close-sheet" aria-label="Close résumé">Close <small>Esc</small></button>
@@ -78,4 +78,11 @@ body:has(.profile-controls) .introduction-copy,body:has(.profile-controls) .intr
 @keyframes resume-links-in{0%,95%{visibility:hidden}100%{visibility:visible}}
 #resume-sheet.closing .resume-hotspots{visibility:hidden;animation:none}
 @media(prefers-reduced-motion:reduce){.resume-hotspots{animation:none}}
+@font-face{font-family:"Lulu Handwriting";src:url('/fonts/caveat-regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+.profile-controls .lulu-paper-note{font:400 18px/22px "Lulu Handwriting",cursive;letter-spacing:0;color:#514c45;padding:3px 12px;border:0;border-radius:0;background:#faf5eb url('/img/paper-fibers.svg');box-shadow:1px 3px 5px #51433318;transform:rotate(-5deg);transform-origin:50% 35%;animation:lulu-note-drift 4.8s ease-in-out infinite;transition:box-shadow .2s}
+.profile-controls .lulu-paper-note:hover{box-shadow:1px 5px 8px #51433325}
+.profile-controls .lulu-paper-note:active{box-shadow:0 1px 2px #51433318}
+@keyframes lulu-note-drift{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-2px) rotate(-2deg)}}
+@media(max-width:700px){.profile-controls .lulu-paper-note{font-size:17px;padding:3px 10px}}
+@media(prefers-reduced-motion:reduce){.profile-controls .lulu-paper-note{animation:none;transition:none}}
 </style>
