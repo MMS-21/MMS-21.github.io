@@ -57,16 +57,16 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
  }
 </script>
 <style>
- .section-nav{position:fixed;z-index:40;top:40px;left:36px;display:flex;flex-direction:column;align-items:center;width:44px;color:#39332b}
+ .section-nav{position:fixed;z-index:40;top:50%;right:24px;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;width:44px;color:#39332b}
  .section-stop{position:relative;display:flex;align-items:flex-start;justify-content:center;min-width:44px;height:20px;padding:8px 0;box-sizing:content-box;text-decoration:none;color:inherit}
  .section-mark{display:block;width:16px;height:1px;background:currentColor;transition:width 150ms cubic-bezier(.4,0,.2,1),height 150ms cubic-bezier(.4,0,.2,1),opacity 150ms ease}
  .section-stop[aria-current] .section-mark{width:24px;height:4px}
  .section-stop:hover .section-mark,.section-stop:focus-visible .section-mark{width:24px;opacity:.8}
  .section-stop:focus-visible{outline:2px solid currentColor;outline-offset:1px;border-radius:2px}
- .section-label{position:absolute;left:43px;top:1px;padding:4px 8px;white-space:nowrap;background:#fcfaf7;color:#39332b;font:11px/18px ui-monospace,SFMono-Regular,Menlo,monospace;opacity:0;transform:translateX(-4px);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease}
+ .section-label{position:absolute;right:43px;top:1px;padding:4px 8px;white-space:nowrap;background:#fcfaf7;color:#39332b;font:11px/18px ui-monospace,SFMono-Regular,Menlo,monospace;opacity:0;transform:translateX(-4px);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease}
  .section-stop:hover .section-label,.section-stop:focus-visible .section-label{opacity:1;transform:none}
  @media(min-width:768px){.section-stop{height:1px;padding:8px 0}}
- @media(max-width:767px){.section-nav{left:2px;top:20px}.section-stop{height:12px;padding:8px 0}.section-label{left:40px}}
+ @media(max-width:767px){.section-nav{right:2px;top:50%}.section-stop{height:12px;padding:8px 0}.section-label{right:40px}}
  @media(prefers-reduced-motion:reduce){.section-mark,.section-label{transition:none}}
  @media(forced-colors:active){.section-nav{color:CanvasText}.section-mark{background:CanvasText}.section-label{background:Canvas;color:CanvasText}}
  @media print{.section-nav{display:none}}
