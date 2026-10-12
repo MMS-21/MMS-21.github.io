@@ -1,12 +1,11 @@
 ---
 const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introduction'},{id:'work-routine',label:'How I work'},{id:'featured-work',label:'Featured work'},{id:'about',label:'About me'},{id:'connect',label:'Get in touch'}];
 ---
-<nav class="scroll-rail" aria-label="Page sections">
- <div class="rail-line" aria-hidden="true"><span class="rail-fill"></span><span class="rail-light"></span></div>
- {stops.map((stop,i)=><a href={`#${stop.id}`} data-section={stop.id} class="rail-stop" style={`--stop:${i/(stops.length-1)}`} aria-label={`Go to ${stop.label}`}><span class="rail-dot" aria-hidden="true"></span><span class="rail-label">{stop.label}</span></a>)}
+<nav class="section-nav" aria-label="Page sections">
+ {stops.map(stop=><a href={`#${stop.id}`} data-section={stop.id} class="section-stop" aria-label={`Go to ${stop.label}`}><span class="section-mark" aria-hidden="true"></span><span class="section-label">{stop.label}</span></a>)}
 </nav>
 <script>
- const rail=document.querySelector<HTMLElement>('.scroll-rail');
+ const rail=document.querySelector<HTMLElement>('.section-nav');
  if(rail){
   const links=[...rail.querySelectorAll<HTMLAnchorElement>('a')];
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -54,27 +53,21 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
   addEventListener('resize',measure,{passive:true});
   new ResizeObserver(measure).observe(document.body);
   document.fonts.ready.then(measure);measure();
-  rail.dataset.ready='true';document.documentElement.classList.add('has-scroll-rail');
+  rail.dataset.ready='true';
  }
 </script>
 <style>
- .scroll-rail { --progress:0; position:fixed; z-index:40; right:14px; top:50%; transform:translateY(-50%); width:44px; height:min(44svh,340px); visibility:hidden; }
- .scroll-rail[data-ready="true"] { visibility:visible; opacity:.3; transition:opacity 450ms ease; }
- .scroll-rail[data-moving="true"],.scroll-rail:hover,.scroll-rail:focus-within { opacity:1; }
- .rail-line { position:absolute; left:21.5px; top:0; bottom:0; width:1px; background:#b9b5ae; pointer-events:none; }
- .rail-fill { position:absolute; inset:0; background:#39332b; transform:scaleY(var(--progress)); transform-origin:top; }
- .rail-light { position:absolute; z-index:2; left:-3.5px; top:-4px; width:8px; height:8px; border-radius:50%; background:#c99b51; border:1px solid #75582d; transform:translateY(calc(var(--progress) * min(44svh,340px))); box-shadow:none; transition:background 250ms ease; }
- [data-arrived="true"] .rail-light { background:#986f35; box-shadow:none; }
- .rail-stop { position:absolute; left:0; top:calc(var(--stop) * 100% - 22px); width:44px; height:44px; display:grid; place-items:center; text-decoration:none; }
- .rail-dot { width:8px; height:8px; border:2px solid #fcfaf7; border-radius:50%; background:#39332b; box-shadow:0 0 0 1px #39332b20; transition:transform 180ms ease,background 180ms ease; }
- .rail-stop:hover .rail-dot,.rail-stop:focus-visible .rail-dot { transform:scale(1.4); background:#986f35; }
- .rail-stop[aria-current] .rail-dot { background:#986f35; }
- .rail-label { position:absolute; right:42px; white-space:nowrap; padding:5px 12px; color:#30291f; background:#fffaf0; border:1px solid #d7cab1; border-radius:3px; font-family:'Cormorant Garamond',Georgia,serif; font-size:1.12rem; opacity:0; transform:translateX(5px); pointer-events:none; transition:opacity 180ms ease,transform 180ms ease; }
- .rail-stop:hover .rail-label,.rail-stop:focus-visible .rail-label { opacity:1; transform:none; }
- @media(max-width:700px) { .scroll-rail { right:0; height:240px; } .rail-light { transform:translateY(calc(var(--progress) * 240px)); } .rail-label { font-size:1rem; } }
- @media(prefers-reduced-motion:reduce) { .rail-label,.rail-dot,.rail-light { transition:none; } }
- @media(forced-colors:active) { .rail-light { background:Highlight; } .rail-line,.rail-fill { background:CanvasText; } }
- @media print { .scroll-rail { display:none; } }
- :global(html.has-scroll-rail) { scrollbar-width:none; }
- :global(html.has-scroll-rail::-webkit-scrollbar) { display:none; }
+ .section-nav{position:fixed;z-index:40;top:40px;left:36px;display:flex;flex-direction:column;align-items:center;width:44px;color:#39332b}
+ .section-stop{position:relative;display:flex;align-items:flex-start;justify-content:center;min-width:44px;height:20px;padding:8px 0;box-sizing:content-box;text-decoration:none;color:inherit}
+ .section-mark{display:block;width:16px;height:1px;background:currentColor;transition:width 150ms cubic-bezier(.4,0,.2,1),height 150ms cubic-bezier(.4,0,.2,1),opacity 150ms ease}
+ .section-stop[aria-current] .section-mark{width:24px;height:4px}
+ .section-stop:hover .section-mark,.section-stop:focus-visible .section-mark{width:24px;opacity:.8}
+ .section-stop:focus-visible{outline:2px solid currentColor;outline-offset:1px;border-radius:2px}
+ .section-label{position:absolute;left:43px;top:1px;padding:4px 8px;white-space:nowrap;background:#fcfaf7;color:#39332b;font:11px/18px ui-monospace,SFMono-Regular,Menlo,monospace;opacity:0;transform:translateX(-4px);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease}
+ .section-stop:hover .section-label,.section-stop:focus-visible .section-label{opacity:1;transform:none}
+ @media(min-width:768px){.section-stop{height:1px;padding:8px 0}}
+ @media(max-width:767px){.section-nav{left:2px;top:20px}.section-stop{height:12px;padding:8px 0}.section-label{left:40px}}
+ @media(prefers-reduced-motion:reduce){.section-mark,.section-label{transition:none}}
+ @media(forced-colors:active){.section-nav{color:CanvasText}.section-mark{background:CanvasText}.section-label{background:Canvas;color:CanvasText}}
+ @media print{.section-nav{display:none}}
 </style>
