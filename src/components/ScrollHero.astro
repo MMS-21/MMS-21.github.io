@@ -44,9 +44,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
   <div class="opening-welcome"><WelcomeGarden arabic /></div>
   <div class="hero-identity">
     <div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={86} label="Moaaz avatar" /></div></div>
-    <h1><span class="name-english">{SITE.name}</span></h1>
+    <h1><span class="name-english">{SITE.name}</span></h1><button class="identity-pet" type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button>
   </div>
-  <button class="identity-pet" type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button>
   <div class="navigation-shell">
 
     <nav class="hero-nav" id="portfolio-navigation" aria-label="Main" hidden></nav>
@@ -105,7 +104,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
       set(background,'--paper-visible',animated?ramp(p,.025,.07):1);
       scraps.forEach((scrap,i)=>set(scrap,'--assembly',animated?ease(((p-.07)-(i%6)*.006)/.15):1));
       const lift=animated?ramp(p,.07,.13):1;
-      set(hero,'--identity',lift);
+      set(hero,'--identity',lift);identity.dataset.introducing=String(lift<.8);
       const introReveal=animated?ramp(p,.18,.24)*(1-ramp(p,.43,.49)):1;
       set(hero,'--intro-reveal',introReveal);style(hero,'--intro-visibility',introReveal>.01?'visible':'hidden');
       hero.querySelector<HTMLElement>('.hero-introduction')!.inert=introReveal<.8;
@@ -349,7 +348,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
 
 <style>
 .navigation-shell{display:none!important}
-.hero-identity{left:calc(50% * (1 - var(--identity,0)) + 42px * var(--identity,0))!important;top:calc((50svh - 190px) * (1 - var(--identity,0)) + 32px * var(--identity,0))!important;transform:translateX(calc(-50% * (1 - var(--identity,0))))!important}
+.hero-identity{left:calc(50% * (1 - var(--identity,0)) + 42px * var(--identity,0))!important;top:calc((50svh - 225px) * (1 - var(--identity,0)) + 32px * var(--identity,0))!important;transform:translateX(calc(-50% * (1 - var(--identity,0))))!important}
 .hero-identity h1{order:0}
 .identity-pet{position:fixed;left:42px;top:145px}
 .paper-background[data-interactive="true"] .paper-fragment{pointer-events:auto}
@@ -361,3 +360,5 @@ const fragments = Array.from({length:24}, (_,i) => ({
 </style>
 
 <style>.identity-pet{position:fixed;left:auto;right:48px;top:100px;z-index:25}@media(max-width:700px){.identity-pet{position:fixed;right:18px;top:92px}}</style>
+
+<style>.hero-identity[data-introducing="false"] h1{order:-1}.hero-identity .identity-pet{position:static;order:2;left:auto;right:auto;top:auto;z-index:auto}</style>

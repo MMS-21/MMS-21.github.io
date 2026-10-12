@@ -1,4 +1,5 @@
 ---
+import '../styles/paper-details.css';
 import { Mascot } from 'page-mascot';
 import LuluPet from '../components/LuluPet.astro';
 import ProjectPaperDeck from '../components/ProjectPaperDeck.astro';
@@ -105,3 +106,5 @@ body{isolation:isolate}.side-painting{position:fixed;z-index:-1;pointer-events:n
 @media(max-width:650px){.collection-projects{grid-template-columns:1fr;gap:28px}.collection-project img,.collection-project:first-child img{height:260px}.collection-project strong{font-size:28px}#works-collection{padding:0 24px 40px}.collection-heading{padding-bottom:25px}}
 @media(prefers-reduced-motion:reduce){.collection-project img,.switch-paper{transition:none}}
 </style>
+
+<script>import '../scripts/title-morph';</script>
