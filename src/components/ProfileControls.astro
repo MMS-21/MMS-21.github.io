@@ -2,9 +2,9 @@
 import { SITE } from '../data/site';
 ---
 <aside class="profile-controls" aria-label="Profile links and preferences">
- 
- <div class="profile-links"><a href={SITE.links.linkedin}>LinkedIn</a><a href={SITE.links.github}>GitHub</a><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={`mailto:${SITE.email}`}>Email</a></div>
- <div class="profile-preferences"><button class="pet-paper" data-lulu-toggle aria-pressed="true">Hide Lulu</button><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
+
+ <div class="profile-links"><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={SITE.links.linkedin}>LinkedIn</a><a href={`mailto:${SITE.email}`}>Email</a><a href={SITE.links.github}>GitHub</a></div>
+ <div class="profile-preferences"><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
 </aside>
  <dialog id="resume-sheet" aria-labelledby="resume-title" aria-describedby="resume-help">
   <button class="close-sheet" aria-label="Close résumé">Close <small>Esc</small></button>
@@ -18,7 +18,8 @@ import { SITE } from '../data/site';
   <p id="resume-help" class="sr-only">Preview of Moaaz Magdy’s résumé. Download the PDF for selectable text and links. Press Escape or click outside the paper to close.</p>
  </dialog>
 <script>
- import { paperSound } from '../scripts/paper-sound';
+ import { paperSound, installClickSounds } from '../scripts/paper-sound';
+ installClickSounds();
  const sound=document.querySelector<HTMLButtonElement>('#paper-sound-toggle')!;
  function label(){const on=localStorage.getItem('workbench-sound')!=='off';sound.textContent=on?'Sound on':'Sound off';sound.setAttribute('aria-pressed',String(on))}label();
  sound.addEventListener('click',()=>{localStorage.setItem('workbench-sound',sound.getAttribute('aria-pressed')==='true'?'off':'on');label();paperSound()});

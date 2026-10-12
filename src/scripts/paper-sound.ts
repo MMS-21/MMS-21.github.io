@@ -14,3 +14,11 @@ export function paperSound(kind:'flip'|'open'|'close' = 'flip') {
   source.connect(high).connect(low).connect(gain).connect(audio.destination);source.start();source.onended=()=>{source.disconnect();high.disconnect();low.disconnect();gain.disconnect()};
  } catch { /* Sound is optional when the browser has no audio device. */ }
 }
+
+let clickInstalled=false,lastClick=0;
+export function clickSound(){
+ if(localStorage.getItem('workbench-sound')==='off'||performance.now()-lastClick<70)return;
+ lastClick=performance.now();
+ try{audio??=new AudioContext();void audio.resume();const tone=audio.createOscillator(),gain=audio.createGain(),now=audio.currentTime;tone.type='sine';tone.frequency.setValueAtTime(640,now);tone.frequency.exponentialRampToValueAtTime(320,now+.035);gain.gain.setValueAtTime(0,now);gain.gain.linearRampToValueAtTime(.009,now+.004);gain.gain.exponentialRampToValueAtTime(.0001,now+.04);tone.connect(gain).connect(audio.destination);tone.start(now);tone.stop(now+.045);tone.onended=()=>{tone.disconnect();gain.disconnect()}}catch{}
+}
+export function installClickSounds(){if(clickInstalled)return;clickInstalled=true;document.addEventListener('click',event=>{const el=(event.target as Element).closest('a,button');if(el&&!el.hasAttribute('disabled'))clickSound()},{capture:true})}

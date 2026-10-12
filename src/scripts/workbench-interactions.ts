@@ -1,19 +1,20 @@
-import { paperSound } from './paper-sound';
+import { paperSound, installClickSounds } from './paper-sound';
+installClickSounds();
 const papers = [...document.querySelectorAll<HTMLElement>('.project-paper')];
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const mod = (n:number) => (n + papers.length) % papers.length;
 let front = 0, busy = false, suppressClick = false;
 let sound = localStorage.getItem('workbench-sound') !== 'off';
-function rustle(kind:'flip'|'open'|'close' = 'flip'){if(sound)paperSound(kind)}
+function rustle(kind:'flip'|'open'|'close' = 'flip'){paperSound(kind)}
 // Integrate a damped spring at bounded steps, independent of display refresh rate.
-function spring(from:number[],to:number[],draw:(v:number[])=>void,k=180,d=22) {
+function spring(from:number[],to:number[],draw:(v:number[])=>void,k=180,d=22,epsilon=.12) {
  return new Promise<void>(resolve=>{
   if(reduced.matches){draw(to);resolve();return}
   const x=[...from],v=from.map(()=>0);let previous=performance.now(),start=previous;
   function frame(now:number){let remaining=Math.min((now-previous)/1000,.04);previous=now;
    while(remaining>0){const dt=Math.min(remaining,1/120);remaining-=dt;for(let i=0;i<x.length;i++){v[i]+=(k*(to[i]-x[i])-d*v[i])*dt;x[i]+=v[i]*dt;}}
    draw(x);
-   if(now-start>1800||x.every((n,i)=>Math.abs(n-to[i])<.12&&Math.abs(v[i])<.2)){draw(to);resolve()}else requestAnimationFrame(frame);
+   if(now-start>1800||x.every((n,i)=>Math.abs(n-to[i])<epsilon&&Math.abs(v[i])<epsilon*2)){draw(to);resolve()}else requestAnimationFrame(frame);
   }requestAnimationFrame(frame);
  });
 }
@@ -21,11 +22,14 @@ const positions=papers.map(()=>[0,0,0]);
 const slots=[[0,0,-5],[24,16,4],[-22,30,-3],[-38,43,5]];
 function paint(i:number,p:number[]){positions[i]=[...p];papers[i].style.transform=`translate(calc(-50% + ${p[0]}px),${p[1]}px) rotate(${p[2]}deg)`;}
 function update(){papers.forEach((p,i)=>{const rank=mod(i-front);p.dataset.front=String(rank===0);p.inert=rank!==0;p.setAttribute('aria-hidden',String(rank!==0));p.style.zIndex=String(10-rank);p.style.setProperty('--shade',String(rank*.035));});document.querySelector('.count')!.textContent=`${front+1} / ${papers.length}`;}
-async function shuffle(direction:number){if(busy)return;busy=true;rustle();const old=front;front=mod(front+direction);
- const width=papers[old].offsetWidth;
- const others=papers.map((_,i)=>i).filter(i=>i!==old).map(i=>spring(positions[i],slots[mod(i-front)],p=>paint(i,p)));
- await spring(positions[old],[direction*width*.55,-24,direction*17],p=>paint(old,p),190,24);
- update();await Promise.all([...others,spring(positions[old],slots[mod(old-front)],p=>paint(old,p))]);busy=false;
+async function shuffle(direction:number){if(busy)return;busy=true;rustle();const old=front,next=mod(front+direction),start=positions.map(p=>[...p]);
+ const width=papers[old].offsetWidth;let handed=false;
+ // One continuous arc: no pause at the apex or abrupt restart on the return.
+ await spring([0],[1],values=>{const t=Math.max(0,Math.min(1,values[0]));
+  papers.forEach((_,i)=>{const target=slots[mod(i-next)],p=start[i].map((n,j)=>n+(target[j]-n)*t);if(i===old){const arc=Math.sin(Math.PI*t);p[0]+=direction*width*.66*arc;p[1]-=28*arc;p[2]+=direction*12*arc;}paint(i,p)});
+  if(t>.5&&!handed){front=next;update();handed=true;}
+ },160,26,.001);
+ if(!handed){front=next;update()}busy=false;
 }
 papers.forEach((_,i)=>paint(i,slots[i]));update();
 document.querySelectorAll('.switch-paper').forEach((b,i)=>b.addEventListener('click',()=>void shuffle(i===0?-1:1)));
@@ -42,9 +46,9 @@ papers.forEach((paper,i)=>{
  image.addEventListener('pointerup',release);image.addEventListener('pointercancel',release);
  image.addEventListener('click',()=>{if(!suppressClick&&!busy)void openCase(i,image)});
 });
-const soundButton=document.querySelector<HTMLButtonElement>('#sound')!;
-function soundLabel(){soundButton.textContent=sound?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound))}soundLabel();
-soundButton.addEventListener('click',()=>{sound=!sound;localStorage.setItem('workbench-sound',sound?'on':'off');soundLabel();if(sound)rustle()});
+const soundButton=document.querySelector<HTMLButtonElement>('#sound');
+function soundLabel(){if(!soundButton)return;soundButton.textContent=sound?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound))}soundLabel();
+soundButton?.addEventListener('click',()=>{sound=!sound;localStorage.setItem('workbench-sound',sound?'on':'off');soundLabel();if(sound)rustle()});
 const drawer=document.querySelector<HTMLDialogElement>('#case-drawer')!,resume=document.querySelector<HTMLDialogElement>('#resume-sheet')!,collection=document.querySelector<HTMLDialogElement>('#works-collection')!;
 function lock(){document.body.classList.toggle('sheet-open',[drawer,resume,collection].some(d=>d.open))}
 let request=0,caseTrigger:HTMLElement|undefined;
@@ -71,10 +75,10 @@ handle.addEventListener('pointerup',()=>{if(dragStart===undefined)return;dragSta
 handle.addEventListener('pointercancel',()=>{dragStart=undefined;void spring([collectionY],[0],v=>slide(v[0]),240,26)});
 collection.addEventListener('wheel',e=>{if(collection.scrollTop===0&&e.deltaY < -45&&!collectionBusy){e.preventDefault();void closeCollection()}},{passive:false});
 const resumeTrigger=document.querySelector<HTMLButtonElement>('#resume-open')!;
-resumeTrigger.setAttribute('aria-haspopup','dialog');resumeTrigger.setAttribute('aria-controls','resume-sheet');
-resumeTrigger.addEventListener('click',()=>{resume.classList.remove('closing');resume.showModal();lock();resumeTrigger.setAttribute('aria-expanded','true');rustle('open')});
+if(!document.querySelector('.profile-controls')){resumeTrigger.setAttribute('aria-haspopup','dialog');resumeTrigger.setAttribute('aria-controls','resume-sheet');
+resumeTrigger.addEventListener('click',()=>{resume.classList.remove('closing');resume.showModal();lock();resumeTrigger.setAttribute('aria-expanded','true');rustle('open')});}
 let closingResume=false;
 function closeResume(){if(closingResume||!resume.open)return;closingResume=true;resume.classList.add('closing');rustle('close');setTimeout(()=>{resume.close();resume.classList.remove('closing');closingResume=false;resumeTrigger.setAttribute('aria-expanded','false');resumeTrigger.focus()},reduced.matches?0:480)}
 let closingCase=false;
 async function closeCase(){if(closingCase||!drawer.open)return;closingCase=true;++request;rustle('close');if(!reduced.matches)await drawer.animate([{transform:'translateY(0)',opacity:1},{transform:'translateY(70px)',opacity:0}],{duration:220,easing:'ease-in'}).finished;drawer.close();closingCase=false;caseTrigger?.focus();}
-for(const sheet of [drawer,resume,collection]){const close=()=>sheet===resume?closeResume():sheet===collection?void closeCollection():void closeCase();sheet.querySelector('.close-sheet')!.addEventListener('click',close);sheet.addEventListener('cancel',e=>{e.preventDefault();close()});sheet.addEventListener('close',lock);sheet.addEventListener('click',e=>{if(e.target===sheet){const r=sheet.getBoundingClientRect();if(sheet===resume||e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close()}})}
+for(const sheet of [drawer,...(document.querySelector('.profile-controls')?[]:[resume]),collection]){const close=()=>sheet===resume?closeResume():sheet===collection?void closeCollection():void closeCase();sheet.querySelector('.close-sheet')!.addEventListener('click',close);sheet.addEventListener('cancel',e=>{e.preventDefault();close()});sheet.addEventListener('close',lock);sheet.addEventListener('click',e=>{if(e.target===sheet){const r=sheet.getBoundingClientRect();if(sheet===resume||e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close()}})}

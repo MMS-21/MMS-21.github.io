@@ -8,7 +8,7 @@ export const SITE = {
     'A little curiosity goes a long way. Explore my projects, experiments, and notes. Say hi to Lulu along the way.',
   role: 'Data & Business Analyst',
   location: 'Cairo, Egypt',
-  email: 'moaz.magdy220@gmail.com',
+  email: 'moaz.magdy2@hotmail.com',
   links: {
     github: 'https://github.com/MMS-21',
     linkedin: 'https://www.linkedin.com/in/moaaz-magdy',
