@@ -3,7 +3,9 @@ import { Mascot } from 'page-mascot';
 import LuluPet from '../components/LuluPet.astro';
 const papers = [
  {title:'Which customers should we focus on?', description:'Customer value and churn risk, turned into retention priorities.', tools:'Python · Customer analytics', image:'/img/ecommerce/segment-revenue.svg', url:'/projects/ecommerce-clv-churn/'},
- {title:'Where should HR focus its retention efforts?', description:'Attrition patterns across roles and overtime, with clear retention priorities.', tools:'Power BI · SQL · Python', image:'/img/hr/attrition-overview.svg', url:'/projects/hr-attrition-analysis/'}
+ {title:'Where should HR focus its retention efforts?', description:'Attrition patterns across roles and overtime, with clear retention priorities.', tools:'Power BI · SQL · Python', image:'/img/hr/attrition-overview.svg', url:'/projects/hr-attrition-analysis/'},
+ {title:'analytics-agent',description:'From data to an inspectable report',tools:'Python · pandas · matplotlib',image:'/img/analytics-agent-paper.svg',url:'/projects/analytics-agent/'},
+ {title:'ai-tell',description:'A closer look at document authorship',tools:'TypeScript · Electron',image:'/img/ai-tell-paper.svg',url:'/projects/ai-tell/'}
 ];
 ---
 <!doctype html>
@@ -22,25 +24,13 @@ const papers = [
   <section class="workbench" aria-label="Project papers">
    <div class="stack">
     {papers.map((paper,i)=><article class="project-paper" data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
-     <button class="project-image" aria-label={`Shuffle papers: ${paper.title}`}><img src={paper.image} alt={i===0?'Customer segments compared by customer share and revenue share.':'Employee attrition compared across overtime and roles.'} width="900" height="580"/></button>
+     <button class="project-image" aria-label={`Shuffle papers: ${paper.title}`}><img src={paper.image} alt={['Customer segments compared by customer share and revenue share.','Employee attrition compared across overtime and roles.','Report illustration for analytics-agent.','Document analysis illustration for ai-tell.'][i]} width="900" height="580"/></button>
      <div class="paper-copy"><h2><a href={paper.url}>{paper.title} <span aria-hidden="true">↗</span></a></h2><small>{paper.tools}</small></div>
     </article>)}
    </div>
-   <div class="stack-controls"><button id="expand-study">Take a closer look ↗</button><div><button class="switch-paper" aria-label="Show previous project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h13"/></svg></button><span class="count" aria-live="polite">1 / 2</span><button class="switch-paper" aria-label="Show next project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6M16 12H3"/></svg></button></div></div>
+   <div class="stack-controls"><button id="expand-study">Take a closer look ↗</button><div><button class="switch-paper" aria-label="Show previous project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h13"/></svg></button><span class="count" aria-live="polite">1 / {papers.length}</span><button class="switch-paper" aria-label="Show next project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6M16 12H3"/></svg></button></div></div>
   </section>
-  <section class="tools" aria-labelledby="tools-heading">
-   <h2 id="tools-heading">Tools &amp; gadgets</h2>
-   <div class="tool-papers">
-    <a class="tool-paper" href="/projects/analytics-agent/">
-     <div class="tool-art report-art" aria-hidden="true"><svg viewBox="0 0 320 200"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M74 35h142l28 28v106H74zM216 35v28h28M95 58h69M95 70h43M95 148h128"/><path class="report-bars" d="M108 137v-24h19v24m16 0V93h19v44m16 0V78h19v59"/><path d="m252 101 12 12-12 12m-11-12h23"/></g><circle cx="55" cy="98" r="4" fill="currentColor" opacity=".4"/></svg><span>01 / REPORTS</span></div>
-     <div class="tool-copy"><h3>analytics-agent <span aria-hidden="true">↗</span></h3><p>From data to an inspectable report</p><small>Python · FastAPI · React</small></div>
-    </a>
-    <a class="tool-paper" href="/projects/ai-tell/">
-     <div class="tool-art document-art" aria-hidden="true"><svg viewBox="0 0 320 200"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M89 32h118v138H89zM103 52h87M103 65h68M103 83h87M103 96h49M103 114h65M103 127h45"/><circle class="document-lens" cx="211" cy="125" r="28"/><path d="m231 145 23 23M197 125h28m-23-8v16m9-20v24m8-17v10"/></g></svg><span>02 / DOCUMENTS</span></div>
-     <div class="tool-copy"><h3>ai-tell <span aria-hidden="true">↗</span></h3><p>A closer look at document authorship</p><small>TypeScript · Electron</small></div>
-    </a>
-   </div>
-  </section>
+
   <footer><a href="/projects/">Explore all projects ↗</a><button id="sound" aria-pressed="true">Sound on</button><a href="/">Back to the portfolio</a></footer>
  </main>
  <LuluPet />
@@ -68,7 +58,7 @@ const counter=document.querySelector('.count')!;
 let front=0,z=3,sound=true,audio:AudioContext|undefined,busy=false;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 function rustle(){if(!sound)return;audio??=new AudioContext();void audio.resume();const buffer=audio.createBuffer(1,audio.sampleRate*.24,audio.sampleRate);const values=buffer.getChannelData(0);for(let i=0;i<values.length;i++)values[i]=(Math.random()*2-1)*Math.sin(Math.PI*i/values.length);const source=audio.createBufferSource();source.buffer=buffer;const filter=audio.createBiquadFilter();filter.type='bandpass';filter.frequency.value=1800;filter.Q.value=.65;const gain=audio.createGain();gain.gain.value=.035;source.connect(filter).connect(gain).connect(audio.destination);source.start();}
-function select(i:number){front=(i+papers.length)%papers.length;papers.forEach((p,j)=>{p.dataset.front=String(j===front);p.style.setProperty('--angle',j===front?'-5deg':'6deg')});papers[front].style.zIndex=String(++z);counter.textContent=`${front+1} / ${papers.length}`;}
+function select(i:number){front=(i+papers.length)%papers.length;papers.forEach((p,j)=>{p.dataset.front=String(j===front);p.inert=j!==front;p.setAttribute('aria-hidden',String(j!==front));p.style.setProperty('--angle',j===front?'-5deg':'6deg')});papers[front].style.zIndex=String(++z);counter.textContent=`${front+1} / ${papers.length}`;}
 async function shuffle(i:number){if(busy)return;const next=(i+papers.length)%papers.length;if(next===front)return;busy=true;rustle();const old=papers[front],incoming=papers[next];if(reduced.matches){select(next);busy=false;return}const first=old.animate([{transform:'translateX(-50%) rotate(-5deg)'},{transform:'translateX(-104%) translateY(-22px) rotate(-13deg)'},{transform:'translateX(-50%) rotate(6deg)'}],{duration:720,easing:'cubic-bezier(.4,0,.2,1)'});incoming.animate([{transform:'translateX(-50%) rotate(6deg)'},{transform:'translateX(-28%) translateY(8px) rotate(9deg)'},{transform:'translateX(-50%) rotate(-5deg)'}],{duration:720,easing:'cubic-bezier(.4,0,.2,1)'});window.setTimeout(()=>select(next),340);await first.finished;busy=false;}
 document.querySelectorAll('.switch-paper').forEach((button,i)=>button.addEventListener('click',()=>void shuffle(front+(i===0?-1:1))));
 document.querySelector('#sound')!.addEventListener('click',event=>{sound=!sound;const button=event.currentTarget as HTMLButtonElement;button.textContent=sound?'Sound on':'Sound off';button.setAttribute('aria-pressed',String(sound));if(sound)rustle()});
@@ -133,4 +123,12 @@ for(const sheet of [drawer,resume]){sheet.querySelector('.close-sheet')!.addEven
 body{isolation:isolate}.side-painting{position:fixed;z-index:-1;pointer-events:none;right:-100px;top:-80px;width:clamp(350px,40vw,650px);height:calc(100svh + 160px);background:url('/img/workbench-painting.jpg') center/cover no-repeat;transform:rotate(9deg);transform-origin:70% 50%;opacity:.34;mix-blend-mode:multiply;mask-image:linear-gradient(to right,transparent,black 34%);-webkit-mask-image:linear-gradient(to right,transparent,black 34%)}
 @media(max-width:1100px){.introduction h1{font-size:76px;line-height:76px}.side-painting{right:-180px;opacity:.25}}
 @media(max-width:650px){.introduction h1{font-size:clamp(44px,10vw,64px);line-height:1}.menu-label{display:none}.side-painting{right:-230px;width:400px;opacity:.17}}
+</style>
+
+<style is:global>
+.fixed-menu nav{font-size:18px}.fixed-menu .identity>a,.fixed-menu .contact-links,.fixed-menu .contact-links a,.fixed-menu .contact-links button,.fixed-menu .menu-label{font-size:10px;line-height:14px}.fixed-menu .pet-paper{font-size:8px!important}
+</style>
+
+<style is:global>
+.project-image img{width:100%;height:330px;object-fit:contain}.paper-copy{min-height:106px}@media(max-width:650px){.project-image img{height:calc((100vw - 54px)*.72)}}
 </style>
