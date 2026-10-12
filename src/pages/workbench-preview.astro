@@ -17,7 +17,7 @@ const papers = [
   <div class="contact-links"><span>Contact</span><div><a href="https://www.linkedin.com/in/moaaz-magdy">LinkedIn</a><a href="https://github.com/MMS-21">GitHub</a><button id="resume-open">Résumé</button><a href="mailto:moaz.magdy220@gmail.com">Email</a></div></div>
  </header>
  <main id="work">
-  <header class="introduction"><h1>Currently on<br/><em>the workbench.</em></h1><p>Customer analytics, useful tools,<br/>and a little curiosity.</p></header>
+  <header class="introduction"><h1>Currently on<br/><em>the workbench.</em></h1></header>
   <section class="workbench" aria-label="Project papers">
    <div class="stack">
     {papers.map((paper,i)=><article class="project-paper" data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
@@ -27,7 +27,19 @@ const papers = [
    </div>
    <div class="stack-controls"><button id="expand-study">Take a closer look ↗</button><div><button class="switch-paper" aria-label="Show previous project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h13"/></svg></button><span class="count" aria-live="polite">1 / 2</span><button class="switch-paper" aria-label="Show next project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6M16 12H3"/></svg></button></div></div>
   </section>
-  <section class="tools" aria-labelledby="tools-heading"><h2 id="tools-heading">Tools &amp; gadgets</h2><a href="/projects/analytics-agent/"><span>analytics-agent<small>From data to an inspectable report</small></span><span aria-hidden="true">↗</span></a><a href="/projects/ai-tell/"><span>ai-tell<small>A closer look at document authorship</small></span><span aria-hidden="true">↗</span></a></section>
+  <section class="tools" aria-labelledby="tools-heading">
+   <h2 id="tools-heading">Tools &amp; gadgets</h2>
+   <div class="tool-papers">
+    <a class="tool-paper" href="/projects/analytics-agent/">
+     <div class="tool-art report-art" aria-hidden="true"><svg viewBox="0 0 320 200"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M74 35h142l28 28v106H74zM216 35v28h28M95 58h69M95 70h43M95 148h128"/><path class="report-bars" d="M108 137v-24h19v24m16 0V93h19v44m16 0V78h19v59"/><path d="m252 101 12 12-12 12m-11-12h23"/></g><circle cx="55" cy="98" r="4" fill="currentColor" opacity=".4"/></svg><span>01 / REPORTS</span></div>
+     <div class="tool-copy"><h3>analytics-agent <span aria-hidden="true">↗</span></h3><p>From data to an inspectable report</p><small>Python · FastAPI · React</small></div>
+    </a>
+    <a class="tool-paper" href="/projects/ai-tell/">
+     <div class="tool-art document-art" aria-hidden="true"><svg viewBox="0 0 320 200"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M89 32h118v138H89zM103 52h87M103 65h68M103 83h87M103 96h49M103 114h65M103 127h45"/><circle class="document-lens" cx="211" cy="125" r="28"/><path d="m231 145 23 23M197 125h28m-23-8v16m9-20v24m8-17v10"/></g></svg><span>02 / DOCUMENTS</span></div>
+     <div class="tool-copy"><h3>ai-tell <span aria-hidden="true">↗</span></h3><p>A closer look at document authorship</p><small>TypeScript · Electron</small></div>
+    </a>
+   </div>
+  </section>
   <footer><a href="/projects/">Explore all projects ↗</a><button id="sound" aria-pressed="true">Sound on</button><a href="/">Back to the portfolio</a></footer>
  </main>
  <LuluPet />
@@ -100,4 +112,14 @@ for(const sheet of [drawer,resume]){sheet.querySelector('.close-sheet')!.addEven
 @keyframes resume-top-unfold{0%{transform:rotateX(-175deg);filter:brightness(.8)}100%{transform:rotateX(0);filter:brightness(1)}}@keyframes resume-bottom-unfold{0%{transform:rotateX(175deg);filter:brightness(.8)}100%{transform:rotateX(0);filter:brightness(1)}}@keyframes resume-paper-in{from{opacity:0;transform:translate(-50%,calc(-50% + 35px)) scale(.9) rotate(-2deg)}to{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}@keyframes resume-crease{from{opacity:1}to{opacity:.1}}@keyframes resume-scrim-in{from{background:rgba(40,37,31,0);backdrop-filter:blur(0)}to{background:rgba(40,37,31,.57);backdrop-filter:blur(5px)}}@keyframes resume-scrim-out{to{background:rgba(40,37,31,0);backdrop-filter:blur(0)}}@keyframes resume-download-in{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}@keyframes resume-download-out{to{opacity:0;transform:translateY(12px)}}@keyframes resume-top-fold{to{transform:rotateX(-170deg)}}@keyframes resume-bottom-fold{to{transform:rotateX(170deg)}}@keyframes resume-paper-out{to{opacity:0;transform:translate(-50%,calc(-50% + 20px)) scale(.88)}}
 @media(max-width:650px){.resume-paper{width:min(calc((100svh - 140px)*.707),calc(100vw - 32px));top:46%}#resume-sheet .resume-download{right:50%;translate:50% 0;bottom:20px;white-space:nowrap}#resume-sheet .resume-download:hover{translate:50% -2px}#resume-sheet .close-sheet{top:10px;right:10px}}
 @media(prefers-reduced-motion:reduce){#resume-sheet::backdrop,#resume-sheet.closing::backdrop,#resume-sheet .resume-paper,#resume-sheet .resume-panel,#resume-sheet .resume-panel::after,#resume-sheet .resume-download{animation:none!important;transition:none!important}}
+</style>
+
+<style is:global>
+.identity>a{font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;letter-spacing:.06em;text-transform:uppercase}
+.tool-papers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;padding:8px 4px}
+.tool-paper{display:block;color:var(--ink);text-decoration:none;background:#f8f3e9 url('/img/paper-fibers.svg');border:1px solid #77685318;box-shadow:3px 8px 15px #51433314;transform:rotate(-2deg);transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s}
+.tool-paper:nth-child(2){transform:rotate(2deg)}.tool-paper:hover,.tool-paper:focus-visible{transform:translateY(-7px) rotate(0);box-shadow:5px 15px 23px #51433322}
+.tool-art{position:relative;aspect-ratio:1.6;overflow:hidden;color:#557b87;background:#e7eeee80}.document-art{color:#8b7355;background:#ece6db90}.tool-art svg{display:block;width:100%;height:100%}.tool-art>span{position:absolute;bottom:12px;left:18px;font:8px ui-monospace,monospace;letter-spacing:.09em;opacity:.7}.tool-copy{padding:20px 20px 22px}.tool-copy h3{font:500 28px/1.1 Cormorant,Georgia,serif;letter-spacing:-.02em;margin:0 0 9px;display:flex;justify-content:space-between;align-items:center}.tool-copy h3 span{font:16px Manrope,sans-serif;transition:translate .3s}.tool-paper:hover h3 span{translate:2px -2px}.tool-copy p{font-size:11px;margin:0 0 13px;color:var(--muted)}.tool-copy small{font-size:9px;color:#817568}.report-bars,.document-lens{transform-origin:center;transition:transform .4s}.tool-paper:hover .report-bars{transform:translateY(-4px)}.tool-paper:hover .document-lens{transform:translate(3px,-3px)}
+@media(max-width:650px){.tool-papers{grid-template-columns:1fr;gap:26px}.tool-art{aspect-ratio:1.8}.identity>a{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.tool-paper,.tool-copy h3 span,.report-bars,.document-lens{transition:none}.tool-paper:hover,.tool-paper:focus-visible{transform:none}}
 </style>
