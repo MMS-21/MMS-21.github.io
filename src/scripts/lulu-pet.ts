@@ -18,6 +18,7 @@ export function startLulu(){
  const control=document.querySelector<HTMLButtonElement>('[data-lulu-toggle]')!;
  const canvas=host.querySelector('canvas')!,ctx=canvas.getContext('2d');if(!ctx)return;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const mobile=matchMedia('(max-width:700px)');
  const shell=document.querySelector<HTMLElement>('.navigation-shell');
  const rows:Record<State,number>={idle:0,right:1,left:2,wave:3,jump:4,play:6};
  let image=new Image();
@@ -78,7 +79,7 @@ export function startLulu(){
   });
   document.querySelectorAll<HTMLElement>('main .preview img').forEach(el=>{if(usable(el))obstacles.push(el.getBoundingClientRect())});
   const result:Perch[]=[floor()];
-  for(const {el,rect,index} of texts){
+  if(!mobile.matches)for(const {el,rect,index} of texts){
    if(!ids.has(el))ids.set(el,++serial);
    const left=Math.max(8,rect.left),right=Math.min(innerWidth-8,rect.right),top=rect.top-3;
    const safe=[left+3,right-width()-3,(left+right-width())/2].filter(px=>{
@@ -98,6 +99,7 @@ export function startLulu(){
   position();wake();
  }
  function decide(now:number){
+  if(mobile.matches){change('idle',now);nextAction=now+5000;return}
   decisions++;
   const reach=current.floor?Math.max(340,innerHeight*.85):420;
   const candidates=perches.filter(p=>p.key!==current.key&&Math.abs(p.y-footY)<reach&&Math.abs(p.left-x)<Math.min(520,innerWidth*.85)&&p.y-scrollY>height()+20&&p.y-scrollY<innerHeight-20);

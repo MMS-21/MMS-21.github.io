@@ -3,7 +3,8 @@ import { SITE } from '../data/site';
 ---
 <aside class="profile-controls" aria-label="Profile links and preferences">
 
- <div class="profile-links"><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={SITE.links.linkedin}>LinkedIn</a><a href={`mailto:${SITE.email}`}>Email</a><a href={SITE.links.github}>GitHub</a></div>
+ <button class="profile-menu-toggle" type="button" aria-expanded="false" aria-controls="profile-links">Menu</button>
+ <div class="profile-links" id="profile-links"><nav class="mobile-page-links" aria-label="Main"><a href="/projects/">Projects</a><a href="/writing/">Writing</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={SITE.links.linkedin}>LinkedIn</a><a href={`mailto:${SITE.email}`}>Email</a><a href={SITE.links.github}>GitHub</a></div>
  <div class="profile-preferences"><button class="lulu-paper-note" type="button" data-lulu-toggle aria-pressed="true">Hide Rem</button><button class="stamps-toggle" type="button" data-stamps-open aria-haspopup="dialog" aria-controls="stamp-album">Stamps</button><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
 </aside>
  <dialog id="resume-sheet" aria-labelledby="resume-title" aria-describedby="resume-help">
@@ -26,6 +27,14 @@ import { SITE } from '../data/site';
 <script>
  import { paperSound, installClickSounds } from '../scripts/paper-sound';
  installClickSounds();
+ const mobileMenu=document.querySelector<HTMLButtonElement>('.profile-menu-toggle')!;
+ const profileControls=document.querySelector<HTMLElement>('.profile-controls')!;
+ function closeMobileMenu(){profileControls.removeAttribute('data-menu-open');mobileMenu.setAttribute('aria-expanded','false')}
+ mobileMenu.addEventListener('click',()=>{const open=mobileMenu.getAttribute('aria-expanded')!=='true';profileControls.toggleAttribute('data-menu-open',open);mobileMenu.setAttribute('aria-expanded',String(open))});
+ document.addEventListener('pointerdown',event=>{if(!profileControls.contains(event.target as Node))closeMobileMenu()});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&mobileMenu.getAttribute('aria-expanded')==='true'){closeMobileMenu();mobileMenu.focus()}});
+ profileControls.querySelector('#resume-open')?.addEventListener('click',closeMobileMenu);
+
  const sound=document.querySelector<HTMLButtonElement>('#paper-sound-toggle')!;
  function label(){const on=localStorage.getItem('workbench-sound')!=='off';sound.textContent=on?'Sound on':'Sound off';sound.setAttribute('aria-pressed',String(on))}label();
  sound.addEventListener('click',()=>{localStorage.setItem('workbench-sound',sound.getAttribute('aria-pressed')==='true'?'off':'on');label();paperSound()});
@@ -85,4 +94,21 @@ body:has(.profile-controls) .introduction-copy,body:has(.profile-controls) .intr
 @keyframes lulu-note-drift{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-2px) rotate(-2deg)}}
 @media(max-width:700px){.profile-controls .lulu-paper-note{font-size:17px;padding:3px 10px}}
 @media(prefers-reduced-motion:reduce){.profile-controls .lulu-paper-note{animation:none;transition:none}}
+</style>
+
+<style is:global>
+.profile-menu-toggle,.mobile-page-links{display:none}
+@media(max-width:700px){
+ .profile-controls{position:absolute;top:16px;left:20px;right:20px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;z-index:50}
+ .profile-controls .profile-menu-toggle{display:block;min-height:44px;padding:8px 0;background:none;border:0;font:14px/20px Manrope,sans-serif;letter-spacing:0}
+ .profile-preferences{gap:14px;justify-content:flex-end}
+ .profile-controls .profile-preferences button{min-height:44px}
+ .profile-controls #paper-sound-toggle{font:12px/20px Manrope,sans-serif;letter-spacing:0}
+ .profile-controls .profile-links{display:none;position:absolute;top:56px;left:0;right:0;padding:18px 20px;background:#fffaf0 url('/img/paper-fibers.svg');box-shadow:2px 8px 22px #57402025;grid-template-columns:1fr 1fr;gap:6px 20px;pointer-events:auto}
+ .profile-controls[data-menu-open] .profile-links{display:grid}
+ .profile-controls .profile-links a,.profile-controls .profile-links button{font:14px/22px Manrope,sans-serif;letter-spacing:0;min-height:44px;display:flex;align-items:center;white-space:normal;text-decoration:none}
+ .profile-controls .mobile-page-links{display:grid;grid-column:1 / -1;grid-template-columns:1fr 1fr;gap:4px 20px;padding-bottom:14px;margin-bottom:10px;border-bottom:1px solid #d9cdb8}
+ .profile-controls .mobile-page-links a{font:500 23px/1.2 'Cormorant Garamond',Georgia,serif}
+}
+@media(max-width:350px){.profile-controls{left:16px;right:16px}.profile-preferences{gap:10px}}
 </style>

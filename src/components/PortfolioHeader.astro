@@ -26,3 +26,16 @@ const links=[{href:'/',label:'Home'},{href:'/projects/',label:'Projects'},{href:
  @media(max-width:700px){.header-stamps{position:static}.portfolio-header{height:auto;display:flex;align-items:center;flex-direction:column;padding-top:10px}.header-mascot{position:static;height:58px}.portfolio-name{position:static;margin-top:0}nav{margin:12px 0 0;padding:0 10px;gap:12px;flex-wrap:wrap}nav a{font-size:1.3rem;padding:10px 7px 16px}:global(body.has-portfolio-header main),:global(body.has-portfolio-header .site-footer){margin-left:0}:global(body.has-portfolio-header main){padding-top:1.5rem}}
  @media(prefers-reduced-motion:reduce){nav a svg{transition:none}}
 </style>
+
+<style>
+@media(max-width:700px){
+ .portfolio-header{display:grid;grid-template-columns:52px minmax(0,1fr) auto;align-items:center;gap:4px 12px;height:auto;padding:16px 20px 10px}
+ .header-mascot{position:static;width:52px;height:58px}
+ .header-mascot :global(astro-island){scale:.72}
+ .portfolio-name{position:static;width:auto;margin:0;text-align:left;font-size:21px;line-height:1.2}
+ .header-stamps{position:static;padding:8px 0;min-height:44px;font-size:18px}
+ nav{grid-column:1 / -1;display:flex;justify-content:space-between;flex-wrap:nowrap;gap:0;margin:0;padding:10px 0 0;min-width:0}
+ nav a{font-size:19px;padding:10px 3px 14px;min-height:44px;white-space:nowrap;text-align:center}
+}
+@media(max-width:350px){.portfolio-header{padding-inline:16px;gap:4px 8px}.portfolio-name{font-size:19px}nav a{font-size:17px}}
+</style>

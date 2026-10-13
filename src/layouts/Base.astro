@@ -556,3 +556,26 @@ body.paper-page{background:#faf8f3 url('/img/paper-fibers.svg')}
  rememberPage();
  window.addEventListener('pageshow',rememberPage);
 </script>
+
+<style is:global>
+@media(max-width:700px){
+ body.has-portfolio-header main{padding-top:22px}
+ body.paper-page .about-page,body.paper-page .writing-page,body.paper-page .letter-desk{width:auto;margin:0 12px;padding:30px 20px 36px}
+ body.paper-page .about-page h1,body.paper-page .writing-page h1,body.paper-page .letter-desk h1{font-size:clamp(34px,9.5vw,42px);line-height:1.1}
+ body.paper-page .featured-story{padding:24px 18px;gap:24px}
+ body.paper-page .story-copy h2{font-size:29px;line-height:1.2}
+ body.paper-page .letter-form{padding:24px 18px}
+ body.paper-page .letter-address{flex-wrap:wrap;gap:16px}
+ body.paper-page .stationery{transform:none}
+ body.paper-page .stationery:before{inset:4px;transform:none}
+ body.paper-page .personal-note{transform:none;justify-self:start}
+ body.paper-page .about-opening,body.paper-page .notebook-opening{gap:28px}
+ body.paper-page .letter-desk{gap:40px}
+ body.paper-page .desk-envelope{width:220px;margin:28px 0 12px;transform:none}
+ body.paper-page .envelope-lulu{right:0;top:-28px;width:76px;transform:none}
+ body.paper-page .envelope-lulu canvas{width:76px;height:83px}
+ body.paper-page input,body.paper-page textarea{font-size:16px}
+ body.paper-page .letter-actions{flex-direction:column;align-items:stretch;gap:16px}
+ body.paper-page .open-draft{white-space:normal;min-height:48px}
+}
+</style>
