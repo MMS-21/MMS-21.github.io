@@ -1,0 +1,85 @@
+---
+const questions = [
+ {
+  id:'customers', label:'Why are customers leaving?', note:'Customer retention',
+  title:'Start with what “leaving” means.',
+  framing:'An inactive customer and a lost customer can look the same in a dataset. I would agree on a useful definition before comparing groups.',
+  ask:['What counts as churn, and over what period?','Which customers changed their buying habits?','What decision would this analysis help us make?'],
+  data:'Order history, customer IDs, acquisition dates, refunds, and any recorded service issues.',
+  first:'Group customers by their first purchase month, then compare repeat purchases over equal time windows. Check whether the change is concentrated in a particular cohort or segment.',
+  decision:'Prioritize a segment for a retention experiment, then measure repeat purchases against a comparison group.',
+  link:'/projects/ecommerce-clv-churn/', linkLabel:'Explore the customer analytics project'
+ },
+ {
+  id:'revenue', label:'Why did revenue fall?', note:'Business performance',
+  title:'Break the change into smaller questions.',
+  framing:'Revenue can move because of fewer orders, smaller baskets, discounts, or returns. I would separate those changes before proposing a response.',
+  ask:['Which period gives us a fair comparison?','Is this happening across the business or in one segment?','Did pricing, promotions, stock, or tracking change?'],
+  data:'Order dates, products, quantities, prices, discounts, returns, channels, and stock availability.',
+  first:'Reconcile revenue with the source records, then split the movement into order volume and average order value. Compare products and channels to locate the largest contributions.',
+  decision:'Investigate the largest contributor with the team that owns it, and choose a targeted action with a measurable outcome.',
+  link:'/projects/analytics-projects/', linkLabel:'Explore the dashboard collection'
+ },
+ {
+  id:'people', label:'Where should retention efforts focus?', note:'People analytics',
+  title:'Look for patterns worth investigating.',
+  framing:'A difference between groups is a starting point for a conversation. I would check its size, context, and consistency before recommending action.',
+  ask:['Are we looking at voluntary departures, or all exits?','Are the groups large enough for a useful comparison?','What has changed in working conditions or policy?'],
+  data:'Departure dates and types, role, tenure, overtime, and relevant employee feedback, with access limited to what the analysis needs.',
+  first:'Compare voluntary departure rates across roles and tenure groups using consistent denominators. Check group sizes and investigate the strongest patterns with HR.',
+  decision:'Identify an area for further review and evaluate a focused retention initiative over time.',
+  link:'/projects/hr-attrition-analysis/', linkLabel:'Explore the HR case study'
+ }
+];
+---
+<section class="business-questions" aria-labelledby="business-question-title">
+ <header class="question-heading">
+  <h2 id="business-question-title">Ask a business question.</h2>
+  <p>Choose a question. Take a look at how I would start.</p>
+ </header>
+ <div class="question-workspace">
+  <div class="question-choices" role="group" aria-label="Choose a business question">
+   {questions.map((question,index)=><button type="button" data-question-choice={question.id} aria-pressed={index===0?'true':'false'} aria-controls={`question-${question.id}`}><span>{question.note}</span><strong>{question.label}</strong><svg viewBox="0 0 28 18" aria-hidden="true" fill="none"><path d="M2 9h23m-7-6 7 6-7 6" /></svg></button>)}
+  </div>
+  <div class="question-notes">
+   {questions.map((question,index)=><article id={`question-${question.id}`} data-question-note={question.id} hidden={index!==0} aria-labelledby={`question-title-${question.id}`}>
+    <h3 id={`question-title-${question.id}`}>{question.title}</h3>
+    <p class="question-framing">{question.framing}</p>
+    <div class="analysis-step"><h4>First, I would ask</h4><ul>{question.ask.map(item=><li>{item}</li>)}</ul></div>
+    <div class="analysis-step"><h4>The data I would need</h4><p>{question.data}</p></div>
+    <div class="analysis-step"><h4>The first analysis I would try</h4><p>{question.first}</p></div>
+    <p class="decision-note"><span>A decision this could support</span>{question.decision}</p>
+    <a class="question-project-link" href={question.link}>{question.linkLabel}<svg viewBox="0 0 18 18" aria-hidden="true" fill="none"><path d="M4 14 14 4M4 4h10v10" /></svg></a>
+   </article>)}
+  </div>
+ </div>
+ <p class="question-status" role="status" aria-live="polite" aria-atomic="true"></p>
+ <noscript><style is:inline>.question-notes article[hidden]{display:block!important;margin-top:40px}.question-choices{display:none!important}</style></noscript>
+</section>
+<script>
+ document.querySelectorAll<HTMLElement>('.business-questions').forEach(section=>{
+  const choices=[...section.querySelectorAll<HTMLButtonElement>('[data-question-choice]')];
+  const notes=[...section.querySelectorAll<HTMLElement>('[data-question-note]')];
+  choices.forEach(choice=>choice.addEventListener('click',()=>{
+   if(choice.getAttribute('aria-pressed')==='true')return;
+   choices.forEach(button=>button.setAttribute('aria-pressed',String(button===choice)));
+   notes.forEach(note=>note.hidden=note.dataset.questionNote!==choice.dataset.questionChoice);
+   section.querySelector<HTMLElement>('.question-status')!.textContent=`Showing the approach for: ${choice.querySelector('strong')!.textContent}`;
+  }));
+ });
+</script>
+<style>
+.business-questions{max-width:700px;margin:44px auto 72px}
+.question-heading{margin-bottom:22px}.question-heading h2{font:500 clamp(32px,4vw,42px)/1.06 Cormorant,Georgia,serif;letter-spacing:-.025em;margin:0 0 12px}.question-heading>p{font-size:12px;line-height:1.7;color:#665c51;margin:0}
+.question-workspace{display:grid;grid-template-columns:190px minmax(0,1fr);gap:22px;align-items:start}
+.question-choices{display:grid;gap:0}.question-choices button{position:relative;display:block;text-align:left;width:100%;padding:18px 26px 18px 0;background:none;border:0;border-bottom:1px solid #b9ad975c;color:#51483d;cursor:pointer}.question-choices button:first-child{padding-top:9px}.question-choices span{display:block;font:10px/1.6 Manrope,sans-serif;color:#6a6054;margin-bottom:6px}.question-choices strong{display:block;font:500 22px/1.15 Cormorant,Georgia,serif;letter-spacing:-.01em}.question-choices svg{position:absolute;right:0;top:50%;width:19px;height:14px;stroke:currentColor;stroke-width:1.2;opacity:0;transition:opacity 180ms,translate 180ms}.question-choices button[aria-pressed=true]{color:#31596d}.question-choices button[aria-pressed=true] svg,.question-choices button:hover svg{opacity:1}.question-choices button:hover svg{translate:2px 0}
+.question-notes{position:relative;background:#fcf8ef url('/img/paper-fibers.svg');padding:28px 26px 24px;box-shadow:3px 9px 22px #51433314;border-top:1px solid #fffdf5}
+.question-notes article[hidden]{display:none}.question-notes h3{font:500 28px/1.1 Cormorant,Georgia,serif;letter-spacing:-.015em;margin:0 0 14px}.question-framing{font:12px/1.8 Manrope,sans-serif;color:#5d5449;margin:0 0 25px}
+.analysis-step{margin:0 0 22px}.analysis-step h4{font:500 18px/1.3 Cormorant,Georgia,serif;margin:0 0 8px;color:#42382c}.analysis-step p,.analysis-step li{font:12px/1.8 Manrope,sans-serif;color:#5d5449}.analysis-step p{margin:0}.analysis-step ul{padding-left:16px;margin:0}.analysis-step li+li{margin-top:5px}.analysis-step li::marker{color:#8a7962}
+.decision-note{font:12px/1.8 Manrope,sans-serif;color:#486044;margin:27px 0 22px;padding-top:17px;border-top:1px solid #d9cfbd}.decision-note span{display:block;font:italic 20px/1.25 Cormorant,Georgia,serif;margin-bottom:8px}
+.question-project-link{display:inline-flex;gap:10px;align-items:center;font:11px/1.7 Manrope,sans-serif;color:#31596d;text-decoration:underline;text-underline-offset:4px}.question-project-link svg{width:13px;height:13px;flex-shrink:0;stroke:currentColor;stroke-width:1.2}
+.question-choices button:focus-visible,.question-project-link:focus-visible{outline:2px solid #426b7d;outline-offset:4px}
+.question-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:700px){.question-workspace{grid-template-columns:1fr;gap:20px}.question-choices{grid-template-columns:1fr}.question-choices button,.question-choices button:first-child{padding:13px 30px 13px 0}.question-choices strong{font-size:22px}.question-choices span{margin-bottom:3px}.question-notes{padding:25px 22px}.business-questions{margin:35px 0 55px}}
+@media(prefers-reduced-motion:reduce){.question-choices svg{transition:none}}
+</style>

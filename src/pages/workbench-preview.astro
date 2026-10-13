@@ -3,6 +3,7 @@ import '../styles/paper-details.css';
 import { Mascot } from 'page-mascot';
 import LuluPet from '../components/LuluPet.astro';
 import ProjectPaperDeck from '../components/ProjectPaperDeck.astro';
+import BusinessQuestions from '../components/BusinessQuestions.astro';
 
 ---
 <!doctype html>
@@ -18,6 +19,7 @@ import ProjectPaperDeck from '../components/ProjectPaperDeck.astro';
  </header>
  <main id="work">
   <header class="introduction"><h1>Currently on<br/><em>the workbench.</em></h1></header>
+  <BusinessQuestions />
   <ProjectPaperDeck />
 
   <footer><button id="collection-open" aria-haspopup="dialog" aria-controls="works-collection" aria-expanded="false">Explore all projects ↗</button><button id="sound" aria-pressed="true">Sound on</button><a href="/">Back to the portfolio</a></footer>
