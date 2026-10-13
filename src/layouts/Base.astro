@@ -26,7 +26,7 @@ const {
   ogImage = '/og-portfolio-2026-10-v3.png',
 } = Astro.props;
 const paperPage = /^\/(writing|about|contact)(\/|$)/.test(Astro.url.pathname);
-const entryStamp = ({'/about/':'about','/writing/':'writing','/contact/':'contact'} as Record<string,string>)[Astro.url.pathname];
+const entryStamp = ({'/':'home','/about/':'about','/writing/':'writing','/contact/':'contact'} as Record<string,string>)[Astro.url.pathname];
 const pageTitle = title ? `${title} — ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Must be absolute: consumers resolve og:image relative to the *scraping* host,
@@ -550,3 +550,9 @@ body.paper-page{background:#faf8f3 url('/img/paper-fibers.svg')}
 .paper-page .personal-note,.paper-page .letter-form{background:#fffaf0 url('/img/paper-fibers.svg')}
 @media(max-width:600px){.paper-page .about-page,.paper-page .writing-page,.paper-page .letter-desk{margin:0 12px;padding-top:28px;padding-bottom:28px}}
 </style>
+
+<script>
+ const rememberPage=()=>{if(location.pathname!=='/'){try{sessionStorage.setItem('portfolio-return-from',location.pathname);}catch{}}};
+ rememberPage();
+ window.addEventListener('pageshow',rememberPage);
+</script>

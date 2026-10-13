@@ -1,13 +1,14 @@
 ---
 const { kind } = Astro.props;
 const stamps: Record<string,{src:string;alt:string}> = {
+ home:{src:'/img/home-stamp.webp',alt:'Iranian postage stamp with an Avicenna portrait'},
  about:{src:'/img/about-stamp.webp',alt:'Green Egyptian airmail postage stamp'},
  writing:{src:'/img/writing-stamp.webp',alt:'Canadian blue whale postage stamp'},
  contact:{src:'/img/contact-stamp.webp',alt:'Red Tanganyika giraffe postage stamp'},
 };
 const stamp=stamps[kind];
 ---
-<div class="page-stamp-entrance" data-page-stamp aria-label="Opening page">
+<div class="page-stamp-entrance" data-page-stamp data-stamp-kind={kind} aria-label="Opening page">
  <img src={stamp.src} alt={stamp.alt} fetchpriority="high" />
  <button type="button">Skip intro</button>
 </div>
@@ -15,9 +16,23 @@ const stamp=stamps[kind];
  const entrance=document.querySelector<HTMLElement>('[data-page-stamp]');
  if(entrance){
   let timer:ReturnType<typeof setTimeout>;
-  const finish=()=>{clearTimeout(timer);entrance.remove();};
+  const finish=()=>{clearTimeout(timer);entrance.classList.remove('playing');};
+  const play=()=>{
+   finish();
+   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+   entrance.classList.add('playing');timer=setTimeout(finish,1450);
+  };
   entrance.querySelector('button')?.addEventListener('click',finish);
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){entrance.classList.add('playing');timer=setTimeout(finish,1450);}
+  if(entrance.dataset.stampKind==='home'){
+   const returnHome=()=>{
+    let previous='';
+    try{previous=sessionStorage.getItem('portfolio-return-from')||'';sessionStorage.removeItem('portfolio-return-from');}catch{}
+    if(previous&&previous!=='/')play();
+   };
+   returnHome();
+   window.addEventListener('pageshow',event=>{if(event.persisted)returnHome();});
+   window.addEventListener('pagehide',finish);
+  }else play();
  }
 </script>
 <style>
