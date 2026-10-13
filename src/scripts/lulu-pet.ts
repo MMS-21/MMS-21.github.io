@@ -173,8 +173,8 @@ export function startLulu(){
  addEventListener('scroll',scheduleScan,{passive:true});addEventListener('resize',scheduleScan);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)scan();wake()});
  reduced.addEventListener('change',()=>{trip=null;walkTo=null;current=floor();footY=current.y;change('idle',performance.now());nextAction=performance.now()+3600;wake()});
- let saved='lulu';try{saved=localStorage.getItem('portfolio-companion')||'lulu';if(COMPANIONS.some(pet=>pet.id===saved)&&localStorage.getItem('portfolio-companion'))host.dataset.chosen='true'}catch{}
- choose(COMPANIONS.some(pet=>pet.id===saved)?saved:'lulu',false);
+ let saved=COMPANIONS[0].id as string;try{saved=localStorage.getItem('portfolio-companion')||COMPANIONS[0].id;if(COMPANIONS.some(pet=>pet.id===saved)&&localStorage.getItem('portfolio-companion'))host.dataset.chosen='true'}catch{}
+ choose(COMPANIONS.some(pet=>pet.id===saved)?saved:COMPANIONS[0].id,false);
   document.fonts.ready.then(scheduleScan);
   // Revisit surfaces after scroll reveals and timeline transitions have settled.
   window.setInterval(()=>{if(visible&&!document.hidden&&!dragging&&!trip&&!touring)scan()},2400);

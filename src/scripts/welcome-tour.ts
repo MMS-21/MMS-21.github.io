@@ -41,7 +41,7 @@ export function startWelcomeTour() {
  const paw=document.querySelector<HTMLButtonElement>('.pyramid-toggle')!;
  const key='portfolio-welcome-seen-v1';
  const steps=[
-  {title:'Welcome to my little corner.',text:'A short walk through my work, the story behind it, and a little hello to Lulu. Move at your own pace.',section:'pre-hero',target:'.mobile-welcome',href:'',label:''},
+  {title:'Welcome to my little corner.',text:'A short walk through my work, the story behind it, and a little hello to your companion. Move at your own pace.',section:'pre-hero',target:'.mobile-welcome',href:'',label:''},
   {title:'First, a little introduction.',text:'Here’s what I do in business analytics and operations. The AI tools link opens a closer look at the tools I build and use.',section:'hero-story',target:'#hero-introduction-title',href:'/about/',label:'More about me'},
   {title:'How I approach the work.',text:'Follow the three papers: check the records, understand the gaps, and make the next step clear. My tools sit just below them.',section:'work-routine',target:'#desk-introduction-title',href:'/projects/analytics-agent/',label:'Explore Analytics Agent'},
   {title:'See the questions behind the projects.',text:'Customer retention, employee attrition, and practical tools. Open a case study for the evidence and decisions behind the result.',section:'featured-work',target:'#featured-heading',href:'/projects/',label:'Browse all projects'},

@@ -1,4 +1,5 @@
 export const COMPANIONS = [
+ {id:'rem',name:'Rem',sprite:'/pets/rem/sprite.webp',portrait:'/pets/rem/portrait.webp',frames:[4,4,4,4,3,1,4,1,1]},
  {id:'lulu',name:'Lulu',sprite:'/pets/lulu.webp',portrait:'/pets/lulu-idle.webp',frames:[8,8,8,8,8,8,8,8,8]},
  {id:'zongzi',name:'Zongzi',sprite:'/pets/zongzi/sprite.webp',portrait:'/pets/zongzi/portrait.webp',frames:[6,8,8,4,5,8,6,6,6]},
  {id:'bolt-2',name:'Bolt',sprite:'/pets/bolt-2/sprite.webp',portrait:'/pets/bolt-2/portrait.webp',frames:[6,8,8,4,5,8,6,6,6]},

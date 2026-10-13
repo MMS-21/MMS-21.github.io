@@ -5,7 +5,7 @@ export const SITE = {
   name: 'Moaaz Magdy',
   title: 'Moaaz Magdy',
   description:
-    'A little curiosity goes a long way. Explore my projects, experiments, and notes. Say hi to Lulu along the way.',
+    'A little curiosity goes a long way. Explore my projects, experiments, and notes. Say hi to your companion along the way.',
   role: 'Data & Business Analyst',
   location: 'Cairo, Egypt',
   email: 'moaz.magdy2@hotmail.com',

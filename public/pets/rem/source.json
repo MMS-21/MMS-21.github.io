@@ -1,0 +1,29 @@
+{
+  "name": "Rem",
+  "source": "User-supplied wizard cat reference, adapted into generated full-body pet poses",
+  "tileWidth": 192,
+  "tileHeight": 208,
+  "columns": 8,
+  "rows": [
+    "idle",
+    "right",
+    "left",
+    "wave",
+    "jump",
+    "rest",
+    "play",
+    "extra-wave",
+    "extra-idle"
+  ],
+  "frames": [
+    4,
+    4,
+    4,
+    4,
+    3,
+    1,
+    4,
+    1,
+    1
+  ]
+}
