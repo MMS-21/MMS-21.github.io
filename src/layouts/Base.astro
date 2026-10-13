@@ -1,6 +1,8 @@
 ---
 import '../styles/paper-details.css';
 import PortfolioHeader from '../components/PortfolioHeader.astro';
+import StampCollection from '../components/StampCollection.astro';
+import PageStamp from '../components/PageStamp.astro';
 import { SITE } from '../data/site';
 
 interface Props {
@@ -23,6 +25,8 @@ const {
   flushTop = false,
   ogImage = '/og-portfolio-2026-10-v3.png',
 } = Astro.props;
+const paperPage = /^\/(writing|about|contact)(\/|$)/.test(Astro.url.pathname);
+const entryStamp = ({'/about/':'about','/writing/':'writing','/contact/':'contact'} as Record<string,string>)[Astro.url.pathname];
 const pageTitle = title ? `${title} — ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Must be absolute: consumers resolve og:image relative to the *scraping* host,
@@ -86,7 +90,8 @@ const person = {
     <meta name="google-site-verification" content="gID2a2NCEtEtQQKILCCoTH5TifVEAfCbGyRensYqgrU" />
     <script type="application/ld+json" set:html={JSON.stringify(person).replace(/</g, '\\u003c')} />
   </head>
-  <body class:list={{'has-portfolio-header':!hideHeader}}>
+  <body class:list={{'has-portfolio-header':!hideHeader,'paper-page':paperPage}}>
+    <StampCollection />
     <a class="skip" href="#main">Skip to content</a>
 
     {!hideHeader && <PortfolioHeader />}
@@ -95,6 +100,7 @@ const person = {
       id="main"
       class={flushTop ? 'flush-hero' : hideHeader ? 'flush-top' : undefined}
     >
+      {entryStamp && <PageStamp kind={entryStamp} />}
       <slot />
     </main>
 
@@ -537,3 +543,10 @@ const person = {
 <script>import '../scripts/title-morph';</script>
 
 <script>import '../scripts/page-motion';</script>
+
+<style is:global>
+body.paper-page{background:#faf8f3 url('/img/paper-fibers.svg')}
+.paper-page .about-page,.paper-page .writing-page,.paper-page .letter-desk{background:#f5f1e7 url('/img/paper-fibers.svg');box-shadow:0 20px 70px #40352509;padding-top:42px;padding-bottom:42px}
+.paper-page .personal-note,.paper-page .letter-form{background:#fffaf0 url('/img/paper-fibers.svg')}
+@media(max-width:600px){.paper-page .about-page,.paper-page .writing-page,.paper-page .letter-desk{margin:0 12px;padding-top:28px;padding-bottom:28px}}
+</style>

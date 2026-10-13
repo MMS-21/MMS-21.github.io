@@ -1,0 +1,32 @@
+---
+const { kind } = Astro.props;
+const stamps: Record<string,{src:string;alt:string}> = {
+ about:{src:'/img/about-stamp.webp',alt:'Green Egyptian airmail postage stamp'},
+ writing:{src:'/img/writing-stamp.webp',alt:'Canadian blue whale postage stamp'},
+ contact:{src:'/img/contact-stamp.webp',alt:'Red Tanganyika giraffe postage stamp'},
+};
+const stamp=stamps[kind];
+---
+<div class="page-stamp-entrance" data-page-stamp aria-label="Opening page">
+ <img src={stamp.src} alt={stamp.alt} fetchpriority="high" />
+ <button type="button">Skip intro</button>
+</div>
+<script>
+ const entrance=document.querySelector<HTMLElement>('[data-page-stamp]');
+ if(entrance){
+  let timer:ReturnType<typeof setTimeout>;
+  const finish=()=>{clearTimeout(timer);entrance.remove();};
+  entrance.querySelector('button')?.addEventListener('click',finish);
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){entrance.classList.add('playing');timer=setTimeout(finish,1450);}
+ }
+</script>
+<style>
+.page-stamp-entrance{display:none;position:fixed;inset:0;z-index:1000;place-items:center;background:#faf8f3 url('/img/paper-fibers.svg');pointer-events:none}
+.page-stamp-entrance.playing{display:grid;pointer-events:auto;animation:stamp-fade 1.45s both}
+img{width:clamp(160px,22vw,270px);max-height:45svh;object-fit:contain;filter:drop-shadow(5px 16px 12px #38281c30);animation:stamp-land 1.4s cubic-bezier(.16,1,.3,1) both}
+button{position:absolute;bottom:32px;background:none;border:0;color:#514c45;text-decoration:underline;text-underline-offset:4px;cursor:pointer;padding:12px}
+button:focus-visible{outline:2px solid #426b7d;outline-offset:4px}
+@keyframes stamp-land{0%{opacity:0;transform:translateY(-35px) rotate(-15deg) scale(1.15)}35%,75%{opacity:1;transform:rotate(5deg)}100%{opacity:0;transform:translateY(15px) rotate(8deg) scale(.9)}}
+@keyframes stamp-fade{0%,85%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.page-stamp-entrance{display:none!important}}
+</style>

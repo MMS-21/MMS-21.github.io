@@ -4,7 +4,7 @@ import { SITE } from '../data/site';
 <aside class="profile-controls" aria-label="Profile links and preferences">
 
  <div class="profile-links"><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={SITE.links.linkedin}>LinkedIn</a><a href={`mailto:${SITE.email}`}>Email</a><a href={SITE.links.github}>GitHub</a></div>
- <div class="profile-preferences"><button class="lulu-paper-note" type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
+ <div class="profile-preferences"><button class="lulu-paper-note" type="button" data-lulu-toggle aria-pressed="true">Hide Lulu</button><button class="stamps-toggle" type="button" data-stamps-open aria-haspopup="dialog" aria-controls="stamp-album">Stamps</button><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
 </aside>
  <dialog id="resume-sheet" aria-labelledby="resume-title" aria-describedby="resume-help">
   <button class="close-sheet" aria-label="Close résumé">Close <small>Esc</small></button>

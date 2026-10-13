@@ -6,6 +6,7 @@ const links=[{href:'/',label:'Home'},{href:'/projects/',label:'Projects'},{href:
 <header class="portfolio-header">
  <div class="header-mascot"><Mascot client:idle directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={72} label="Moaaz avatar" /></div>
  <a class="portfolio-name" href="/" aria-label="Moaaz Magdy — Home">{SITE.name}</a>
+ <button class="header-stamps" type="button" data-stamps-open aria-haspopup="dialog" aria-controls="stamp-album">Stamps</button>
   <nav aria-label="Main">{links.map(link=><a href={link.href} aria-current={(link.href==='/'?Astro.url.pathname==='/':Astro.url.pathname.startsWith(link.href))?'page':undefined}>{link.label}<svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path d="M2 6Q43 0 98 4M14 8Q53 3 86 6"/></svg></a>)}</nav>
 </header>
 
@@ -14,6 +15,7 @@ const links=[{href:'/',label:'Home'},{href:'/projects/',label:'Projects'},{href:
  .portfolio-header{position:relative;height:100px;color:#292522;z-index:40}
  .header-mascot{position:fixed;top:12px;left:18px;width:130px;height:58px;display:flex;align-items:center;justify-content:center}
  .portfolio-name{position:fixed;top:69px;left:18px;width:130px;font-family:"Cormorant Garamond",Georgia,serif;font-size:1.25rem;font-weight:500;color:inherit;text-decoration:none;text-align:center;line-height:1.1}
+ .header-stamps{position:fixed;top:100px;left:55px;background:none;border:0;padding:6px;color:#514c45;font:18px "Lulu Handwriting",cursive;cursor:pointer}
  nav{display:flex;justify-content:center;gap:clamp(24px,4vw,64px);padding:28px 24px 12px;margin-left:160px}
  nav a{position:relative;display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.65rem;font-weight:500;text-decoration:none;color:#342b20;padding:10px 8px 16px}
  nav a svg{position:absolute;left:5%;bottom:5px;width:90%;height:9px;stroke:#79613e;stroke-width:1.5;stroke-linecap:round;opacity:0;transition:opacity 250ms}
@@ -21,6 +23,6 @@ const links=[{href:'/',label:'Home'},{href:'/projects/',label:'Projects'},{href:
  nav a:hover{color:#705832}
  a:focus-visible{outline:2px solid #79613e;outline-offset:4px}
  :global(body.has-portfolio-header main),:global(body.has-portfolio-header .site-footer){margin-left:160px}
- @media(max-width:700px){.portfolio-header{height:auto;display:flex;align-items:center;flex-direction:column;padding-top:10px}.header-mascot{position:static;height:58px}.portfolio-name{position:static;margin-top:0}nav{margin:12px 0 0;padding:0 10px;gap:12px;flex-wrap:wrap}nav a{font-size:1.3rem;padding:10px 7px 16px}:global(body.has-portfolio-header main),:global(body.has-portfolio-header .site-footer){margin-left:0}:global(body.has-portfolio-header main){padding-top:1.5rem}}
+ @media(max-width:700px){.header-stamps{position:static}.portfolio-header{height:auto;display:flex;align-items:center;flex-direction:column;padding-top:10px}.header-mascot{position:static;height:58px}.portfolio-name{position:static;margin-top:0}nav{margin:12px 0 0;padding:0 10px;gap:12px;flex-wrap:wrap}nav a{font-size:1.3rem;padding:10px 7px 16px}:global(body.has-portfolio-header main),:global(body.has-portfolio-header .site-footer){margin-left:0}:global(body.has-portfolio-header main){padding-top:1.5rem}}
  @media(prefers-reduced-motion:reduce){nav a svg{transition:none}}
 </style>
