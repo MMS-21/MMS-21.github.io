@@ -34,6 +34,15 @@ import { projectPapers as papers } from '../data/project-papers';
 .poster-paper .project-image{aspect-ratio:4/3;background:#000}.poster-paper .project-image img{height:100%;object-fit:cover}.poster-paper .paper-copy{position:absolute;bottom:0;left:0;min-height:0;padding:16px;pointer-events:none}.poster-paper .paper-copy a{pointer-events:auto}.customer-poster .paper-copy{width:29%;padding:12px}.customer-poster .paper-copy h2{font-size:clamp(16px,2vw,22px);line-height:1.08;margin:0}.hr-poster .project-image img{object-fit:contain}.hr-poster .paper-copy{width:100%;padding:5px 12px;background:#000}.hr-poster .paper-copy h2{font-size:16px;line-height:1.2;margin:0}.hr-poster .paper-copy h2 a{color:#fffaf0}
 #case-drawer{height:calc(100svh - 48px);inset:24px 0 0;max-width:1100px;padding:30px 40px 48px}
 #case-drawer .drawer-heading{align-items:center;margin-bottom:22px}
+.workbench:has(.poster-paper){max-width:900px;padding-inline:38px}.stack:has(.poster-paper){max-width:760px;height:610px}.project-paper.poster-paper{width:min(100%,680px)}
+#case-drawer.poster-preview{display:flex;flex-direction:column;padding:24px 0 0;max-width:1400px}
+#case-drawer.poster-preview:not([open]){display:none}
+#case-drawer.poster-preview>.close-sheet{align-self:flex-start;margin:0 24px 16px}
+#case-drawer.poster-preview .drawer-heading{order:0;padding:0 24px;margin-bottom:12px}
+#case-drawer.poster-preview #drawer-content{order:1;padding:0 24px;max-width:none;margin:0 0 20px}
+#case-drawer.poster-preview #drawer-content p{margin:0;max-width:80ch}
+#case-drawer.poster-preview #drawer-chart{order:2;flex:none;width:100%;height:auto;max-height:none;background:transparent}
+@media(max-width:700px){.workbench:has(.poster-paper){padding-inline:0}.stack:has(.poster-paper){height:calc((100vw - 60px)*.75 + 135px)}.project-paper.poster-paper{width:100%}}
 #case-drawer .drawer-heading h2{font-size:clamp(30px,3.4vw,48px);max-width:24ch}
 #case-drawer #drawer-chart{max-height:52svh}
 #case-drawer #drawer-content{margin-top:22px;max-width:65ch;font-size:14px;line-height:1.75}
