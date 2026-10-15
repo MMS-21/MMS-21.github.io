@@ -1,6 +1,5 @@
 ---
-import TopicStamp from './TopicStamp.astro';
-import CairoPostage from './CairoPostage.astro';
+
 const stamps=[
  {src:'/img/home-stamp.webp',label:'Back to the beginning',place:'Iran ? Avicenna'},
  {src:'/img/project-stamp.webp',label:'The project collection',place:'France · Lady and unicorn'},
@@ -14,9 +13,7 @@ const stamps=[
  <h2 id="stamp-album-title">A little stamp collection.</h2>
  <p class="album-intro">Small journeys, collected along the way.</p>
  <div class="album-pages">
- {stamps.map((stamp,i)=><figure style={`--stamp-angle:${i%2?3:-4}deg`}><div class="stamp-mount"><img src={stamp.src} alt={stamp.place} width="220" height="220" loading="lazy" /></div><figcaption>{stamp.label}<small>{stamp.place}</small></figcaption></figure>)}
- <figure class="cairo-pair"><div class="stamp-mount"><CairoPostage /></div><figcaption>From Cairo<small>Giza pyramids and Cairo Tower</small></figcaption></figure>
- {['role','project','hello'].map(kind=><figure><div class="stamp-mount"><TopicStamp kind={kind} /></div><figcaption>{kind==='role'?'A role':kind==='project'?'A project':'Just a hello'}<small>A finishing touch for a letter</small></figcaption></figure>)}
+ {stamps.map((stamp,i)=><figure style={`--stamp-angle:${i%2?3:-4}deg`}><div class="stamp-mount"><img src={stamp.src} alt={stamp.place} width="220" height="220" loading="lazy" /></div></figure>)}
  </div>
 </dialog>
 <script>

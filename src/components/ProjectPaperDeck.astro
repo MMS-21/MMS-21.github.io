@@ -3,9 +3,9 @@ import { projectPapers as papers } from '../data/project-papers';
 ---
   <section class="workbench" aria-label="Project papers">
    <div class="stack">
-    {papers.map((paper,i)=><article class="project-paper" data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
+    {papers.map((paper,i)=><article class:list={['project-paper',{'poster-paper':i<2,'customer-poster':i===0,'hr-poster':i===1}]} data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
      <button class="project-image" aria-label={`Enlarge ${paper.title}`}><img src={paper.image} alt={paper.alt} width="900" height="580"/></button>
-     <div class="paper-copy"><h2><a href={paper.url}>{paper.title} <span aria-hidden="true">↗</span></a></h2><small>{paper.tools}</small></div>
+     <div class="paper-copy"><h2><a href={paper.url}>{paper.title} <span aria-hidden="true">↗</span></a></h2>{i>1&&<small>{paper.tools}</small>}</div>
     </article>)}
    </div>
    <div class="stack-controls"><button id="expand-study">Take a closer look ↗</button><div><button class="switch-paper" aria-label="Show previous project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h13"/></svg></button><span class="count" aria-live="polite">1 / {papers.length}</span><button class="switch-paper" aria-label="Show next project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6M16 12H3"/></svg></button></div></div>
@@ -31,6 +31,7 @@ import { projectPapers as papers } from '../data/project-papers';
 
 <style is:global>
 #case-drawer,#works-collection{pointer-events:auto;overflow-y:auto;touch-action:pan-y}
+.poster-paper .project-image{aspect-ratio:4/3;background:#000}.poster-paper .project-image img{height:100%;object-fit:cover}.poster-paper .paper-copy{position:absolute;bottom:0;left:0;min-height:0;padding:16px;pointer-events:none}.poster-paper .paper-copy a{pointer-events:auto}.customer-poster .paper-copy{width:29%;padding:12px}.customer-poster .paper-copy h2{font-size:clamp(16px,2vw,22px);line-height:1.08;margin:0}.hr-poster .project-image img{object-fit:contain}.hr-poster .paper-copy{width:100%;padding:5px 12px;background:#000}.hr-poster .paper-copy h2{font-size:16px;line-height:1.2;margin:0}.hr-poster .paper-copy h2 a{color:#fffaf0}
 #case-drawer{height:calc(100svh - 48px);inset:24px 0 0;max-width:1100px;padding:30px 40px 48px}
 #case-drawer .drawer-heading{align-items:center;margin-bottom:22px}
 #case-drawer .drawer-heading h2{font-size:clamp(30px,3.4vw,48px);max-width:24ch}
