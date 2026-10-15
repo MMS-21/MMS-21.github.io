@@ -3,7 +3,7 @@ import { projectPapers as papers } from '../data/project-papers';
 ---
   <section class="workbench" aria-label="Project papers">
    <div class="stack">
-    {papers.map((paper,i)=><article class:list={['project-paper',{'poster-paper':i<2,'customer-poster':i===0,'hr-poster':i===1}]} data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
+    {papers.map((paper,i)=><article class:list={['project-paper',{'poster-paper':i<2||i===4,'customer-poster':i===0,'hr-poster':i===1}]} data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
      <button class="project-image" aria-label={`Enlarge ${paper.title}`}><img src={paper.image} alt={paper.alt} width="900" height="580"/></button>
      <div class="paper-copy"><h2><a href={paper.url}>{paper.title} <span aria-hidden="true">↗</span></a></h2>{i>1&&<small>{paper.tools}</small>}</div>
     </article>)}
