@@ -155,6 +155,21 @@ export const PROJECTS: Project[] = [
     repo: 'https://github.com/MMS-21/SQL-for-Business-Analytics',
     featured: false,
   },
-];
+  {
+    slug: 'co2-emissions',
+    name: 'CO2 Emissions per Capita',
+    tagline: 'Per capita and total CO2 emissions for 20 countries in 2020',
+    problem: 'Total emissions alone do not show which countries have the highest per capita carbon footprint, or how that has changed over time.',
+    approach: [
+      'Gathered CO2 emissions data from Our World in Data and the World Bank for 20 countries with populations over 5 million.',
+      'Built radial charts where spoke length encodes per capita emissions and circle size encodes total national emissions.',
+      'Positioned countries by GDP and population to reveal the relationship between economic output, population size, and emissions.',
+    ],
+    result: 'An infographic comparing 20 countries on per capita and total CO2 emissions, with year-by-year trends from 2000 to 2020.',
+    stack: ['Python', 'Data visualization', 'Our World in Data'],
+    repo: 'https://github.com/MMS-21/Analytics-Projects/tree/main/CO2%20Emissions%20per%20capita%20For%202020',
+    featured: false,
+  },
+  ];
 
 export const FEATURED = PROJECTS.filter((p) => p.featured);
