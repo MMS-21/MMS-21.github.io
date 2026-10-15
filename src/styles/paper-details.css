@@ -1,6 +1,7 @@
 /* Letters change silhouette while the word keeps its layout and color. */
 @font-face{font-family:'Zodiak';src:url('/fonts/zodiak-regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 html{scrollbar-width:none}html::-webkit-scrollbar{display:none}
+body #main :is(p,h2,h3,h4,h5,h6),body #main :is(p,h2,h3,h4,h5,h6) :is(a,span,small,strong,em){font-family:'Zodiak',Georgia,serif!important}
 body main .introduction-copy button{font-family:inherit}
 body main .paper-destination,body main .paper-destination span,body main .working-paper,body main .project-paper,body main .tool-paper,body main .working-paper :is(h2,h3,p),body main .project-paper :is(h2,h3,p),body main .tool-paper :is(h2,h3,p),body main .introduction-copy{font-family:'Zodiak',Georgia,serif!important;font-weight:400}
 .morph-title{pointer-events:auto}

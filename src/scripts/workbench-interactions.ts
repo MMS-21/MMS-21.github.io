@@ -55,7 +55,7 @@ function lock(){document.body.classList.toggle('sheet-open',[drawer,resume,colle
 let request=0,caseTrigger:HTMLElement|undefined;
 async function openCase(index:number,trigger:HTMLElement){if(drawer.open)return;caseTrigger=trigger;const token=++request,paper=papers[index],link=paper.querySelector<HTMLAnchorElement>('h2 a')!,image=paper.querySelector<HTMLImageElement>('img')!;
  const origin=trigger.querySelector('img')?.getBoundingClientRect()??image.getBoundingClientRect();
- document.querySelector('#drawer-title')!.textContent=link.textContent;document.querySelector<HTMLAnchorElement>('#drawer-link')!.href=link.href;
+ const titleLink=document.querySelector<HTMLAnchorElement>('#drawer-link')!;titleLink.textContent=link.textContent;titleLink.href=link.href;
  drawer.classList.toggle('poster-preview',paper.classList.contains('poster-paper'));
  const chart=document.querySelector<HTMLImageElement>('#drawer-chart')!;chart.src=image.src;chart.alt=image.alt;
  const content=document.querySelector<HTMLElement>('#drawer-content')!;content.replaceChildren();const summary=document.createElement('p');summary.textContent=projectPapers[index].summary;content.append(summary);drawer.showModal();drawer.scrollTop=0;lock();rustle('open');
