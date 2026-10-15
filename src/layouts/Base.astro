@@ -547,6 +547,14 @@ const person = {
 <style is:global>
 body.paper-page{background:#faf8f3 url('/img/paper-fibers.svg')}
 body #main > :is(.about-page,.writing-page,.reading-page,.letter-desk,.project-collection,.hr-case,.wrap,.contact-section){padding-bottom:180px;mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 140px),transparent 100%);-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 140px),transparent 100%)}
+body.has-portfolio-header{background:#faf8f3 url('/img/paper-fibers.svg')}
+body.has-portfolio-header #main > :is(.about-page,.writing-page,.reading-page,.letter-desk,.project-collection,.hr-case,.wrap){position:relative;isolation:isolate;width:auto;max-width:900px;margin:44px auto 80px;padding:66px 60px 180px;background:#f5f1e7 url('/img/paper-fibers.svg');box-shadow:0 20px 70px #40352509;color:#302f29;font-family:'Zodiak',Georgia,serif}
+body.has-portfolio-header #main > :is(.about-page,.writing-page,.reading-page,.letter-desk,.project-collection,.hr-case,.wrap)::before{content:'';position:absolute;inset:12px 5px -8px;z-index:-1;background:#eee9de url('/img/paper-fibers.svg');transform:rotate(-1.3deg);transform-origin:50% 100%;pointer-events:none}
+body.has-portfolio-header #main > :is(.about-page,.writing-page,.reading-page,.letter-desk,.project-collection,.hr-case,.wrap)::after{content:'';position:absolute;inset:0;z-index:-1;background:#f5f1e7 url('/img/paper-fibers.svg');pointer-events:none}
+body.has-portfolio-header #main > :is(.about-page,.writing-page,.reading-page,.letter-desk,.project-collection,.hr-case,.wrap) :is(p:not(.eyebrow),li:not(.tag),dt,dd,h2,h3){font-family:'Zodiak',Georgia,serif}
+body.has-portfolio-header #main > :is(.about-page,.writing-page,.reading-page,.project-collection,.hr-case,.wrap) h1{font-family:'Zodiak',Georgia,serif;font-weight:400}
+@media(max-width:1000px){body.has-portfolio-header #main > :is(.about-page,.writing-page,.reading-page,.letter-desk,.project-collection,.hr-case,.wrap){margin:30px 24px 60px;padding:50px 40px 180px}}
+@media(max-width:600px){body.has-portfolio-header #main > :is(.about-page,.writing-page,.reading-page,.letter-desk,.project-collection,.hr-case,.wrap){margin:12px 12px 40px;padding:35px 24px 180px}}
 .paper-page .about-page,.paper-page .writing-page,.paper-page .letter-desk{background:#f5f1e7 url('/img/paper-fibers.svg');box-shadow:0 20px 70px #40352509;padding-top:42px;padding-bottom:42px}
 .paper-page .personal-note,.paper-page .letter-form{background:#fffaf0 url('/img/paper-fibers.svg')}
 @media(max-width:600px){.paper-page .about-page,.paper-page .writing-page,.paper-page .letter-desk{margin:0 12px;padding-top:28px;padding-bottom:28px}}

@@ -3,7 +3,7 @@ import { projectPapers as papers } from '../data/project-papers';
 ---
   <section class="workbench" aria-label="Project papers">
    <div class="stack">
-    {papers.map((paper,i)=><article class:list={['project-paper','poster-paper',{'customer-retention-paper':paper.url==='/projects/ecommerce-clv-churn/'}]} data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
+    {papers.map((paper,i)=><article class:list={['project-paper','poster-paper','overlay-paper',{'customer-retention-paper':paper.url==='/projects/ecommerce-clv-churn/'}]} data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
      <button class="project-image" aria-label={`Enlarge ${paper.title}`}><img src={paper.image} alt={paper.alt} width="900" height="580"/></button>
      <div class="paper-copy"><h2><a href={paper.url}>{paper.title} <span aria-hidden="true">↗</span></a></h2></div>
     </article>)}
@@ -34,9 +34,9 @@ import { projectPapers as papers } from '../data/project-papers';
 .poster-paper .project-image{aspect-ratio:4/3;background:#fff}.poster-paper .project-image img{height:100%;object-fit:contain}.poster-paper .paper-copy{position:relative;min-height:106px;padding:17px 22px 19px}.poster-paper .paper-copy h2{margin:0}
 #case-drawer{height:calc(100svh - 48px);inset:24px 0 0;max-width:1100px;padding:30px 40px 48px}
 #case-drawer .drawer-heading{align-items:center;margin-bottom:22px}
-.project-paper.customer-retention-paper .paper-copy{position:absolute;left:0;bottom:0;width:28%;min-height:0;padding:14px;pointer-events:none}.customer-retention-paper .paper-copy h2{font-size:clamp(14px,2vw,24px);line-height:1.22}.customer-retention-paper .paper-copy a{pointer-events:auto}
-.customer-retention-paper .paper-copy h2 span{font-size:inherit}@media(max-width:700px){.project-paper.customer-retention-paper .paper-copy{padding:9px;width:29%}}
-.workbench:has(.poster-paper){max-width:900px;padding-inline:38px}.stack:has(.poster-paper){max-width:760px;height:690px}.project-paper.poster-paper{width:min(100%,680px)}
+.project-paper.overlay-paper .paper-copy{position:absolute;left:0;bottom:0;width:28%;min-height:0;padding:14px;pointer-events:none}.overlay-paper .paper-copy h2{font-size:clamp(14px,2vw,24px);line-height:1.22}.overlay-paper .paper-copy a{pointer-events:auto}
+.overlay-paper .paper-copy h2 span{font-size:inherit}.overlay-paper:not(.customer-retention-paper) .project-image img{padding-left:28%;background:#fff}@media(max-width:700px){.project-paper.overlay-paper .paper-copy{padding:9px;width:29%}}
+.workbench:has(.poster-paper){max-width:900px;padding-inline:38px}.stack:has(.poster-paper){max-width:760px;height:590px}.project-paper.poster-paper{width:min(100%,680px)}
 #case-drawer.poster-preview{display:flex;flex-direction:column;padding:24px 0 0;max-width:1400px}
 #case-drawer.poster-preview:not([open]){display:none}
 #case-drawer.poster-preview>.close-sheet{align-self:flex-start;margin:0 24px 16px}
@@ -44,7 +44,7 @@ import { projectPapers as papers } from '../data/project-papers';
 #case-drawer.poster-preview #drawer-content{order:1;padding:0 24px;max-width:none;margin:0 0 20px}
 #case-drawer.poster-preview #drawer-content p{margin:0;max-width:80ch}
 #case-drawer.poster-preview #drawer-chart{order:2;flex:none;width:100%;height:auto;max-height:none;background:transparent}
-@media(max-width:700px){.workbench:has(.poster-paper){padding-inline:0}.stack:has(.poster-paper){height:calc((100vw - 60px)*.75 + 185px)}.project-paper.poster-paper{width:100%}.poster-paper .paper-copy{min-height:116px}}
+@media(max-width:700px){.workbench:has(.poster-paper){padding-inline:0}.stack:has(.poster-paper){height:calc((100vw - 60px)*.75 + 85px)}.project-paper.poster-paper{width:100%}}
 #case-drawer .drawer-heading h2{font-size:clamp(30px,3.4vw,48px);max-width:24ch}
 #case-drawer .drawer-heading #drawer-link{font:inherit;white-space:normal;margin:0;text-decoration:none}#case-drawer .drawer-heading #drawer-link:hover{text-decoration:underline;text-underline-offset:6px}
 #case-drawer #drawer-chart{max-height:52svh}
