@@ -20,7 +20,7 @@ function spring(from:number[],to:number[],draw:(v:number[])=>void,k=180,d=22,eps
  });
 }
 const positions=papers.map(()=>[0,0,0]);
-const slots=[[0,0,-5],[24,16,4],[-22,30,-3],[-38,43,5]];
+const slots=[[0,0,-5],[24,16,4],[-22,30,-3],[-38,43,5],[-54,56,6]];
 function paint(i:number,p:number[]){positions[i]=[...p];papers[i].style.transform=`translate(calc(-50% + ${p[0]}px),${p[1]}px) rotate(${p[2]}deg)`;}
 function update(){papers.forEach((p,i)=>{const rank=mod(i-front);p.dataset.front=String(rank===0);p.inert=rank!==0;p.setAttribute('aria-hidden',String(rank!==0));p.style.zIndex=String(10-rank);p.style.setProperty('--shade',String(rank*.035));});document.querySelector('.count')!.textContent=`${front+1} / ${papers.length}`;}
 async function shuffle(direction:number){if(busy)return;busy=true;rustle();const old=front,next=mod(front+direction),start=positions.map(p=>[...p]);
