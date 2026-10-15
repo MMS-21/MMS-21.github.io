@@ -12,7 +12,7 @@ const isEcommerce = project.slug === 'ecommerce-clv-churn';
 ---
 
 <Base title={project.name} description={project.tagline}>
-  <div class="wrap">
+  <div class:list={['wrap', { 'ecommerce-paper': isEcommerce }]}>
     <article class="prose">
       <p class="eyebrow"><a href="/projects/">Projects</a></p>
       <h1>{isEcommerce ? 'Prioritizing customer retention with value and churn risk' : project.name}</h1>
@@ -150,5 +150,65 @@ const isEcommerce = project.slug === 'ecommerce-clv-churn';
     .figure-link { overflow-x: auto; }
     figure img { width: 620px; max-width: none; }
     .figure-link:focus-visible { outline-offset: 3px; }
+  }
+  :global(body:has(.ecommerce-paper)) { background: #faf8f3 url('/img/paper-fibers.svg'); }
+  .ecommerce-paper {
+    position: relative;
+    isolation: isolate;
+    max-width: 900px;
+    margin: 44px auto 80px;
+    padding: 66px 60px 180px;
+    background: #f5f1e7 url('/img/paper-fibers.svg');
+    box-shadow: 0 20px 70px #40352509;
+    color: #302f29;
+    font-family: 'Zodiak', Georgia, serif;
+    font-size: 1rem;
+    line-height: 1.85;
+    --bg: #f5f1e7;
+    --fg: #302f29;
+    --muted: #665c4d;
+    --border: #a79c8235;
+  }
+  .ecommerce-paper::before, .ecommerce-paper::after {
+    content: '';
+    position: absolute;
+    inset: 12px 5px -8px;
+    z-index: -1;
+    background: #eee9de url('/img/paper-fibers.svg');
+    transform: rotate(-1.3deg);
+    transform-origin: 50% 100%;
+  }
+  .ecommerce-paper::after { inset: 0; background: #f5f1e7 url('/img/paper-fibers.svg'); transform: none; }
+  .ecommerce-paper .prose { max-width: none; }
+  .ecommerce-paper h1 {
+    margin: 0 0 28px;
+    font: 400 clamp(2.2rem, 4.6vw, 3.5rem)/1.2 'Zodiak', Georgia, serif;
+    letter-spacing: -.035em;
+    text-wrap: balance;
+  }
+  .ecommerce-paper :is(h2, h3) { font-family: 'Zodiak', Georgia, serif; font-weight: 400; line-height: 1.45; text-wrap: balance; }
+  .ecommerce-paper h2 { font-size: clamp(1.35rem, 2.8vw, 1.65rem); }
+  .ecommerce-paper h3 { font-size: 1.125rem; }
+  .ecommerce-paper .lede { font-size: 1.0625rem; line-height: 1.85; }
+  .ecommerce-paper .eyebrow { margin-bottom: 24px; }
+  .ecommerce-paper :is(.eyebrow, .tag, .btn, .chart-hint) { font-family: system-ui, sans-serif; }
+  .ecommerce-paper a { text-underline-offset: 5px; }
+  .ecommerce-paper .case-story { margin-top: 3rem; }
+  .ecommerce-paper .project-evidence { margin-top: 3.5rem; }
+  .ecommerce-paper figure { margin: 1.75rem 0 3.5rem; }
+  .ecommerce-paper .figure-link { background: #fff; border-radius: 2px; }
+  .ecommerce-paper figcaption { max-width: 42rem; }
+  .ecommerce-paper .recommendations { padding-top: 1.25rem; }
+  .ecommerce-paper .btn { background: transparent; border-radius: 2px; }
+  .ecommerce-paper .cta-row { margin-top: 2.5rem; }
+  @media (max-width: 1000px) {
+    .ecommerce-paper { margin: 30px 24px 60px; padding: 50px 40px 180px; }
+  }
+  @media (max-width: 600px) {
+    .ecommerce-paper { margin: 12px 12px 40px; padding: 35px 24px 180px; font-size: .9375rem; }
+    .ecommerce-paper h1 { font-size: clamp(1.9rem, 7.5vw, 2.6rem); line-height: 1.25; }
+    .ecommerce-paper .lede { font-size: 1rem; }
+    .ecommerce-paper :is(p, li, a) { overflow-wrap: anywhere; }
+    .ecommerce-paper figure { margin-bottom: 2.5rem; }
   }
 </style>
