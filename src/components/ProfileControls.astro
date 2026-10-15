@@ -2,6 +2,7 @@
 import { SITE } from '../data/site';
 ---
 <aside class="profile-controls" aria-label="Profile links and preferences">
+ <a class="profile-booking" href={SITE.links.booking}>Book a call ↗</a>
 
  <button class="profile-menu-toggle" type="button" aria-expanded="false" aria-controls="profile-links">Menu</button>
  <div class="profile-links" id="profile-links"><nav class="mobile-page-links" aria-label="Main"><a href="/projects/">Projects</a><a href="/writing/">Writing</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={SITE.links.linkedin}>LinkedIn</a><a href={`mailto:${SITE.email}`}>Email</a><a href={SITE.links.github}>GitHub</a></div>
@@ -21,6 +22,7 @@ import { SITE } from '../data/site';
     <a href={`mailto:${SITE.email}`} aria-label="Email Moaaz" style="left:78%;width:19%"></a>
    </nav>
   </div>
+  <a class="resume-booking" href={SITE.links.booking}>Book a call ↗</a>
   <a class="resume-download" href="/moaaz-magdy-resume.pdf?v=b0ba518" download="Moaaz-Magdy-Resume.pdf">Download PDF <span aria-hidden="true">↗</span></a>
   <p id="resume-help" class="sr-only">Preview of Moaaz Magdy’s résumé. The contact links at the top are clickable. Download the PDF for selectable text. Press Escape or click outside the paper to close.</p>
  </dialog>
@@ -61,6 +63,7 @@ import { SITE } from '../data/site';
 #resume-sheet .close-sheet{position:absolute;top:24px;right:28px;margin:0;padding:8px 12px;color:#fffcf5;z-index:3;font-size:11px}#resume-sheet .close-sheet small{color:#eee5d5}
 #resume-sheet .resume-download{position:absolute;right:32px;bottom:32px;margin:0;padding:15px 25px;border-radius:999px;background:#302c29;color:#fffcf5;font-size:11px;display:flex;gap:16px;align-items:center;box-shadow:0 5px 12px #1d180d20;animation:resume-download-in 650ms 350ms cubic-bezier(.16,1,.3,1) both;transition:background .2s,translate .2s}
 #resume-sheet .resume-download:hover{background:#494236;translate:0 -3px}#resume-sheet .resume-download:focus-visible,#resume-sheet .close-sheet:focus-visible{outline-color:#fffcf5}
+ #resume-sheet .resume-booking{position:absolute;right:32px;bottom:98px;padding:12px 20px;background:#fffcf5;color:#302c29;border-radius:999px;text-decoration:none;z-index:5}#resume-sheet .resume-booking:focus-visible{outline:2px solid #fffcf5;outline-offset:5px}@media(max-width:650px){#resume-sheet .resume-booking{right:50%;translate:50% 0;bottom:82px;white-space:nowrap}}
 #resume-sheet.closing .resume-top{animation:resume-top-fold 480ms cubic-bezier(.7,0,.84,0) both}#resume-sheet.closing .resume-bottom{animation:resume-bottom-fold 480ms cubic-bezier(.7,0,.84,0) both}#resume-sheet.closing .resume-paper{animation:resume-paper-out 480ms ease both}#resume-sheet.closing .resume-download{animation:resume-download-out 250ms ease both}
 @keyframes resume-top-unfold{0%{transform:rotateX(-175deg);filter:brightness(.8)}100%{transform:rotateX(0);filter:brightness(1)}}@keyframes resume-bottom-unfold{0%{transform:rotateX(175deg);filter:brightness(.8)}100%{transform:rotateX(0);filter:brightness(1)}}@keyframes resume-paper-in{from{opacity:0;transform:translate(-50%,calc(-50% + 35px)) scale(.9) rotate(-2deg)}to{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}@keyframes resume-crease{from{opacity:1}to{opacity:.1}}@keyframes resume-scrim-in{from{background:rgba(40,37,31,0);backdrop-filter:blur(0)}to{background:rgba(40,37,31,.57);backdrop-filter:blur(5px)}}@keyframes resume-scrim-out{to{background:rgba(40,37,31,0);backdrop-filter:blur(0)}}@keyframes resume-download-in{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}@keyframes resume-download-out{to{opacity:0;transform:translateY(12px)}}@keyframes resume-top-fold{to{transform:rotateX(-170deg)}}@keyframes resume-bottom-fold{to{transform:rotateX(170deg)}}@keyframes resume-paper-out{to{opacity:0;transform:translate(-50%,calc(-50% + 20px)) scale(.88)}}
 @media(max-width:650px){.resume-paper{width:min(calc((100svh - 140px)*.707),calc(100vw - 32px));top:46%}#resume-sheet .resume-download{right:50%;translate:50% 0;bottom:20px;white-space:nowrap}#resume-sheet .resume-download:hover{translate:50% -2px}#resume-sheet .close-sheet{top:10px;right:10px}}

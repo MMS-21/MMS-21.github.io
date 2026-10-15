@@ -10,6 +10,7 @@ export const SITE = {
   location: 'Cairo, Egypt',
   email: 'moaz.magdy2@hotmail.com',
   links: {
+    booking: 'https://cal.com/moaaz-magdy-95egrb/a-quick-chat-with-moaaz',
     github: 'https://github.com/MMS-21',
     linkedin: 'https://www.linkedin.com/in/moaaz-magdy',
     kaggle: 'https://www.kaggle.com/moaazmagdy',
