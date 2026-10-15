@@ -2,7 +2,7 @@
 import { SITE } from '../data/site';
 ---
 <aside class="profile-controls" aria-label="Profile links and preferences">
- <a class="profile-booking" href={SITE.links.booking}>Book a call ↗</a>
+
 
  <button class="profile-menu-toggle" type="button" aria-expanded="false" aria-controls="profile-links">Menu</button>
  <div class="profile-links" id="profile-links"><nav class="mobile-page-links" aria-label="Main"><a href="/projects/">Projects</a><a href="/writing/">Writing</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={SITE.links.linkedin}>LinkedIn</a><a href={`mailto:${SITE.email}`}>Email</a><a href={SITE.links.github}>GitHub</a></div>
