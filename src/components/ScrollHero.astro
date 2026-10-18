@@ -183,7 +183,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   :global(html:has(.scroll-hero)) { overflow-x:clip; }
   :global(body:has(.scroll-hero)) { isolation:isolate; overflow-x:clip; }
   :global(main.flush-top:has(.scroll-hero)) { padding-top:0; }
-  .paper-background::after { content:""; position:absolute; inset:0; background:url('/img/paper-fibers.svg'); opacity:.5; }
+  .paper-fragment:not(.paper-link) { display:none; }
   .paper-underlay { position:absolute; inset:0; background:#fcfaf7; }
   .paper-fragment { --assembly:1; position:absolute; width:29%; height:40%; transform:translate3d(calc(var(--scatter-x) * (1 - var(--assembly))),calc(var(--scatter-y) * (1 - var(--assembly))),0) rotate(calc(var(--rest-r) + var(--scatter-r) * (1 - var(--assembly)))) scale(calc(.58 + .42 * var(--assembly))); }
   .paper-edge { position:absolute; inset:0; background:#fffdf7; clip-path:var(--torn-edge); }
