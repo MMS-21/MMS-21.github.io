@@ -13,14 +13,13 @@ const stamp=stamps[kind];
  <button type="button">Skip intro</button>
 </div>
 <script>
- import { reducedMotion } from '../scripts/preferences';
  const entrance=document.querySelector<HTMLElement>('[data-page-stamp]');
  if(entrance){
   let timer:ReturnType<typeof setTimeout>;
   const finish=()=>{clearTimeout(timer);entrance.classList.remove('playing');};
   const play=()=>{
    finish();
-   if(reducedMotion.matches)return;
+   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
    entrance.classList.add('playing');timer=setTimeout(finish,1450);
   };
   entrance.querySelector('button')?.addEventListener('click',finish);

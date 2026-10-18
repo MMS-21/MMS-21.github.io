@@ -6,7 +6,7 @@ import { SITE } from '../data/site';
 
  <button class="profile-menu-toggle" type="button" aria-expanded="false" aria-controls="profile-links">Menu</button>
  <div class="profile-links" id="profile-links"><nav class="mobile-page-links" aria-label="Main"><a href="/projects/">Projects</a><a href="/writing/">Writing</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={SITE.links.linkedin}>LinkedIn</a><a href={`mailto:${SITE.email}`}>Email</a><a href={SITE.links.github}>GitHub</a></div>
- <details class="preference-panel"><summary>Accessibility &amp; preferences</summary><div class="profile-preferences"><button class="lulu-paper-note" type="button" data-lulu-toggle aria-pressed="true">Hide companion</button><button id="paper-sound-toggle" type="button" aria-pressed="false">Sound off</button><button id="motion-toggle" type="button" aria-pressed="false">Reduce motion</button><button class="stamps-toggle" type="button" data-stamps-open aria-haspopup="dialog" aria-controls="stamp-album">Stamps</button></div></details>
+ <div class="profile-preferences"><button class="lulu-paper-note" type="button" data-lulu-toggle aria-pressed="true">Hide Rem</button><button class="stamps-toggle" type="button" data-stamps-open aria-haspopup="dialog" aria-controls="stamp-album">Stamps</button><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
 </aside>
  <dialog id="resume-sheet" aria-labelledby="resume-title" aria-describedby="resume-help">
   <button class="close-sheet" aria-label="Close résumé">Close <small>Esc</small></button>
@@ -27,7 +27,6 @@ import { SITE } from '../data/site';
   <p id="resume-help" class="sr-only">Preview of Moaaz Magdy’s résumé. The contact links at the top are clickable. Download the PDF for selectable text. Press Escape or click outside the paper to close.</p>
  </dialog>
 <script>
- import { reducedMotion, setReducedMotion, soundEnabled, setSound } from '../scripts/preferences';
  import { paperSound, installClickSounds } from '../scripts/paper-sound';
  installClickSounds();
  const mobileMenu=document.querySelector<HTMLButtonElement>('.profile-menu-toggle')!;
@@ -39,15 +38,10 @@ import { SITE } from '../data/site';
  profileControls.querySelector('#resume-open')?.addEventListener('click',closeMobileMenu);
 
  const sound=document.querySelector<HTMLButtonElement>('#paper-sound-toggle')!;
- function label(){const on=soundEnabled();sound.textContent=on?'Sound on':'Sound off';sound.setAttribute('aria-pressed',String(on));sound.setAttribute('aria-label',on?'Mute sounds':'Enable sounds')}label();
- sound.addEventListener('click',()=>{setSound(!soundEnabled());paperSound()});
- window.addEventListener('portfolio:sound',label);
- const motion=document.querySelector<HTMLButtonElement>('#motion-toggle')!;
- function motionLabel(){motion.textContent=reducedMotion.matches?'Reduced motion on':'Reduce motion';motion.setAttribute('aria-pressed',String(reducedMotion.matches))}motionLabel();
- motion.addEventListener('click',()=>setReducedMotion(!reducedMotion.matches));
- reducedMotion.addEventListener('change',motionLabel);
+ function label(){const on=localStorage.getItem('workbench-sound')!=='off';sound.textContent=on?'Sound on':'Sound off';sound.setAttribute('aria-pressed',String(on))}label();
+ sound.addEventListener('click',()=>{localStorage.setItem('workbench-sound',sound.getAttribute('aria-pressed')==='true'?'off':'on');label();paperSound()});
  const sheet=document.querySelector<HTMLDialogElement>('#resume-sheet')!,trigger=document.querySelector<HTMLButtonElement>('#resume-open')!;
- const reduced=reducedMotion;let closing=false,previousOverflow='';
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');let closing=false,previousOverflow='';
  trigger.addEventListener('click',()=>{if(sheet.open)return;sheet.showModal();previousOverflow=document.body.style.overflow;document.body.style.overflow='hidden';trigger.setAttribute('aria-expanded','true');paperSound('open')});
  function close(){if(closing||!sheet.open)return;closing=true;sheet.classList.add('closing');paperSound('close');setTimeout(()=>{sheet.close();sheet.classList.remove('closing');closing=false;document.body.style.overflow=previousOverflow;trigger.setAttribute('aria-expanded','false');trigger.focus()},reduced.matches?0:480)}
  sheet.querySelector('.close-sheet')!.addEventListener('click',close);sheet.addEventListener('cancel',e=>{e.preventDefault();close()});sheet.addEventListener('click',e=>{if(e.target===sheet)close()});

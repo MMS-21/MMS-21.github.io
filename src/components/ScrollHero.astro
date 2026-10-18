@@ -45,8 +45,6 @@ const fragments = Array.from({length:24}, (_,i) => ({
   <div class="hero-identity">
     <div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={132} label="Moaaz avatar" /></div></div>
     <h1><span class="name-english">{SITE.name}</span></h1>
-    <p class="identity-role">{SITE.role}</p>
-    <nav class="identity-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}>{item.label}</a>)}</nav>
   </div>
   <div class="navigation-shell">
 
@@ -70,10 +68,9 @@ const fragments = Array.from({length:24}, (_,i) => ({
  }
 </style>
 <script>
- import { reducedMotion } from '../scripts/preferences';
   const hero=document.querySelector<HTMLElement>('.scroll-hero');
   if(hero){
-    const reduced=reducedMotion;
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)');
     const identity=hero.querySelector<HTMLElement>('.hero-identity')!;
     const shell=hero.querySelector<HTMLElement>('.navigation-shell')!;
     const nav=hero.querySelector<HTMLElement>('.hero-nav')!;

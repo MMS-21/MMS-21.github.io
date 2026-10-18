@@ -13,7 +13,6 @@ import { SITE } from '../data/site';
 <a class="back-introduction" href="#hero-story">Back to introduction <span aria-hidden="true">↑</span></a>
 </section>
 <script>
- import { reducedMotion } from '../scripts/preferences';
  document.querySelector<HTMLAnchorElement>('.back-introduction')?.addEventListener('click',event=>{
   const hero=document.querySelector<HTMLElement>('.scroll-hero');
   const intro=document.querySelector<HTMLElement>('.hero-introduction');
@@ -21,7 +20,7 @@ import { SITE } from '../data/site';
   event.preventDefault();
   const top=hero.dataset.animated==='true'?hero.offsetTop+(hero.offsetHeight-innerHeight)*.30:intro.getBoundingClientRect().top+scrollY;
   history.replaceState(null,'','#hero-story');
-  scrollTo({top,behavior:reducedMotion.matches?'instant':'smooth'});
+  scrollTo({top,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
   document.getElementById('hero-story')?.focus({preventScroll:true});
  });
 </script>

@@ -1,12 +1,11 @@
-import { reducedMotion } from './preferences';
 import { projectPapers } from '../data/project-papers';
 import { paperSound, installClickSounds } from './paper-sound';
 installClickSounds();
 const papers = [...document.querySelectorAll<HTMLElement>('.project-paper')];
-const reduced = reducedMotion;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const mod = (n:number) => (n + papers.length) % papers.length;
 let front = 0, busy = false, suppressClick = false;
-let sound = localStorage.getItem('workbench-sound') === 'on';
+let sound = localStorage.getItem('workbench-sound') !== 'off';
 function rustle(kind:'flip'|'open'|'close' = 'flip'){paperSound(kind)}
 // Integrate a damped spring at bounded steps, independent of display refresh rate.
 function spring(from:number[],to:number[],draw:(v:number[])=>void,k=180,d=22,epsilon=.12) {

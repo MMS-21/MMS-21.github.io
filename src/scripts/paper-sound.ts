@@ -1,8 +1,7 @@
-import { soundEnabled } from './preferences';
 let audio:AudioContext|undefined, lastSound=0;
 // A quiet, low-passed brush of air, with a rounded attack and no sharp crackle.
 export function paperSound(kind:'flip'|'open'|'close' = 'flip') {
- if (!soundEnabled() || performance.now()-lastSound < 280) return;
+ if (localStorage.getItem('workbench-sound') === 'off' || performance.now()-lastSound < 280) return;
  lastSound=performance.now();
  try {
   audio ??= new AudioContext(); void audio.resume();
@@ -19,7 +18,7 @@ export function paperSound(kind:'flip'|'open'|'close' = 'flip') {
 let clickInstalled=false,lastClick=0;
 let typewriterClick:HTMLAudioElement|undefined;
 export function clickSound(){
- if(!soundEnabled()||performance.now()-lastClick<70)return;
+ if(localStorage.getItem('workbench-sound')==='off'||performance.now()-lastClick<70)return;
  lastClick=performance.now();
  try{
   typewriterClick??=new Audio('/audio/mixkit-hard-typewriter-click-1119.wav');

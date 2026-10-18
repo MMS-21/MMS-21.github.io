@@ -1,4 +1,3 @@
-import { reducedMotion, soundEnabled, setSound } from './preferences';
 export function startWelcomeTour() {
  const card=document.querySelector<HTMLElement>('[data-tour-card]'); if(!card)return;
  const light=document.querySelector<HTMLElement>('[data-tour-spotlight]')!;
@@ -6,8 +5,9 @@ export function startWelcomeTour() {
  const hints=['Welcome','About me','How I work','Latest projects','My experience','Site menu','Contact me'];
  const dust=document.querySelector<HTMLElement>('[data-tour-dust]')!;
  const soundButton=card.querySelector<HTMLButtonElement>('[data-tour-sound]')!;
- const reduced=reducedMotion;
- let soundOn=soundEnabled();
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ let soundOn=true;
+ try{soundOn=localStorage.getItem('portfolio-tour-sound')!=='off'}catch{}
  let audio:AudioContext|null=null,burstPending=false,burstTimer=0;
  const tones=new Set<OscillatorNode>();
  function soundLabel(){soundButton.textContent=soundOn?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(soundOn));soundButton.setAttribute('aria-label',soundOn?'Mute tour sound':'Enable tour sound')}
@@ -31,15 +31,14 @@ export function startWelcomeTour() {
    });
   });
  }
- window.addEventListener('portfolio:sound',()=>{soundOn=soundEnabled();soundLabel();if(!soundOn)silence()});
- soundButton.addEventListener('click',()=>{setSound(!soundOn);if(soundOn){primeSound();chime()}});
+ soundButton.addEventListener('click',()=>{soundOn=!soundOn;try{localStorage.setItem('portfolio-tour-sound',soundOn?'on':'off')}catch{}soundLabel();if(soundOn){primeSound();chime()}else silence()});
  const title=card.querySelector('h2')!, description=card.querySelector('p')!;
  const next=card.querySelector<HTMLButtonElement>('[data-tour-next]')!;
  const skip=card.querySelector<HTMLButtonElement>('[data-tour-skip]')!;
  const back=card.querySelector<HTMLButtonElement>('[data-tour-back]')!;
  const progress=card.querySelector<HTMLElement>('[data-tour-progress]')!;
  const action=card.querySelector<HTMLAnchorElement>('[data-tour-action]')!;
- const navigationLink=document.querySelector<HTMLAnchorElement>('.identity-navigation a');
+ const paw=document.querySelector<HTMLButtonElement>('.pyramid-toggle')!;
  const key='portfolio-welcome-seen-v1';
  const steps=[
   {title:'Welcome to my little corner.',text:'A short walk through my work, the story behind it, and a little hello to your companion. Move at your own pace.',section:'pre-hero',target:'.mobile-welcome',href:'',label:''},
@@ -47,7 +46,7 @@ export function startWelcomeTour() {
   {title:'How I approach the work.',text:'Follow the three papers: check the records, understand the gaps, and make the next step clear. My tools sit just below them.',section:'work-routine',target:'#desk-introduction-title',href:'/projects/analytics-agent/',label:'Explore Analytics Agent'},
   {title:'See the questions behind the projects.',text:'Customer retention, employee attrition, and practical tools. Open a case study for the evidence and decisions behind the result.',section:'featured-work',target:'#featured-heading',href:'/projects/',label:'Browse all projects'},
   {title:'Follow the path so far.',text:'This timeline connects my studies, experience, and recent work. Use its milestone buttons or arrows to explore each chapter.',section:'about',target:'#about-heading',href:'/about/',label:'Read my story'},
-  {title:'Keep exploring, with a companion.',text:'The links beside my portrait open Projects, Writing, About, and Contact. Accessibility & preferences lets you hide the companion, mute sounds, and reduce motion.',section:'pre-hero',target:'.identity-navigation',href:'/writing/',label:'Open the working notebook'},
+  {title:'Keep exploring, with a companion.',text:'The paw menu opens Projects, Writing, About, and Contact. Choose a companion beside your pet, tap them to say hello, or use the menu to hide them and replay this tour.',section:'about',target:'.pyramid-toggle',href:'/writing/',label:'Open the working notebook'},
   {title:'Leave a note on my desk.',text:'A role, a project, or a little hello: the contact page is where to reach me. You can keep exploring from here or revisit any stop.',section:'connect',target:'#contact-heading',href:'/contact/',label:'Get in touch'},
  ];
  let step=0,active=false,frame=0,timer=0,restore:HTMLElement|null=null;
@@ -132,7 +131,8 @@ export function startWelcomeTour() {
  function begin(){
   primeSound();
   clearTimeout(timer);restore=document.activeElement instanceof HTMLElement?document.activeElement:null;
-  if(restore?.closest('#portfolio-navigation')||restore?.closest('[data-tour-card]'))restore=navigationLink;
+  if(restore?.closest('#portfolio-navigation')||restore?.closest('[data-tour-card]'))restore=paw;
+  if(paw.getAttribute('aria-expanded')==='true')paw.click();
   seen();active=true;step=0;render();
  }
  next.addEventListener('click',()=>{primeSound();if(!active)begin();else if(step===steps.length-1)finish();else{step++;render()}});

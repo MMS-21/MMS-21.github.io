@@ -1,9 +1,8 @@
-import { reducedMotion } from './preferences';
 import { Garden } from './divider-garden.js';
 export function startWelcomeGardens(){
  document.querySelectorAll('.welcome-garden').forEach(host=>{
   const canvas=host.querySelector('canvas'),ctx=canvas.getContext('2d');if(!ctx)return;
-  const engine=new Garden(),reduced=reducedMotion;
+  const engine=new Garden(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const arabic=host.classList.contains('arabic-intro');
   let fontsReady=!arabic;
   host.dataset.blooming='false';
