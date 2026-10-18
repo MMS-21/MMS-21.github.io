@@ -178,6 +178,8 @@ const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writi
   .stack-navigation{position:fixed;left:190px;top:24px;z-index:35;display:flex;flex-direction:column;align-items:flex-start;gap:8px;visibility:hidden}
   :global(body:has(.hero-identity[data-introducing="false"])) .stack-navigation{visibility:visible}
   .stack-navigation a{position:relative;display:block;color:#302f29;font:400 19px/1 "Astoria",sans-serif;letter-spacing:.01em;text-transform:uppercase;text-decoration:none;padding:0;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+  @font-face{font-family:"Nippo";src:url("/fonts/nippo-light.woff2") format("woff2");font-weight:300;font-style:normal;font-display:swap}
+  .stack-navigation a{font-family:"Nippo",system-ui,-apple-system,sans-serif;font-weight:300;letter-spacing:.005em}
   .stack-arrow{position:absolute;left:-32px;top:0;width:24px;font-family:Arial,sans-serif;opacity:0;transition:opacity .2s}
   .stack-navigation:not(:has(a:hover,a:focus-visible)) a:first-child,.stack-navigation a:hover,.stack-navigation a:focus-visible{transform:translateX(32px)}
   .stack-navigation:not(:has(a:hover,a:focus-visible)) a:first-child .stack-arrow,.stack-navigation a:hover .stack-arrow,.stack-navigation a:focus-visible .stack-arrow{opacity:1}

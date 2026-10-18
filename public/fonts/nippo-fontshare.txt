@@ -1,0 +1,9 @@
+Nippo
+by Fontshare (Indian Type Foundry)
+https://www.fontshare.com/fonts/nippo
+
+Licensed under the Fontshare Free Font License.
+See https://www.fontshare.com/licenses for the current terms.
+
+This site self-hosts the font file (nippo-light.woff2, weight 300)
+from public/fonts/ so that no font CDN request is made to visitors.
