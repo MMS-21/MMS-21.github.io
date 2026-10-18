@@ -43,7 +43,7 @@ const fragments = Array.from({length:24}, (_,i) => ({
   </div>
   <div class="opening-welcome"><WelcomeGarden arabic hideFollow /></div>
   <div class="hero-identity">
-    <div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={132} label="Moaaz avatar" /></div></div>
+    <div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={136} label="Moaaz avatar" /></div></div>
     <h1><span class="name-english">{SITE.name}</span></h1>
   </div>
   <div class="navigation-shell">
@@ -364,8 +364,8 @@ const fragments = Array.from({length:24}, (_,i) => ({
 <style>.hero-identity[data-introducing="false"] h1{order:-1}.hero-identity .identity-pet{position:static;order:2;left:auto;right:auto;top:auto;z-index:auto}</style>
 
 <style>
-.identity-art,.mascot-portrait{width:132px;height:132px}.hero-identity{width:144px}.hero-identity[data-introducing="true"]{top:calc(50svh - 265px)!important}.identity-pet{position:fixed;left:82px;right:auto;top:210px;transform:translateX(-50%) rotate(-3deg);z-index:25}.identity-pet:hover{transform:translateX(-50%) rotate(2deg) translateY(-2px)}
-@media(max-width:700px),(max-height:760px),(prefers-reduced-motion:reduce){.hero-identity[data-introducing="true"]{top:30px!important}.identity-art :global(astro-island){scale:1;transform-origin:center}.identity-pet{left:58px;top:215px}.identity-art,.mascot-portrait{width:132px;height:132px}}
+.identity-art,.mascot-portrait{width:136px;height:136px}.hero-identity{width:144px}.hero-identity[data-introducing="true"]{top:calc(50svh - 265px)!important}.identity-pet{position:fixed;left:82px;right:auto;top:210px;transform:translateX(-50%) rotate(-3deg);z-index:25}.identity-pet:hover{transform:translateX(-50%) rotate(2deg) translateY(-2px)}
+@media(max-width:700px),(max-height:760px),(prefers-reduced-motion:reduce){.hero-identity[data-introducing="true"]{top:30px!important}.identity-art :global(astro-island){scale:1;transform-origin:center}.identity-pet{left:58px;top:215px}.identity-art,.mascot-portrait{width:136px;height:136px}}
 @media(max-width:700px){.identity-pet{left:58px;top:210px}}
 </style>
 
@@ -382,8 +382,9 @@ const fragments = Array.from({length:24}, (_,i) => ({
 @media(max-width:700px){
  .hero-identity,.hero-identity[data-introducing="true"]{top:84px!important;left:50%!important;width:144px;transform:translateX(-50%)!important;gap:10px}
  .hero-identity h1,.hero-identity[data-introducing="true"] h1,.hero-identity[data-introducing="false"] h1{font-size:22px;line-height:1.25;order:1;margin:0;max-width:calc(100vw - 40px)}
- .identity-art,.mascot-portrait{width:112px;height:112px}
- .identity-art :global(astro-island){scale:.8485;transform-origin:top left}
+ .identity-art,.mascot-portrait{width:134px;height:134px}
+ .identity-art :global(astro-island){scale:1;transform-origin:top left}
+ .mascot-portrait :global(button){width:134px!important;height:134px!important}
  .mobile-signature{display:none}
  .mobile-welcome{padding:250px 24px 40px;min-height:570px;gap:0}
  .mobile-welcome :global(.welcome-garden){height:150px;max-width:340px}

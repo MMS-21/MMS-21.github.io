@@ -29,7 +29,8 @@ const stamps=[
 </script>
 <style is:global>
 @font-face{font-family:"Lulu Handwriting";src:url('/fonts/caveat-regular.ttf') format('truetype');font-display:swap}
-.profile-controls .stamps-toggle{font:18px/22px "Lulu Handwriting",cursive;letter-spacing:0;background:none;border:0;padding:3px 0;color:#514c45}
+.profile-controls .stamps-toggle{font:18px/22px "Lulu Handwriting",cursive;letter-spacing:0;background:none;border:0;padding:3px 0;color:#514c45;display:grid;place-items:center;min-width:36px;min-height:44px}
+.profile-controls .stamps-toggle img{display:block;width:28px;height:36px;object-fit:contain}
 .stamps-toggle:hover{text-decoration:underline;text-underline-offset:4px}
 #stamp-album{width:min(760px,calc(100vw - 32px));max-height:calc(100svh - 48px);padding:32px 38px;border:0;background:#f5f1e7 url('/img/paper-fibers.svg');color:#302f29;box-shadow:4px 16px 40px #30282030;overscroll-behavior:contain}
 #stamp-album::backdrop{background:#30282066}
