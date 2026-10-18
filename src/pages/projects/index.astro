@@ -33,8 +33,9 @@ const descriptions:Record<string,{title:string;kind:string;body:string;output:st
  </div>
 </Base>
 <script>
+ import { reducedMotion } from '../../scripts/preferences';
  const entrance=document.querySelector<HTMLElement>('.stamp-entrance')!;
- const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const reduce=reducedMotion.matches;
  let finished=false;
  function finish(){if(finished)return;finished=true;entrance.classList.add('finished');document.querySelector('.project-collection')?.classList.add('arrived');setTimeout(()=>entrance.remove(),550)}
  entrance.querySelector('button')?.addEventListener('click',finish);

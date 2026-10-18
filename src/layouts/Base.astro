@@ -1,5 +1,6 @@
 ---
 import '../styles/paper-details.css';
+import '../styles/preferences.css';
 import PortfolioHeader from '../components/PortfolioHeader.astro';
 import StampCollection from '../components/StampCollection.astro';
 import PageStamp from '../components/PageStamp.astro';
@@ -89,6 +90,12 @@ const person = {
     <meta name="author" content={SITE.name} />
     <meta name="google-site-verification" content="gID2a2NCEtEtQQKILCCoTH5TifVEAfCbGyRensYqgrU" />
     <script type="application/ld+json" set:html={JSON.stringify(person).replace(/</g, '\\u003c')} />
+    <script is:inline>
+      try {
+        const motion=localStorage.getItem('portfolio-reduced-motion');
+        document.documentElement.toggleAttribute('data-reduced-motion',motion==='on'||(motion!=='off'&&matchMedia('(prefers-reduced-motion: reduce)').matches));
+      } catch { document.documentElement.toggleAttribute('data-reduced-motion',matchMedia('(prefers-reduced-motion: reduce)').matches); }
+    </script>
   </head>
   <body class:list={{'has-portfolio-header':!hideHeader,'paper-page':paperPage}}>
     <StampCollection />

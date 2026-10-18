@@ -1,3 +1,4 @@
+import { reducedMotion } from './preferences';
 // Rose contours, leaf geometry and spring easing adapted from Type Garden
 // by Akshat Agarwal: https://type-garden.vercel.app/ (public Copy code source).
 export class Garden {
@@ -77,7 +78,7 @@ export class Garden {
 
 }
 export function startGardens(){
- const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const reduced=reducedMotion;
  const gardens=[];
  document.querySelectorAll('.flower-divider').forEach((host,index)=>{
   const canvas=host.querySelector('canvas'), ctx=canvas.getContext('2d');

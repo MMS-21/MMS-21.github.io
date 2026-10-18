@@ -1,5 +1,6 @@
+import { reducedMotion } from './preferences';
 // Content stays visible without scripting or when reduced motion is requested.
-if(document.body.classList.contains('has-portfolio-header') && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+if(document.body.classList.contains('has-portfolio-header') && !reducedMotion.matches){
  const observer=new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
    if(!entry.isIntersecting)return;

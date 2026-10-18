@@ -5,10 +5,11 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
  {stops.map(stop=><a href={`#${stop.id}`} data-section={stop.id} class="section-stop" aria-label={`Go to ${stop.label}`}><span class="section-mark" aria-hidden="true"></span><span class="section-label">{stop.label}</span></a>)}
 </nav>
 <script>
+ import { reducedMotion } from '../scripts/preferences';
  const rail=document.querySelector<HTMLElement>('.section-nav');
  if(rail){
   const links=[...rail.querySelectorAll<HTMLAnchorElement>('a')];
-  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const reduced=reducedMotion;
   let targets:number[]=[],frame=0,timer:ReturnType<typeof setTimeout>,previous=-1;
   const clamp=(n:number)=>Math.max(0,Math.min(1,n));
   const render=()=>{

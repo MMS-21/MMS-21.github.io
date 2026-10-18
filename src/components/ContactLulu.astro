@@ -3,10 +3,11 @@
  <span>Lulu ♡</span>
 </button>
 <script>
+ import { reducedMotion } from '../scripts/preferences';
  const button=document.querySelector<HTMLButtonElement>('.envelope-lulu');
  if(button){
   const canvas=button.querySelector('canvas')!,ctx=canvas.getContext('2d')!;
-  const image=new Image(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const image=new Image(),reduced=reducedMotion;
   let ready=false,timer=0;
   const paint=(row:number,frame:number)=>{if(!ready)return;ctx.clearRect(0,0,192,208);ctx.drawImage(image,frame*192,row*208,192,208,0,0,192,208)};
   image.onload=()=>{ready=true;canvas.dataset.loaded='true';paint(0,0)};image.src='/pets/lulu.webp';

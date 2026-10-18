@@ -1,3 +1,4 @@
+import { reducedMotion } from './preferences';
 // The supplied Lulu atlas has eight 192x208 frames in each of nine state rows.
 import { COMPANIONS } from '../data/companions';
 type State='idle'|'right'|'left'|'wave'|'jump'|'play';
@@ -17,7 +18,7 @@ export function startLulu(){
  let greeted=false;
  const control=document.querySelector<HTMLButtonElement>('[data-lulu-toggle]')!;
  const canvas=host.querySelector('canvas')!,ctx=canvas.getContext('2d');if(!ctx)return;
- const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const reduced=reducedMotion;
  const mobile=matchMedia('(max-width:700px)');
  const shell=document.querySelector<HTMLElement>('.navigation-shell');
  const rows:Record<State,number>={idle:0,right:1,left:2,wave:3,jump:4,play:6};
@@ -135,12 +136,12 @@ export function startLulu(){
   position();paint(now);raf=requestAnimationFrame(tick);
  }
  function wake(){if(raf)cancelAnimationFrame(raf);raf=0;last=performance.now();if(visible&&!document.hidden&&loaded)raf=requestAnimationFrame(tick)}
- function setVisible(value:boolean){visible=value;host.hidden=!value;if(!value)setPicker(false,false);if(control){control.textContent=`${value?'Hide':'Show'} ${companion.name}`;control.setAttribute('aria-pressed',String(value))}try{sessionStorage.setItem('lulu-hidden',value?'0':'1')}catch{}if(value)scan();wake()}
- try{visible=sessionStorage.getItem('lulu-hidden')!=='1'}catch{}
+ function setVisible(value:boolean){visible=value;host.hidden=!value;if(!value)setPicker(false,false);if(control){control.textContent=`${value?'Hide':'Show'} companion`;control.setAttribute('aria-pressed',String(value))}try{localStorage.setItem('lulu-hidden',value?'0':'1')}catch{}if(value)scan();wake()}
+ try{visible=localStorage.getItem('lulu-hidden')!=='1'}catch{}
  setVisible(visible);
  control?.addEventListener('click',()=>setVisible(!visible));
  function setPicker(value:boolean,restoreFocus=true){pickerOpen=value;picker.hidden=!value;chooser.setAttribute('aria-expanded',String(value));if(value){trip=null;walkTo=null;current=floor();footY=current.y;change('idle',performance.now());position();options.find(el=>el.dataset.companion===companion.id)?.focus()}else{nextAction=performance.now()+3600;if(restoreFocus)chooser.focus()}wake()}
- function updateCompanion(){host.dataset.companion=companion.id;host.setAttribute('aria-label',`${companion.name}, your site companion`);button.setAttribute('aria-label',`Say hello to ${companion.name}`);const name=hint.querySelector('.lulu-name');if(name?.lastChild)name.lastChild.textContent=companion.name;status.textContent=`${companion.name} is keeping you company.`;options.forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.companion===companion.id)));if(control)control.textContent=`${visible?'Hide':'Show'} ${companion.name}`}
+ function updateCompanion(){host.dataset.companion=companion.id;host.setAttribute('aria-label',`${companion.name}, your site companion`);button.setAttribute('aria-label',`Say hello to ${companion.name}`);const name=hint.querySelector('.lulu-name');if(name?.lastChild)name.lastChild.textContent=companion.name;status.textContent=`${companion.name} is keeping you company.`;options.forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.companion===companion.id)));if(control)control.textContent=`${visible?'Hide':'Show'} companion`}
  function choose(id:string,remember:boolean){const next=COMPANIONS.find(pet=>pet.id===id);if(!next)return;const request=++loadRequest,candidate=new Image();status.textContent=`Getting ${next.name} ready…`;picker.setAttribute('aria-busy','true');candidate.onload=()=>{if(request!==loadRequest)return;image=candidate;companion=next;loaded=true;drawn=-1;canvas.dataset.loaded='true';host.dataset.ready='true';picker.removeAttribute('aria-busy');if(remember){host.dataset.chosen='true';try{localStorage.setItem('portfolio-companion',next.id)}catch{}}updateCompanion();trip=null;walkTo=null;change('wave',performance.now());since=performance.now();reactUntil=since+1200;scan();paint(since);wake();if(remember)setPicker(false)};candidate.onerror=()=>{if(request!==loadRequest)return;picker.removeAttribute('aria-busy');status.textContent=`${next.name} could not load. Please try again.`;if(!loaded)host.dataset.ready='fallback'};candidate.src=next.sprite}
  chooser.addEventListener('click',()=>setPicker(!pickerOpen));
  host.querySelector('[data-companion-close]')?.addEventListener('click',()=>setPicker(false));
@@ -151,7 +152,7 @@ export function startLulu(){
   const detail=event.detail;
   if(detail.active&&!touring)tourWasVisible=visible;
   touring=detail.active;host.toggleAttribute('data-tour',touring);if(touring&&pickerOpen)setPicker(false,false);trip=null;walkTo=null;
-  if(detail.greet){setVisible(true);x=innerWidth<=700?24:Math.max(24,innerWidth-520);footY=scrollY+Math.max(height()+24,detail.footY);current={key:'tour',left:x,right:x+width(),y:footY,floor:false};change('wave',performance.now());reactUntil=performance.now()+1200}
+  if(detail.greet&&visible){x=innerWidth<=700?24:Math.max(24,innerWidth-520);footY=scrollY+Math.max(height()+24,detail.footY);current={key:'tour',left:x,right:x+width(),y:footY,floor:false};change('wave',performance.now());reactUntil=performance.now()+1200}
   else if(current.key==='tour'){current=floor();footY=current.y;change('idle',performance.now())}
   if(!touring&&!tourWasVisible)setVisible(false);
   nextAction=performance.now()+3600;position();wake();

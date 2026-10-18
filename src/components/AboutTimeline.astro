@@ -30,9 +30,10 @@ const milestones=[
  </div>
 </section>
 <script>
+ import { reducedMotion } from '../scripts/preferences';
  const timeline=document.querySelector<HTMLElement>('.about-timeline');
  if(timeline){
-  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const reduced=reducedMotion;
   const track=timeline.querySelector<HTMLElement>('.timeline-track')!;
   const windowEl=timeline.querySelector<HTMLElement>('.timeline-window')!;
   const milestones=[...timeline.querySelectorAll<HTMLElement>('.milestone')];

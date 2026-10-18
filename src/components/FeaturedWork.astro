@@ -48,8 +48,9 @@ import ProjectPaperDeck from './ProjectPaperDeck.astro';
  @media(max-width:700px){.desk-stage{padding:190px 35px 110px;min-height:0}.case-papers,.tool-papers{grid-template-columns:1fr;gap:45px;max-width:440px;margin-left:auto;margin-right:auto}.hr-paper{margin-top:0}.preview img{height:auto;max-height:280px}.project-copy{padding:18px 10px 0}.workbench-heading{margin-top:95px}.tool-papers{margin-top:0;gap:28px}.tool-paper{display:flex}.tool-link{margin:0}.desk-heading{margin-bottom:34px}}
 </style>
 <script>
+ import { reducedMotion } from '../scripts/preferences';
  const section=document.querySelector<HTMLElement>('#featured-work')!;
- const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const reduced=reducedMotion;
  const items=Array.from(section.querySelectorAll<HTMLElement>('.desk-heading,.workbench,.workbench-heading,.tool-papers,.all-projects'));
  // A timed entrance stays legible even when a visitor scrolls quickly.
  const observer=new IntersectionObserver(entries=>{

@@ -1,6 +1,7 @@
+import { reducedMotion } from './preferences';
 import { Garden } from './divider-garden.js';
 export function startFloralAccents(){
- const reduced=matchMedia('(prefers-reduced-motion: reduce)');let oldY=scrollY,forward=0;
+ const reduced=reducedMotion;let oldY=scrollY,forward=0;
  addEventListener('scroll',()=>{if(scrollY>oldY)forward=performance.now();oldY=scrollY},{passive:true});
  const accents=[];let frame=0,last=0;
  const clamp=n=>Math.max(0,Math.min(1,n));
