@@ -2,30 +2,22 @@
 import AnalystDesk from './AnalystDesk.astro';
 import HeroIntroduction from './HeroIntroduction.astro';
 import WelcomeGarden from './WelcomeGarden.astro';
-import PaperLandmark from './PaperLandmark.astro';
+
 import FloralAccent from './FloralAccent.astro';
 import { Mascot } from 'page-mascot';
 import { SITE } from '../data/site';
 const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'/about/',label:'About'},{href:'/contact/',label:'Contact'}];
-// Small scraps overlap; each exposes a white torn-paper edge beneath its sandy face.
-const torn = Array.from({length:30}, (_,i) => `${(100 + Math.sin(i*4.2)*1.7).toFixed(2)}% ${(i*100/29).toFixed(2)}%`);
-const bottom = Array.from({length:30}, (_,i) => `${(100-i*100/29).toFixed(2)}% ${(100 + Math.sin(i*3.8)*1.4).toFixed(2)}%`);
-const left = Array.from({length:30}, (_,i) => `${(Math.sin(i*5.3)*1.5).toFixed(2)}% ${(100-i*100/29).toFixed(2)}%`);
-const top = Array.from({length:30}, (_,i) => `${(i*100/29).toFixed(2)}% ${(Math.sin(i*4.9)*1.4).toFixed(2)}%`);
-const tornEdge = `polygon(${[...top,...torn,...bottom,...left].join(',')})`;
-const fragments = Array.from({length:24}, (_,i) => ({
-  left:(i%6)*20-7+Math.sin(i*2.3)*1.5,
-  top:Math.floor(i/6)*29-9+Math.cos(i*3.7)*1.5,
-  x:Math.sin(i*2.7)*25, y:Math.cos(i*3.1)*24,
-  r:Math.sin(i*7.1)*7, scatter:Math.cos(i*5.3)*48,
-}));
+
 
 ---
 <a class="skip-intro" href="#featured-work">Skip introduction</a>
 <div class="paper-background">
       <div class="paper-underlay"></div>
-      {fragments.map((piece,i)=>{const item=({6:NAV[0],10:NAV[1],12:NAV[2],16:NAV[3]})[i];const Tag=item?'a':'div';return <Tag class={`paper-fragment ${item?'paper-link':''}`} href={item?.href} aria-label={item?`Explore ${item.label}`:undefined} aria-hidden={!item?true:undefined} style={`left:${piece.left}%;top:${piece.top}%;--torn-edge:${tornEdge};--scatter-x:${piece.x}vw;--scatter-y:${piece.y}vh;--scatter-r:${piece.scatter}deg;--rest-r:${piece.r}deg;--piece:${i}`}><div class="paper-edge"></div><div class="paper-surface">{[0,3,5,8,10,13,18,23].includes(i)&&<PaperLandmark index={[0,3,5,8,10,13,18,23].indexOf(i)} />}{item&&<span class="paper-destination">{item.label}<small>Explore ↗</small></span>}</div></Tag>})}
+
     </div>
+<nav class="stack-navigation" aria-label="Main">
+  {NAV.map(item => <a href={item.href}><span aria-hidden="true" class="stack-arrow">→</span><span>{item.label}</span></a>)}
+</nav>
 <section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction">
   <div class="dock-backdrop" aria-hidden="true"></div>
   <div class="mobile-welcome">
@@ -183,7 +175,14 @@ const fragments = Array.from({length:24}, (_,i) => ({
   :global(html:has(.scroll-hero)) { overflow-x:clip; }
   :global(body:has(.scroll-hero)) { isolation:isolate; overflow-x:clip; }
   :global(main.flush-top:has(.scroll-hero)) { padding-top:0; }
-  .paper-fragment:not(.paper-link) { display:none; }
+  .stack-navigation{position:fixed;left:210px;top:42px;z-index:35;display:flex;flex-direction:column;align-items:flex-start;gap:0}
+  .stack-navigation a{position:relative;display:block;color:#302f29;font:400 19px/1 "Astoria",sans-serif;letter-spacing:.01em;text-transform:uppercase;text-decoration:none;padding:0;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+  .stack-arrow{position:absolute;left:-32px;top:0;width:24px;font-family:Arial,sans-serif;opacity:0;transition:opacity .2s}
+  .stack-navigation:not(:has(a:hover,a:focus-visible)) a:first-child,.stack-navigation a:hover,.stack-navigation a:focus-visible{transform:translateX(32px)}
+  .stack-navigation:not(:has(a:hover,a:focus-visible)) a:first-child .stack-arrow,.stack-navigation a:hover .stack-arrow,.stack-navigation a:focus-visible .stack-arrow{opacity:1}
+  .stack-navigation a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+  @media(max-width:700px){.stack-navigation{left:20px;top:18px}.stack-navigation a{font-size:18px;line-height:24px}:global(body:has(.stack-navigation) .profile-menu-toggle){position:absolute;left:0;top:108px}}
+  @media(prefers-reduced-motion:reduce){.stack-navigation a,.stack-arrow{transition:none}}
   .paper-underlay { position:absolute; inset:0; background:#fcfaf7; }
   .paper-fragment { --assembly:1; position:absolute; width:29%; height:40%; transform:translate3d(calc(var(--scatter-x) * (1 - var(--assembly))),calc(var(--scatter-y) * (1 - var(--assembly))),0) rotate(calc(var(--rest-r) + var(--scatter-r) * (1 - var(--assembly)))) scale(calc(.58 + .42 * var(--assembly))); }
   .paper-edge { position:absolute; inset:0; background:#fffdf7; clip-path:var(--torn-edge); }
