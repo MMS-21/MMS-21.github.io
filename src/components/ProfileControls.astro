@@ -4,7 +4,7 @@ import { SITE } from '../data/site';
 <aside class="profile-controls" aria-label="Profile links and preferences">
 
 
- <button class="profile-menu-toggle" type="button" aria-expanded="false" aria-controls="profile-links">Menu</button>
+ <button class="profile-menu-toggle" type="button" aria-expanded="false" aria-controls="profile-links"><span class="menu-line" aria-hidden="true"></span><span class="menu-line" aria-hidden="true"></span><span class="sr-only">Toggle menu</span></button>
  <div class="profile-links" id="profile-links"><nav class="mobile-page-links" aria-label="Main"><a href="/projects/">Projects</a><a href="/writing/">Writing</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><button id="resume-open" aria-haspopup="dialog" aria-controls="resume-sheet" aria-expanded="false">Résumé</button><a href={SITE.links.linkedin}>LinkedIn</a><a href={`mailto:${SITE.email}`}>Email</a><a href={SITE.links.github}>GitHub</a></div>
  <div class="profile-preferences"><button class="lulu-paper-note" type="button" data-lulu-toggle aria-pressed="true">Hide Rem</button><button class="stamps-toggle" type="button" data-stamps-open aria-label="Open stamp collection" aria-haspopup="dialog" aria-controls="stamp-album"><img src="/img/stamps/job-vintage-poster.webp" alt="" width="28" height="36" /></button><button id="paper-sound-toggle" aria-pressed="true">Sound on</button></div>
 </aside>
@@ -104,7 +104,11 @@ body:has(.profile-controls) .introduction-copy,body:has(.profile-controls) .intr
 .profile-menu-toggle,.mobile-page-links{display:none}
 @media(max-width:700px){
  .profile-controls{position:absolute;top:16px;left:20px;right:20px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;z-index:50}
- .profile-controls .profile-menu-toggle{display:block;min-height:44px;padding:8px 0;background:none;border:0;font:14px/20px Manrope,sans-serif;letter-spacing:0}
+ .profile-controls .profile-menu-toggle{display:flex;position:relative;align-items:center;justify-content:center;width:44px;height:44px;padding:0;background:none;border:0}
+ .menu-line{position:absolute;width:24px;height:2px;background:currentColor;transform:translateY(-4px);transition:transform .25s cubic-bezier(.22,1,.36,1)}
+ .menu-line:nth-child(2){transform:translateY(4px)}
+ .profile-menu-toggle[aria-expanded="true"] .menu-line{transform:rotate(45deg)}
+ .profile-menu-toggle[aria-expanded="true"] .menu-line:nth-child(2){transform:rotate(-45deg)}
  .profile-preferences{gap:14px;justify-content:flex-end}
  .profile-controls .profile-preferences button{min-height:44px}
  .profile-controls #paper-sound-toggle{font:11px/20px Manrope,sans-serif;letter-spacing:0}
@@ -115,4 +119,5 @@ body:has(.profile-controls) .introduction-copy,body:has(.profile-controls) .intr
  .profile-controls .mobile-page-links a{font:500 23px/1.2 'Cormorant Garamond',Georgia,serif}
 }
 @media(max-width:350px){.profile-controls{left:16px;right:16px}.profile-preferences{gap:10px}}
+@media(prefers-reduced-motion:reduce){.menu-line{transition:none}}
 </style>

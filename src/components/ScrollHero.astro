@@ -175,14 +175,14 @@ const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writi
   :global(html:has(.scroll-hero)) { overflow-x:clip; }
   :global(body:has(.scroll-hero)) { isolation:isolate; overflow-x:clip; }
   :global(main.flush-top:has(.scroll-hero)) { padding-top:0; }
-  .stack-navigation{position:fixed;left:210px;top:42px;z-index:35;display:flex;flex-direction:column;align-items:flex-start;gap:0;visibility:hidden}
+  .stack-navigation{position:fixed;left:190px;top:24px;z-index:35;display:flex;flex-direction:column;align-items:flex-start;gap:8px;visibility:hidden}
   :global(body:has(.hero-identity[data-introducing="false"])) .stack-navigation{visibility:visible}
   .stack-navigation a{position:relative;display:block;color:#302f29;font:400 19px/1 "Astoria",sans-serif;letter-spacing:.01em;text-transform:uppercase;text-decoration:none;padding:0;transition:transform .3s cubic-bezier(.22,1,.36,1)}
   .stack-arrow{position:absolute;left:-32px;top:0;width:24px;font-family:Arial,sans-serif;opacity:0;transition:opacity .2s}
   .stack-navigation:not(:has(a:hover,a:focus-visible)) a:first-child,.stack-navigation a:hover,.stack-navigation a:focus-visible{transform:translateX(32px)}
   .stack-navigation:not(:has(a:hover,a:focus-visible)) a:first-child .stack-arrow,.stack-navigation a:hover .stack-arrow,.stack-navigation a:focus-visible .stack-arrow{opacity:1}
   .stack-navigation a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-  @media(max-width:700px){.stack-navigation{left:20px;top:18px}.stack-navigation a{font-size:18px;line-height:24px}:global(body:has(.stack-navigation) .profile-menu-toggle){position:absolute;left:0;top:108px}}
+  @media(max-width:700px){.stack-navigation{display:none}}
   @media(prefers-reduced-motion:reduce){.stack-navigation a,.stack-arrow{transition:none}}
   .paper-underlay { position:absolute; inset:0; background:#fcfaf7; }
   .paper-fragment { --assembly:1; position:absolute; width:29%; height:40%; transform:translate3d(calc(var(--scatter-x) * (1 - var(--assembly))),calc(var(--scatter-y) * (1 - var(--assembly))),0) rotate(calc(var(--rest-r) + var(--scatter-r) * (1 - var(--assembly)))) scale(calc(.58 + .42 * var(--assembly))); }
@@ -396,4 +396,7 @@ const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writi
 
 <style>
 @media(max-width:700px){.mobile-welcome :global(.welcome-garden.arabic-intro .arabic-calligraphy){font-size:clamp(22px,6.8vw,34px);inset:12px 0 auto}}
+.hero-identity h1,.hero-identity[data-introducing="false"] h1{order:1!important;font-size:12px;line-height:1.35;margin:0}
+.hero-identity[data-introducing="false"]{left:16px!important;top:12px!important;transform:none!important}
+@media(max-width:700px){.hero-identity{display:none}.mobile-welcome{padding-top:110px;min-height:430px}}
 </style>
