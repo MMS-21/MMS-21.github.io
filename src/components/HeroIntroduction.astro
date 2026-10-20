@@ -5,8 +5,9 @@ import { SITE } from '../data/site';
  <h1 id="hero-introduction-title">{SITE.name}</h1>
  <p class="introduction-role">Data &amp; Business Analyst / Cairo</p>
  <div class="introduction-note">
-  <p class="introduction-copy intro-summary">I turn customer and operational data into clearer decisions.</p>
-  <p class="introduction-copy intro-detail">Dashboards, reporting automation, and practical AI tools.</p>
+  <p class="introduction-copy torn-strip strip-first">I turn customer and operational data</p>
+  <p class="introduction-copy torn-strip strip-second">into clearer decisions.</p>
+  <p class="introduction-copy torn-strip strip-third">Dashboards, reporting automation, and practical AI tools.</p>
  </div>
  <div class="introduction-actions"><a href="/projects/"><span>Explore my work</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a><a href="/contact/"><span>Get in touch</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 18 13-13M6 5h12v12"/></svg></a></div>
 </div>
@@ -23,6 +24,12 @@ h1{margin:0;font:400 clamp(70px,11vw,156px)/1.1 Astoria,system-ui,sans-serif;let
 @media(prefers-reduced-motion:reduce){.introduction-actions a,.introduction-actions svg{transition:none}}
 @media(max-width:700px){h1{font-size:clamp(56px,14vw,92px)}.introduction-role{font-size:14px}.introduction-note{padding:26px 24px}.introduction-copy{font-size:15px}.introduction-actions{gap:16px 24px}}
 @media(prefers-reduced-motion:reduce){.introduction-note{transform:none;opacity:1;visibility:visible!important;transition:none;will-change:auto}}
+</style>
+<style>
+.introduction-note:has(.torn-strip){gap:10px;padding:14px 0 8px;max-width:720px;background:none;box-shadow:none;transform:none}
+.torn-strip{position:relative;width:fit-content;max-width:100%;margin:0;padding:19px 30px 21px;background:#f2eddf url('/img/soft-paper.svg');color:#302f29;font-size:clamp(18px,2vw,26px);line-height:1.35;text-align:left;clip-path:polygon(1% 5%,8% 2%,14% 5%,22% 1%,31% 4%,42% 0,53% 4%,63% 1%,74% 4%,85% 1%,97% 3%,100% 13%,98% 29%,100% 46%,98% 64%,100% 83%,98% 97%,89% 94%,79% 100%,67% 96%,57% 99%,46% 95%,34% 99%,25% 96%,13% 100%,2% 96%,0 81%,2% 65%,0 46%,2% 28%,0 13%);filter:drop-shadow(2px 5px 4px #443b2418)}
+.strip-first{align-self:flex-start;transform:rotate(-2deg)}.strip-second{align-self:center;transform:rotate(1deg);background-color:#e9e4d7}.strip-third{align-self:flex-end;transform:rotate(-1.5deg);font-size:15px;line-height:1.7;background-color:#faf6eb}
+@media(max-width:700px){.torn-strip{padding:18px 22px;font-size:20px}.strip-third{font-size:14px}}
 </style>
 <style>
 .introduction-note{gap:14px;max-width:640px;padding:12px 0;background:none;box-shadow:none;transform:none;will-change:auto}.intro-summary{font:400 clamp(24px,2.5vw,34px)/1.4 'Cormorant Garamond',Georgia,serif;text-align:center;text-wrap:balance;color:#302f29}.intro-detail{font:400 15px/1.7 'Segoe UI',Arial,sans-serif;text-align:center;color:#655c50}

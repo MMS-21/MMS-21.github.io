@@ -12,6 +12,7 @@ import WelcomeTour from '../components/WelcomeTour.astro';
 ---
 
 <Base hideHeader hideFooter>
+  <div class="scroll-artwork" aria-hidden="true"></div>
   <ProfileControls />
   <ScrollHero />
   <FeaturedWork />
@@ -24,4 +25,11 @@ import WelcomeTour from '../components/WelcomeTour.astro';
 
 <style>
  :global(main.flush-top:has(.contact-section)){padding-bottom:0}
+</style>
+<style is:global>
+body:has(.scroll-artwork){isolation:isolate}
+.scroll-artwork{position:fixed;inset:0;z-index:-1;pointer-events:none;background:url('/img/blossoms-birds-background.webp') center center/auto 100% no-repeat;opacity:.05}
+body[data-opening="true"] .scroll-artwork{opacity:0}
+body:has(.scroll-artwork) :is(.about-timeline,.contact-section,.timeline-stage,.desk-scene,.desk-stage,.intro-chapter){background:transparent}
+@media(max-width:700px){.scroll-artwork{background-size:auto 100%;background-position:center}}
 </style>
