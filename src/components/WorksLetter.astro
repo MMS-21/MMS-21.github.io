@@ -1,0 +1,12 @@
+<button class="works-letter" id="collection-open" aria-label="View all Works: case studies and practical tools" aria-haspopup="dialog" aria-controls="works-collection" aria-expanded="false">
+ <span class="letter-action">View all <svg viewBox="0 0 24 16" fill="none" aria-hidden="true"><path d="M2 8h19m-6-6 6 6-6 6" /></svg></span>
+ <span class="letter-title">Works</span>
+ <span class="letter-copy">Case studies and practical tools.</span>
+</button>
+<style>
+.works-letter{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:18px;width:360px;min-height:260px;padding:34px 38px 40px;border:0;background:#eeeae1 url('/img/soft-paper.svg');color:#302f2b;text-align:left;transform:rotate(-8deg);box-shadow:8px 18px 30px #3d37251f,2px 5px 9px #3d37250d;cursor:pointer;transition:transform 250ms ease,box-shadow 250ms ease}
+.letter-action{display:flex;align-items:center;gap:20px;font:400 11px/1.4 Manrope,sans-serif;letter-spacing:.06em;text-transform:uppercase}.letter-action svg{width:26px;height:18px;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;transition:translate 250ms ease}.letter-title{font:500 106px/.95 'Cormorant Garamond',Georgia,serif;letter-spacing:-.035em}.letter-copy{font:400 13px/1.55 Manrope,sans-serif;color:#57534b}
+.works-letter:hover,.works-letter:focus-visible{transform:rotate(-5deg) translateY(-6px);box-shadow:10px 24px 36px #3d372526}.works-letter:hover svg{translate:5px 0}.works-letter:focus-visible{outline:2px solid #426b7d;outline-offset:7px}
+@media(max-width:700px){.works-letter{width:min(320px,calc(100vw - 72px));min-height:230px;padding:30px}.letter-title{font-size:88px}}
+@media(prefers-reduced-motion:reduce){.works-letter,.letter-action svg{transition:none}}
+</style>

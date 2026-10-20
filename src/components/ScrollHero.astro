@@ -1,23 +1,33 @@
 ---
 import HeroIntroduction from './HeroIntroduction.astro';
 import WelcomeGarden from './WelcomeGarden.astro';
+import WorksLetter from './WorksLetter.astro';
 import { Mascot } from 'page-mascot';
 const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'/about/',label:'About'},{href:'/contact/',label:'Contact'}];
 ---
 <a class="skip-intro" href="#featured-work">Skip introduction</a>
-<nav class="stack-navigation" aria-label="Main">{NAV.map(item=><a href={item.href}>{item.label}</a>)}</nav>
+<nav class="stack-navigation" aria-label="Main">
+ <button class="navigation-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="main-page-links"><span></span><span></span></button>
+ <div class="navigation-links" id="main-page-links" hidden>{NAV.map(item=><a href={item.href}>{item.label}</a>)}</div>
+</nav>
 <section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction" data-animated="false">
  <div class="mobile-welcome opening-welcome"><WelcomeGarden arabic hideFollow /></div>
  <a class="opening-cue" href="#hero-story">Scroll down<svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
  <div class="hero-identity"><div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={136} label="Moaaz avatar" /></div></div></div>
 </section>
-<section class="intro-chapter" id="hero-story" tabindex="-1" aria-label="About Moaaz"><HeroIntroduction /></section>
+<section class="intro-chapter" id="hero-story" tabindex="-1" aria-label="About Moaaz"><HeroIntroduction /><div class="intro-works"><WorksLetter /></div></section>
 <script>
  const opening=document.querySelector<HTMLElement>('.scroll-hero')!;
  const portrait=opening.querySelector<HTMLElement>('.hero-identity')!;
  const intro=document.querySelector<HTMLElement>('.intro-chapter')!;
  const controls=document.querySelector<HTMLElement>('.profile-controls');
  const nav=document.querySelector<HTMLElement>('.stack-navigation');
+ const toggle=nav!.querySelector<HTMLButtonElement>('.navigation-toggle')!;
+ const links=nav!.querySelector<HTMLElement>('.navigation-links')!;
+ function setMenu(open:boolean){toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');links.hidden=!open}
+ toggle.addEventListener('click',()=>setMenu(toggle.getAttribute('aria-expanded')!=='true'));
+ document.addEventListener('pointerdown',event=>{if(!nav!.contains(event.target as Node))setMenu(false)});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!links.hidden){setMenu(false);toggle.focus()}});
  const note=document.querySelector<HTMLElement>('.introduction-note');
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  let frame=0,settled=false;
@@ -73,7 +83,11 @@ const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing
 .opening-cue svg{width:30px;height:40px;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
 .intro-chapter{position:relative;min-height:100svh;display:grid;align-items:center;padding:145px 72px 90px 150px;scroll-margin-top:0}
 .skip-intro{position:fixed;top:-100px;left:16px;z-index:100}.skip-intro:focus{top:12px;background:#fffaf0;padding:12px}
+.stack-navigation{display:block}.navigation-toggle{position:relative;display:block;width:64px;height:48px;border:0;padding:0;background:none;color:#514c45;cursor:pointer}.navigation-toggle span{position:absolute;left:4px;top:23px;width:52px;height:2px;background:currentColor;transform:translateY(-6px);transition:transform 300ms cubic-bezier(.22,1,.36,1)}.navigation-toggle span+span{transform:translateY(6px)}.navigation-toggle[aria-expanded="true"] span{transform:rotate(45deg)}.navigation-toggle[aria-expanded="true"] span+span{transform:rotate(-45deg)}.navigation-toggle:focus-visible{outline:2px solid #426b7d;outline-offset:5px}.navigation-links{position:absolute;top:62px;left:0;min-width:220px;padding:22px 28px;background:#f5f1e7 url('/img/soft-paper.svg');box-shadow:4px 14px 30px #443b2420}.navigation-links[hidden]{display:none}.stack-navigation .navigation-links a{font:400 30px/1.4 'Cormorant Garamond',Georgia,serif;min-height:48px}
+.intro-chapter{padding-bottom:350px;min-height:calc(100svh + 190px)}.intro-works{position:absolute;right:74px;bottom:40px}
 @media(max-width:900px){.stack-navigation{left:28px;top:12px;gap:16px}.stack-navigation a{font-size:11px}}
 @media(max-width:700px){:global(.profile-controls){position:fixed}.scroll-hero{min-height:560px}.stack-navigation{display:none}.intro-chapter{padding:180px 24px 70px}.opening-welcome :global(.arabic-calligraphy){font-size:clamp(22px,6.3vw,40px)}.opening-welcome{height:190px}.opening-welcome :global(.welcome-garden){height:190px}}
 @media(prefers-reduced-motion:reduce){.hero-identity{will-change:auto}:global(.profile-controls),.stack-navigation{transition:none}}
+@media(max-width:700px){.intro-chapter{padding-bottom:330px}.intro-works{right:36px;bottom:38px}}
+@media(prefers-reduced-motion:reduce){.navigation-toggle span{transition:none}}
 </style>
