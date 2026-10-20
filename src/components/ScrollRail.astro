@@ -1,5 +1,5 @@
 ---
-const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introduction'},{id:'work-routine',label:'How I work'},{id:'featured-work',label:'Featured work'},{id:'about',label:'About me'},{id:'connect',label:'Get in touch'}];
+const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introduction'},{id:'featured-work',label:'Featured work'},{id:'about',label:'About me'},{id:'connect',label:'Get in touch'}];
 ---
 <nav class="section-nav" aria-label="Page sections">
  {stops.map(stop=><a href={`#${stop.id}`} data-section={stop.id} class="section-stop" aria-label={`Go to ${stop.label}`}><span class="section-mark" aria-hidden="true"></span><span class="section-label">{stop.label}</span></a>)}
@@ -29,8 +29,8 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
    const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
    targets=links.map((link,i)=>{
     const el=document.getElementById(link.dataset.section!)!;
-    if(el.id==='hero-story'||el.id==='work-routine'){
-     const hero=el.closest<HTMLElement>('.scroll-hero')!;
+    if(el.id==='hero-story'){
+     const hero=document.querySelector<HTMLElement>('.scroll-hero')!;
      if(hero.dataset.animated!=='true')return el.getBoundingClientRect().top+scrollY;
      return hero.offsetTop+(hero.offsetHeight-innerHeight)*(el.id==='hero-story'?.30:.82);
     }

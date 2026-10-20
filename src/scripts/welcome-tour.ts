@@ -2,7 +2,7 @@ export function startWelcomeTour() {
  const card=document.querySelector<HTMLElement>('[data-tour-card]'); if(!card)return;
  const light=document.querySelector<HTMLElement>('[data-tour-spotlight]')!;
  const hint=document.querySelector<HTMLElement>('[data-tour-hint]')!;
- const hints=['Welcome','About me','How I work','Latest projects','My experience','Site menu','Contact me'];
+ const hints=['Welcome','About me','Latest projects','My experience','Companions','Contact me'];
  const dust=document.querySelector<HTMLElement>('[data-tour-dust]')!;
  const soundButton=card.querySelector<HTMLButtonElement>('[data-tour-sound]')!;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -38,15 +38,14 @@ export function startWelcomeTour() {
  const back=card.querySelector<HTMLButtonElement>('[data-tour-back]')!;
  const progress=card.querySelector<HTMLElement>('[data-tour-progress]')!;
  const action=card.querySelector<HTMLAnchorElement>('[data-tour-action]')!;
- const paw=document.querySelector<HTMLButtonElement>('.pyramid-toggle')!;
+ const paw=document.querySelector<HTMLElement>('.profile-menu-toggle')!;
  const key='portfolio-welcome-seen-v1';
  const steps=[
   {title:'Welcome to my little corner.',text:'A short walk through my work, the story behind it, and a little hello to your companion. Move at your own pace.',section:'pre-hero',target:'.mobile-welcome',href:'',label:''},
-  {title:'First, a little introduction.',text:'Here’s what I do in business analytics and operations. The AI tools link opens a closer look at the tools I build and use.',section:'hero-story',target:'#hero-introduction-title',href:'/about/',label:'More about me'},
-  {title:'How I approach the work.',text:'Follow the three papers: check the records, understand the gaps, and make the next step clear. My tools sit just below them.',section:'work-routine',target:'#desk-introduction-title',href:'/projects/analytics-agent/',label:'Explore Analytics Agent'},
-  {title:'See the questions behind the projects.',text:'Customer retention, employee attrition, and practical tools. Open a case study for the evidence and decisions behind the result.',section:'featured-work',target:'#featured-heading',href:'/projects/',label:'Browse all projects'},
+  {title:'First, a little introduction.',text:'Here’s what I do in business analytics and operations. Explore the projects for a closer look at the tools I build and use.',section:'hero-story',target:'#hero-introduction-title',href:'/about/',label:'More about me'},
+  {title:'See the questions behind the projects.',text:'Customer retention, employee attrition, and practical tools. Open a case study for the evidence and decisions behind the result.',section:'featured-work',target:'#collection-open',href:'/projects/',label:'Browse all projects'},
   {title:'Follow the path so far.',text:'This timeline connects my studies, experience, and recent work. Use its milestone buttons or arrows to explore each chapter.',section:'about',target:'#about-heading',href:'/about/',label:'Read my story'},
-  {title:'Keep exploring, with a companion.',text:'The paw menu opens Projects, Writing, About, and Contact. Choose a companion beside your pet, tap them to say hello, or use the menu to hide them and replay this tour.',section:'about',target:'.pyramid-toggle',href:'/writing/',label:'Open the working notebook'},
+  {title:'Keep exploring, with a companion.',text:'Choose a companion beside your pet, tap them to say hello, or use the controls to hide them. The navigation links lead to the rest of the site.',section:'about',target:'[data-companion-trigger]',href:'/writing/',label:'Open the working notebook'},
   {title:'Leave a note on my desk.',text:'A role, a project, or a little hello: the contact page is where to reach me. You can keep exploring from here or revisit any stop.',section:'connect',target:'#contact-heading',href:'/contact/',label:'Get in touch'},
  ];
  let step=0,active=false,frame=0,timer=0,restore:HTMLElement|null=null;
@@ -104,7 +103,6 @@ export function startWelcomeTour() {
   const hero=document.querySelector<HTMLElement>('.scroll-hero')!;
   let top=el.getBoundingClientRect().top+scrollY;
   if(id==='pre-hero')top=0;
-  else if((id==='hero-story'||id==='work-routine')&&hero.dataset.animated==='true')top=hero.offsetTop+(hero.offsetHeight-innerHeight)*(id==='hero-story'?.30:.82);
   else if(id==='featured-work'&&el.dataset.animated==='true'&&innerWidth>700)top+=(el.offsetHeight-innerHeight)*.66;
   else if(id==='hero-story')top=document.querySelector<HTMLElement>('.hero-introduction')!.getBoundingClientRect().top+scrollY;
   scrollTo({top:Math.max(0,top),behavior:'instant'});
@@ -121,7 +119,7 @@ export function startWelcomeTour() {
   silence();clearTimeout(burstTimer);dust.hidden=true;dust.replaceChildren();burstPending=false;
   // Let visitors locate the arrow before revealing its dust and synchronized chime.
   burstTimer=window.setTimeout(()=>{if(active&&!document.hidden){burstPending=true;schedule()}},750);
-  visit();requestAnimationFrame(()=>{notify(step===5);schedule();next.focus({preventScroll:true})});
+  visit();requestAnimationFrame(()=>{notify(step===4);schedule();next.focus({preventScroll:true})});
  }
  function finish(){
   active=false;clearTimeout(burstTimer);card.hidden=true;light.hidden=true;hint.hidden=true;dust.hidden=true;dust.replaceChildren();burstPending=false;silence();seen();notify();
@@ -145,7 +143,7 @@ export function startWelcomeTour() {
  document.fonts.ready.then(schedule);
  document.addEventListener('visibilitychange',()=>{if(document.hidden)silence()});
  addEventListener('pagehide',()=>{silence();void audio?.close().catch(()=>{})});
- addEventListener('resize',()=>{if(active){visit();notify(step===5);schedule()}});
+ addEventListener('resize',()=>{if(active){visit();notify(step===4);schedule()}});
  let show=true;try{show=localStorage.getItem(key)!=='1'}catch{}
  if(show)timer=window.setTimeout(()=>{if(document.hidden)return;render()},4000);
 }
