@@ -16,7 +16,7 @@ const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writi
 
     </div>
 <nav class="stack-navigation" aria-label="Main">
-  {NAV.map(item => <a href={item.href}><span aria-hidden="true" class="stack-arrow">→</span><span>{item.label}</span></a>)}
+  {NAV.map(item => <a href={item.href}><span>{item.label}</span><svg viewBox="0 0 100 9" fill="none" aria-hidden="true"><path d="M2 6Q43 0 98 4M14 8Q53 3 86 6" /></svg></a>)}
 </nav>
 <section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction">
   <div class="dock-backdrop" aria-hidden="true"></div>
@@ -175,17 +175,16 @@ const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writi
   :global(html:has(.scroll-hero)) { overflow-x:clip; }
   :global(body:has(.scroll-hero)) { isolation:isolate; overflow-x:clip; }
   :global(main.flush-top:has(.scroll-hero)) { padding-top:0; }
-  .stack-navigation{position:fixed;left:190px;top:24px;z-index:35;display:flex;flex-direction:column;align-items:flex-start;gap:8px;visibility:hidden}
+  .stack-navigation{position:fixed;left:190px;top:24px;z-index:35;display:flex;align-items:center;gap:32px;visibility:hidden}
   :global(body:has(.hero-identity[data-introducing="false"])) .stack-navigation{visibility:visible}
-  .stack-navigation a{position:relative;display:block;color:#302f29;font:400 19px/1 "Astoria",sans-serif;letter-spacing:.01em;text-transform:uppercase;text-decoration:none;padding:0;transition:transform .3s cubic-bezier(.22,1,.36,1)}
-  @font-face{font-family:"Nippo";src:url("/fonts/nippo-light.woff2") format("woff2");font-weight:300;font-style:normal;font-display:swap}
-  .stack-navigation a{font-family:"Nippo",system-ui,-apple-system,sans-serif;font-weight:300;letter-spacing:.005em}
-  .stack-arrow{position:absolute;left:-32px;top:0;width:24px;font-family:Arial,sans-serif;opacity:0;transition:opacity .2s}
-  .stack-navigation:not(:has(a:hover,a:focus-visible)) a:first-child,.stack-navigation a:hover,.stack-navigation a:focus-visible{transform:translateX(32px)}
-  .stack-navigation:not(:has(a:hover,a:focus-visible)) a:first-child .stack-arrow,.stack-navigation a:hover .stack-arrow,.stack-navigation a:focus-visible .stack-arrow{opacity:1}
-  .stack-navigation a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+  .stack-navigation a{position:relative;display:block;color:#342b20;font:500 24px/1.2 'Cormorant Garamond',Georgia,serif;text-decoration:none;padding:10px 0 14px}
+  .stack-navigation a svg{position:absolute;left:0;bottom:4px;width:100%;height:9px;stroke:#79613e;stroke-width:1.5;stroke-linecap:round;opacity:0;transition:opacity 180ms ease}
+  .stack-navigation a:hover{color:#705832}
+  .stack-navigation a:hover svg,.stack-navigation a:focus-visible svg{opacity:1}
+  .stack-navigation a:focus-visible{outline:2px solid #79613e;outline-offset:5px}
+  @media(min-width:701px) and (max-width:1000px){.stack-navigation{left:158px;gap:20px}.stack-navigation a{font-size:22px}}
   @media(max-width:700px){.stack-navigation{display:none}}
-  @media(prefers-reduced-motion:reduce){.stack-navigation a,.stack-arrow{transition:none}}
+  @media(prefers-reduced-motion:reduce){.stack-navigation a svg{transition:none}}
   .paper-underlay { position:absolute; inset:0; background:#fcfaf7; }
   .paper-fragment { --assembly:1; position:absolute; width:29%; height:40%; transform:translate3d(calc(var(--scatter-x) * (1 - var(--assembly))),calc(var(--scatter-y) * (1 - var(--assembly))),0) rotate(calc(var(--rest-r) + var(--scatter-r) * (1 - var(--assembly)))) scale(calc(.58 + .42 * var(--assembly))); }
   .paper-edge { position:absolute; inset:0; background:#fffdf7; clip-path:var(--torn-edge); }
@@ -401,4 +400,8 @@ const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writi
 .hero-identity h1,.hero-identity[data-introducing="false"] h1{order:1!important;font-size:12px;line-height:1.35;margin:0}
 .hero-identity[data-introducing="false"]{left:16px!important;top:12px!important;transform:none!important}
 @media(max-width:700px){.hero-identity{display:none}.mobile-welcome{padding-top:110px;min-height:430px}}
+</style>
+
+<style>
+.hero-identity h1{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
 </style>
