@@ -5,9 +5,8 @@ import { SITE } from '../data/site';
  <h1 id="hero-introduction-title">{SITE.name}</h1>
  <p class="introduction-role">Data &amp; Business Analyst / Cairo</p>
  <div class="introduction-note">
-  <p class="introduction-copy paper-piece">I work in business analytics and operations, from understanding customers to improving everyday processes.</p>
-  <p class="introduction-copy paper-piece">I create dashboards, automate reporting,</p>
-  <p class="introduction-copy paper-piece">and build and use AI tools to support that work.</p>
+  <p class="introduction-copy intro-summary">I turn customer and operational data into clearer decisions.</p>
+  <p class="introduction-copy intro-detail">Dashboards, reporting automation, and practical AI tools.</p>
  </div>
  <div class="introduction-actions"><a href="/projects/"><span>Explore my work</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a><a href="/contact/"><span>Get in touch</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 18 13-13M6 5h12v12"/></svg></a></div>
 </div>
@@ -24,6 +23,9 @@ h1{margin:0;font:400 clamp(70px,11vw,156px)/1.1 Astoria,system-ui,sans-serif;let
 @media(prefers-reduced-motion:reduce){.introduction-actions a,.introduction-actions svg{transition:none}}
 @media(max-width:700px){h1{font-size:clamp(56px,14vw,92px)}.introduction-role{font-size:14px}.introduction-note{padding:26px 24px}.introduction-copy{font-size:15px}.introduction-actions{gap:16px 24px}}
 @media(prefers-reduced-motion:reduce){.introduction-note{transform:none;opacity:1;visibility:visible!important;transition:none;will-change:auto}}
+</style>
+<style>
+.introduction-note{gap:14px;max-width:640px;padding:12px 0;background:none;box-shadow:none;transform:none;will-change:auto}.intro-summary{font:400 clamp(24px,2.5vw,34px)/1.4 'Cormorant Garamond',Georgia,serif;text-align:center;text-wrap:balance;color:#302f29}.intro-detail{font:400 15px/1.7 'Segoe UI',Arial,sans-serif;text-align:center;color:#655c50}
 </style>
 <style>
 .introduction-role{position:relative;padding:12px 26px;margin:24px 0 32px;background:#e5dfb8 url('/img/soft-paper.svg');box-shadow:1px 2px 3px #52472818,0 7px 12px #5247280d;transform:rotate(-2deg);font-size:15px;letter-spacing:.015em;color:#454332;border-radius:1px}

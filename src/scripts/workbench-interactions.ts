@@ -33,6 +33,17 @@ async function shuffle(direction:number){if(busy)return;busy=true;rustle();const
  if(!handed){front=next;update()}busy=false;
 }
 papers.forEach((_,i)=>paint(i,slots[i]));update();
+const workbench=document.querySelector<HTMLElement>('.workbench')!;
+document.querySelectorAll<HTMLButtonElement>('[data-project-view]').forEach(button=>button.addEventListener('click',()=>{
+ const index=button.dataset.projectView==='index';workbench.dataset.view=index?'index':'slide';
+ document.querySelectorAll('[data-project-view]').forEach(el=>el.setAttribute('aria-pressed',String(el===button)));
+ if(index)papers.forEach(p=>{p.inert=false;p.setAttribute('aria-hidden','false')});else update();
+}));
+document.querySelectorAll<HTMLButtonElement>('[data-project-columns]').forEach(button=>button.addEventListener('click',()=>{
+ workbench.style.setProperty('--project-columns',button.dataset.projectColumns!);
+ document.querySelectorAll('[data-project-columns]').forEach(el=>el.setAttribute('aria-pressed',String(el===button)));
+ document.querySelector<HTMLButtonElement>('[data-project-view="index"]')!.click();
+}));
 document.querySelectorAll('.switch-paper').forEach((b,i)=>b.addEventListener('click',()=>void shuffle(i===0?-1:1)));
 const stack=document.querySelector<HTMLElement>('.stack')!;
 stack.tabIndex=0;stack.setAttribute('aria-label','Project papers. Use left and right arrow keys to switch, or select a paper to enlarge.');
