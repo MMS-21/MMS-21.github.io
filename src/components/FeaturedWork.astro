@@ -1,11 +1,10 @@
 ---
-import SectionTitle from './SectionTitle.astro';
 import ProjectPaperDeck from './ProjectPaperDeck.astro';
 ---
 <section class="desk-scene" id="featured-work" tabindex="-1" aria-labelledby="featured-heading">
  <div class="desk-stage">
   <div class="work-section-opening">
-  <header class="desk-heading"><SectionTitle kind="projects"><h2 id="featured-heading">Currently on the workbench</h2></SectionTitle></header>
+  <h2 id="featured-heading" class="work-section-label">Selected work</h2>
   <button class="all-projects works-letter" id="collection-open" aria-label="Explore all projects" aria-haspopup="dialog" aria-controls="works-collection" aria-expanded="false">
    <span class="works-letter-action">View all <svg viewBox="0 0 24 16" fill="none" aria-hidden="true"><path d="M2 8h19m-6-6 6 6-6 6" /></svg></span>
    <span class="works-letter-title">Works</span>
@@ -126,4 +125,9 @@ import ProjectPaperDeck from './ProjectPaperDeck.astro';
 @media(max-width:950px){.work-section-opening{gap:28px}.work-section-opening .works-letter{flex-basis:245px;padding:25px;min-height:190px}.works-letter-title{font-size:70px}}
 @media(max-width:700px){.work-section-opening{flex-direction:column-reverse;gap:48px;margin:0 0 38px}.work-section-opening .desk-heading{text-align:center}.work-section-opening .works-letter{flex-basis:auto;width:min(280px,calc(100% - 24px))}}
 @media(prefers-reduced-motion:reduce){.work-section-opening .works-letter{transition:none}}
+</style>
+<style>
+.work-section-opening{justify-content:flex-end}
+.work-section-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:700px){.work-section-opening{gap:0}}
 </style>

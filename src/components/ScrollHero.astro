@@ -405,3 +405,20 @@ const NAV = [{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writi
 <style>
 .hero-identity h1{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
 </style>
+
+<style>
+@media(min-width:701px){
+ .stack-navigation{left:32px;top:20px;gap:24px}
+ .stack-navigation a{font:400 12px/20px 'Astoria',system-ui,sans-serif;letter-spacing:.02em;min-height:44px;padding:12px 0;color:#514c45}
+ .stack-navigation a svg{bottom:6px}
+ .hero-identity,.hero-identity[data-introducing="true"],.hero-identity[data-introducing="false"]{position:fixed!important;left:50%!important;top:12px!important;transform:translateX(-50%)!important;width:110px}
+}
+@media(min-width:701px) and (max-width:900px){.stack-navigation{left:28px;top:12px;gap:16px}.stack-navigation a{font-size:11px}}
+@media(max-width:700px){
+ .hero-identity,.hero-identity[data-introducing="true"],.hero-identity[data-introducing="false"]{display:flex;position:fixed!important;left:50%!important;top:70px!important;transform:translateX(-50%)!important;width:80px}
+ .identity-art,.mascot-portrait{width:70px;height:70px}
+ .mascot-portrait :global(button){width:70px!important;height:70px!important}
+ .identity-art :global(astro-island){scale:1;transform-origin:top left}
+ .mobile-welcome{padding-top:160px}
+}
+</style>
