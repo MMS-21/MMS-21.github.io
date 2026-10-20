@@ -5,7 +5,9 @@ import { SITE } from '../data/site';
  <h1 id="hero-introduction-title">{SITE.name}</h1>
  <p class="introduction-role">Data &amp; Business Analyst / Cairo</p>
  <div class="introduction-note">
-  <p class="introduction-copy">I work in business analytics and operations, from understanding customers to improving everyday processes. I create dashboards, automate reporting, and build and use AI tools to support that work.</p>
+  <p class="introduction-copy paper-piece">I work in business analytics and operations, from understanding customers to improving everyday processes.</p>
+  <p class="introduction-copy paper-piece">I create dashboards, automate reporting,</p>
+  <p class="introduction-copy paper-piece">and build and use AI tools to support that work.</p>
  </div>
  <div class="introduction-actions"><a href="/projects/"><span>Explore my work</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a><a href="/contact/"><span>Get in touch</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 18 13-13M6 5h12v12"/></svg></a></div>
 </div>
@@ -22,4 +24,15 @@ h1{margin:0;font:400 clamp(70px,11vw,156px)/1.1 Astoria,system-ui,sans-serif;let
 @media(prefers-reduced-motion:reduce){.introduction-actions a,.introduction-actions svg{transition:none}}
 @media(max-width:700px){h1{font-size:clamp(56px,14vw,92px)}.introduction-role{font-size:14px}.introduction-note{padding:26px 24px}.introduction-copy{font-size:15px}.introduction-actions{gap:16px 24px}}
 @media(prefers-reduced-motion:reduce){.introduction-note{transform:none;opacity:1;visibility:visible!important;transition:none;will-change:auto}}
+</style>
+<style>
+.introduction-role{position:relative;padding:12px 26px;margin:24px 0 32px;background:#e5dfb8 url('/img/soft-paper.svg');box-shadow:1px 2px 3px #52472818,0 7px 12px #5247280d;transform:rotate(-2deg);font-size:15px;letter-spacing:.015em;color:#454332;border-radius:1px}
+.introduction-role::after{content:'';position:absolute;right:0;bottom:0;width:22px;height:14px;background:linear-gradient(145deg,transparent 45%,#faf8ed 50%,#d6cfac 100%);box-shadow:-2px -1px 3px #5247280d;pointer-events:none}
+.introduction-note{display:flex;flex-direction:column;align-items:center;gap:16px;max-width:670px;padding:0;background:none;box-shadow:none;transform:translate3d(var(--note-x,0px),var(--note-y,0px),0);opacity:1}
+.paper-piece{position:relative;padding:20px 28px;background:#f7f5ed url('/img/soft-paper.svg');box-shadow:3px 9px 16px #443b241a;text-align:left;transform:rotate(-2deg)}
+.paper-piece:first-child{clip-path:polygon(0 1%,96% 0,100% 3%,99.5% 96%,95% 100%,1% 98%);max-width:620px;padding-block:25px}
+.paper-piece:nth-child(2){align-self:flex-start;margin-left:22px;transform:rotate(1.6deg);background-color:#eeeadf}
+.paper-piece:nth-child(3){align-self:flex-end;margin-right:8px;transform:rotate(-1deg);background-color:#faf7ef}
+@media(min-width:1200px){h1{font-size:clamp(80px,8vw,125px)}}
+@media(max-width:700px){.paper-piece{padding:18px 22px}.paper-piece:nth-child(2){margin-left:0}.paper-piece:nth-child(3){margin-right:0}.introduction-role{font-size:13px;padding:12px 18px;max-width:100%}}
 </style>
