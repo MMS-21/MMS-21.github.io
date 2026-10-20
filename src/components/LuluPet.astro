@@ -14,7 +14,7 @@ const defaultPet=COMPANIONS[0];
  </div>
  <div class="companion-picker" id="companion-picker" role="group" aria-labelledby="companion-picker-title" hidden>
   <div class="companion-picker-heading"><h2 id="companion-picker-title">Choose your companion</h2><button type="button" data-companion-close aria-label="Close companion picker"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg></button></div>
-  <div class="companion-options">{COMPANIONS.map(pet=><button type="button" data-companion={pet.id} aria-pressed={pet.id===defaultPet.id}><img src={pet.portrait} alt="" width="48" height="52" /><span>{pet.name}</span><svg class="companion-check" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" /></svg></button>)}</div>
+  <div class="companion-options">{COMPANIONS.map(pet=><button type="button" data-companion={pet.id} aria-pressed={pet.id===defaultPet.id}><img src={pet.portrait} alt="" width="48" height="52" loading="lazy" decoding="async" /><span>{pet.name}</span><svg class="companion-check" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" /></svg></button>)}</div>
   <p class="companion-status" role="status" aria-live="polite">{defaultPet.name} is keeping you company.</p>
  </div>
 </aside>

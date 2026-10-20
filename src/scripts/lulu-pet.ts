@@ -23,7 +23,7 @@ export function startLulu(){
  const rows:Record<State,number>={idle:0,right:1,left:2,wave:3,jump:4,play:6};
  let image=new Image();
  let visible=true,loaded=false,state:State='wave',since=performance.now();
- let x=16,footY=scrollY+innerHeight-12,raf=0,last=0,drawn=-1,nextAction=since+3600;
+ let x=16,footY=scrollY+innerHeight-12,raf=0,last=0,mobileFrame=0,drawn=-1,nextAction=since+3600;
  let hovered=false,dragging=false,moved=false,clicks=0,decisions=0,touring=false,tourWasVisible=true;
  let trip:Trip|null=null,walkTo:number|null=null,reactUntil=since+1200;
  let perches:Perch[]=[],current:Perch;
@@ -117,6 +117,10 @@ export function startLulu(){
  }
  function tick(now:number){
   raf=0;if(!visible||document.hidden||!loaded)return;
+  // The atlas itself advances every 150 ms. On phones, avoid writing the
+  // identical fixed position several times between visible sprite frames.
+  if(mobile.matches&&!dragging&&now-mobileFrame<140){raf=requestAnimationFrame(tick);return}
+  mobileFrame=now;
   const dt=Math.min((now-last)/1000,.05);last=now;
   if(reduced.matches){trip=null;walkTo=null;if(!(touring&&current.key==='tour')){current=floor();footY=current.y}change('idle',now);position();paint(now);return}
   const menuOpen=shell?.dataset.open==='true'||pickerOpen||chooser.matches(':hover');

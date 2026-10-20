@@ -6,7 +6,7 @@ const stops=[{id:'pre-hero',label:'Opening'},{id:'hero-story',label:'Introductio
 </nav>
 <script>
  const rail=document.querySelector<HTMLElement>('.section-nav');
- if(rail){
+ if(rail&&innerWidth>700){
   const links=[...rail.querySelectorAll<HTMLAnchorElement>('a')];
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   let targets:number[]=[],frame=0,timer:ReturnType<typeof setTimeout>,previous=-1;

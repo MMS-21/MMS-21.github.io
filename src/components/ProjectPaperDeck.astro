@@ -4,7 +4,7 @@ import { projectPapers as papers } from '../data/project-papers';
   <section class="workbench" aria-label="Project papers">
    <div class="stack">
     {papers.map((paper,i)=><article class:list={['project-paper','poster-paper','overlay-paper',{'customer-retention-paper':paper.url==='/projects/ecommerce-clv-churn/'}]} data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
-     <button class="project-image" aria-label={`Enlarge ${paper.title}`}><img src={paper.image} alt={paper.alt} width="900" height="580"/></button>
+     <button class="project-image" aria-label={`Enlarge ${paper.title}`}><img src={paper.image} alt={paper.alt} width="900" height="580" loading="lazy" decoding="async"/></button>
      <div class="paper-copy"><h2><a href={paper.url}>{paper.title} <span aria-hidden="true">↗</span></a></h2></div>
     </article>)}
    </div>
@@ -13,7 +13,7 @@ import { projectPapers as papers } from '../data/project-papers';
  <dialog id="works-collection" aria-labelledby="collection-title">
   <div class="collection-handle"><span aria-hidden="true"></span><button class="close-sheet">← Back to the workbench <small>Esc</small></button></div>
   <header class="collection-heading"><h2 id="collection-title">Works.</h2><p>Customer analytics, useful tools, and a little curiosity.</p></header>
-  <div class="collection-projects">{papers.map((paper,i)=><button class="collection-project" data-collection-paper={i}><img src={paper.image} alt={paper.title} width="900" height="580" loading="lazy"/><span><strong>{paper.title}</strong><small>{paper.tools}</small></span></button>)}</div>
+  <div class="collection-projects">{papers.map((paper,i)=><button class="collection-project" data-collection-paper={i}><img src={paper.image} alt={paper.title} width="900" height="580" loading="lazy" decoding="async"/><span><strong>{paper.title}</strong><small>{paper.tools}</small></span></button>)}</div>
   <a class="collection-index" href="/projects/">Open the full project index ↗</a>
  </dialog>
  <dialog id="case-drawer" aria-labelledby="drawer-title"><button class="close-sheet" aria-label="Close case study">← Go back <small>Esc</small></button><div class="drawer-heading"><h2 id="drawer-title"><a id="drawer-link"></a></h2></div><img id="drawer-chart" alt=""/><div id="drawer-content" aria-live="polite"></div></dialog>

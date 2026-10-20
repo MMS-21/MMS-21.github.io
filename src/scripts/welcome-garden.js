@@ -37,7 +37,7 @@ export function startWelcomeGardens(){
      ctx.save();ctx.globalAlpha=Math.min(1,cycle*12)*Math.min(1,(1-cycle)*4)*.85;ctx.translate(tip[0]+Math.sin(cycle*7+b.phase)*16,tip[1]+cycle*105);ctx.rotate(cycle*7+b.phase);ctx.fillStyle='#91b5cc';ctx.beginPath();ctx.ellipse(0,0,size*.55,size,0,0,Math.PI*2);ctx.fill();ctx.restore();
     }}
    });
-   if(!reduced.matches)raf=requestAnimationFrame(draw);
+   if(!reduced.matches&&!(innerWidth<=700&&elapsed>7000))raf=requestAnimationFrame(draw);
   }
   const wake=()=>{if(!raf&&visible&&!document.hidden)raf=requestAnimationFrame(draw)};
   new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;wake()}).observe(host);

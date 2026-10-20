@@ -9,17 +9,23 @@ const stamps: Record<string,{src:string;alt:string}> = {
 const stamp=stamps[kind];
 ---
 <div class="page-stamp-entrance" data-page-stamp data-stamp-kind={kind} aria-label="Opening page">
- <img src={stamp.src} alt={stamp.alt} fetchpriority="high" />
+ <img src={kind === 'home' ? undefined : stamp.src} data-src={stamp.src} alt={stamp.alt} width="270" height="270" fetchpriority={kind === 'home' ? 'low' : 'high'} />
  <button type="button">Skip intro</button>
 </div>
 <script>
  const entrance=document.querySelector<HTMLElement>('[data-page-stamp]');
  if(entrance){
+  const image=entrance.querySelector<HTMLImageElement>('img')!;
   let timer:ReturnType<typeof setTimeout>;
   const finish=()=>{clearTimeout(timer);entrance.classList.remove('playing');};
   const play=()=>{
    finish();
    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+   if(!image.getAttribute('src')){
+    image.addEventListener('load',play,{once:true});
+    image.src=image.dataset.src!;
+    return;
+   }
    entrance.classList.add('playing');timer=setTimeout(finish,1450);
   };
   entrance.querySelector('button')?.addEventListener('click',finish);

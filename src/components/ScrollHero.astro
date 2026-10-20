@@ -20,15 +20,17 @@ const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing
  const nav=document.querySelector<HTMLElement>('.stack-navigation');
  const note=document.querySelector<HTMLElement>('.introduction-note');
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- let frame=0;
+ let frame=0,settled=false;
  const clamp=(v:number)=>Math.max(0,Math.min(1,v));
  const smooth=(v:number)=>{v=clamp(v);return v*v*(3-2*v)};
  function draw(){
   frame=0;
   const h=innerHeight,w=document.documentElement.clientWidth,y=scrollY;
-  const start=opening.getBoundingClientRect().top+y;
+  const introStart=intro.offsetTop;
+  if(y>=introStart+20+h*.38&&settled)return;
+  settled=y>=introStart+20+h*.38;
+  const start=opening.offsetTop;
   const p=clamp((y-start)/Math.max(1,opening.offsetHeight));
-  const introStart=intro.getBoundingClientRect().top+y;
   const dock=smooth((y-introStart-20)/(h*.38)),mobile=w<=700;
   const centeredX=w/2-68*(1-.18*smooth(p/.9));
   const startY=h/2-225;
@@ -53,7 +55,7 @@ const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing
  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule,{passive:true});reduced.addEventListener('change',schedule);document.fonts.ready.then(schedule);draw();
 </script>
 <style>
-@font-face{font-family:Astoria;src:url('/fonts/astoria.otf') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:Astoria;src:url('/fonts/astoria-latin.woff2') format('woff2');font-weight:400;font-display:swap}
 .scroll-hero{position:relative;height:100svh;min-height:620px}
 .opening-welcome{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,calc(100% - 48px));height:220px;pointer-events:none}
 .opening-welcome :global(.welcome-garden){width:100%;max-width:none;height:220px}

@@ -82,7 +82,7 @@ body:has(.profile-controls) .introduction-copy,body:has(.profile-controls) .intr
 </style>
 
 <style is:global>
-@font-face{font-family:"Astoria";src:url('/fonts/astoria.otf') format('opentype');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:"Astoria";src:url('/fonts/astoria-latin.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
 .profile-controls button,.profile-controls a{font-family:"Astoria",system-ui,sans-serif;font-weight:400;font-style:normal;letter-spacing:.02em}
 .resume-hotspots{position:absolute;inset:0;z-index:4;pointer-events:none;animation:resume-links-in 1s linear both}
 .resume-hotspots a{position:absolute;top:2.7%;height:2.3%;pointer-events:auto;min-height:12px}
@@ -90,7 +90,7 @@ body:has(.profile-controls) .introduction-copy,body:has(.profile-controls) .intr
 @keyframes resume-links-in{0%,95%{visibility:hidden}100%{visibility:visible}}
 #resume-sheet.closing .resume-hotspots{visibility:hidden;animation:none}
 @media(prefers-reduced-motion:reduce){.resume-hotspots{animation:none}}
-@font-face{font-family:"Lulu Handwriting";src:url('/fonts/caveat-regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:"Lulu Handwriting";src:url('/fonts/caveat-latin.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
 .profile-controls .lulu-paper-note{font:400 18px/22px "Lulu Handwriting",cursive;letter-spacing:0;color:#514c45;padding:3px 12px;border:0;border-radius:0;background:#faf5eb url('/img/paper-fibers.svg');box-shadow:1px 3px 5px #51433318;transform:rotate(-5deg);transform-origin:50% 35%;animation:lulu-note-drift 4.8s ease-in-out infinite;transition:box-shadow .2s}
 .profile-controls .lulu-paper-note:hover{box-shadow:1px 5px 8px #51433325}
 .profile-controls .lulu-paper-note:active{box-shadow:0 1px 2px #51433318}

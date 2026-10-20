@@ -78,6 +78,7 @@ export class Garden {
 }
 export function startGardens(){
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const still=()=>reduced.matches||innerWidth<=700;
  const gardens=[];
  document.querySelectorAll('.flower-divider').forEach((host,index)=>{
   const canvas=host.querySelector('canvas'), ctx=canvas.getContext('2d');
@@ -99,7 +100,7 @@ export function startGardens(){
    const dt=Math.min(64,now-(previous||now));previous=now;
    const rect=host.getBoundingClientRect();
    target=Math.max(target,Math.min(1,Math.max(0,(innerHeight*.98-(rect.top+80))/(innerHeight*.38))));
-   progress=reduced.matches?1:progress+(target-progress)*(1-Math.exp(-dt/420));
+   progress=still()?1:progress+(target-progress)*(1-Math.exp(-dt/420));
    const t=now/1000;
    ctx.clearRect(0,0,width,240);
    // The whole garland unfurls along the rule before its branches flower.
@@ -110,13 +111,13 @@ export function startGardens(){
     const local=Math.max(0,Math.min(1,(progress-x/width*.65)/.35));
     if(local<=0)return;
     const age=local*4200;
-    const sway=reduced.matches?0:Math.sin(t*1.05+phase)*4;
+    const sway=still()?0:Math.sin(t*1.05+phase)*4;
     const points=Array.from({length:32},(_,k)=>{const u=k/31;return[Math.max(radius+4,Math.min(width-radius-4,x+lean*length*u+Math.sin(u*3+phase)*6*u)),80-height*Math.sin(u*Math.PI*.68)+sway*u*u]});
     engine.strokeRange(B,points,0,engine.eo(age/1800),engine.cc.blue,1.4);
     [.33,.65].forEach((u,k)=>{const p=points[Math.round(u*31)];const g=engine.spr((age-600-k*220)/1000);engine.leaf(B,p[0],p[1],phase+k*2,14*g+random(j+90)*5*g,.7)});
     const tip=points[31];
     engine.rose(B,tip[0],tip[1],radius,phase+Math.sin(t*.8+phase)*.12,{ph1:phase,ph2:phase+2,turns:1.9},age-1700,null);
-    if(local>.78&&!reduced.matches){
+    if(local>.78&&!still()){
      // Two independent petals per bloom: release from the flower, tumble, then fade.
      for(let k=0;k<2;k++){
       const cycle=((t+phase*2.3+k*3.1)%(6.5+k))/(6.5+k);
@@ -135,7 +136,7 @@ export function startGardens(){
   new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible){draw(performance.now());wake()}},{rootMargin:'40px'}).observe(host);
  });
  let raf=0,last=0;
- function frame(now){raf=0;if(document.hidden)return;if(now-last>32){gardens.forEach(g=>{if(g.active)g.draw(now)});last=now}if(!reduced.matches&&gardens.some(g=>g.active))raf=requestAnimationFrame(frame)}
+ function frame(now){raf=0;if(document.hidden)return;if(now-last>32){gardens.forEach(g=>{if(g.active)g.draw(now)});last=now}if(!still()&&gardens.some(g=>g.active))raf=requestAnimationFrame(frame)}
  function wake(){if(!raf&&!document.hidden)raf=requestAnimationFrame(frame)}
  document.addEventListener('visibilitychange',wake);reduced.addEventListener('change',()=>{gardens.forEach(g=>{if(g.active)g.draw(performance.now())});wake()});
 }

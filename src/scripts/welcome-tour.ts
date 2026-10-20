@@ -145,5 +145,5 @@ export function startWelcomeTour() {
  addEventListener('pagehide',()=>{silence();void audio?.close().catch(()=>{})});
  addEventListener('resize',()=>{if(active){visit();notify(step===4);schedule()}});
  let show=true;try{show=localStorage.getItem(key)!=='1'}catch{}
- if(show)timer=window.setTimeout(()=>{if(document.hidden)return;render()},4000);
+ if(show)requestAnimationFrame(()=>{if(!document.hidden)render()});
 }

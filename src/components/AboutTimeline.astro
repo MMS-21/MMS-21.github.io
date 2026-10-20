@@ -41,7 +41,18 @@ const milestones=[
   let frame=0,top=0,range=1,travel=0,active=0,settle=0;
   const clamp=(n:number)=>Math.max(0,Math.min(1,n));
   const render=()=>{
-   frame=0;const animated=!reduced.matches&&innerWidth>700;
+   frame=0;
+   if(innerWidth<=700){
+    if(timeline.dataset.mobileReady!=='true'){
+     timeline.dataset.mobileReady='true';track.style.transform='none';
+     milestones.forEach(m=>{m.dataset.visible='true';m.style.setProperty('--garden-progress','1')});
+     points.forEach(point=>point.removeAttribute('aria-current'));
+     buttons.forEach(button=>button.disabled=false);
+    }
+    return;
+   }
+   timeline.dataset.mobileReady='false';
+   const animated=!reduced.matches;
    const progress=animated?clamp((scrollY-top-settle)/range):0;
    track.style.transform=animated?`translate3d(${-progress*travel}px,0,0)`:'none';
    const position=animated?progress*Math.max(0,milestones[milestones.length-1].offsetLeft-140):windowEl.scrollLeft;
