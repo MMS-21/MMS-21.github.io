@@ -8,6 +8,7 @@ export function startFloralAccents(){
  document.querySelectorAll('.floral-accent').forEach((host,index)=>{
   const canvas=host.querySelector('canvas'),ctx=canvas.getContext('2d');if(!ctx)return;
   const engine=new Garden(),timeline=host.dataset.mode==='timeline',edge=host.dataset.mode==='edge',deskBranch=host.dataset.mode==='desk-branch';let width=0,visible=false,growth=0;
+  if(host.dataset.color==='red')engine.cc={blue:'#657450',vein:'#e8ecd7',red:'#cf302d',line:'#8f1d22'};
   const rand=n=>{const v=Math.sin(n*127.1+index*31.7)*43758.5453;return v-Math.floor(v)};
   const branches=Array.from({length:edge?6:(timeline||deskBranch)?7:18},(_,i)=>({u:edge?[.02,.09,.16,.84,.91,.98][i]:(i+.5)/((timeline||deskBranch)?7:18),phase:rand(i+4)*6.28,side:edge?1:i%2?1:-1,r:edge?7+rand(i+13)*3:(timeline||deskBranch)?6+rand(i+13)*4:9+rand(i+13)*8}));
   const path=(p,closed)=>{ctx.beginPath();ctx.moveTo(...p[0]);for(let i=1;i<p.length-1;i++){const a=p[i],b=p[i+1];ctx.quadraticCurveTo(...a,(a[0]+b[0])/2,(a[1]+b[1])/2)}ctx.lineTo(...p[p.length-1]);if(closed)ctx.closePath()};
@@ -28,7 +29,7 @@ export function startFloralAccents(){
     const tip=points[31];engine.rose(B,...tip,b.r,b.phase,{ph1:b.phase,ph2:b.phase+2,turns:1.8},age-1200,null);
     if(age>2800&&!still()&&(!timeline||now-forward<1400)){for(let k=0;k<2;k++){
      const cycle=(t+k*3.7+b.phase)%(7+k)/(7+k),size=timeline?3:4;
-     ctx.save();ctx.globalAlpha=Math.min(1,cycle*12)*Math.min(1,(1-cycle)*4)*.8;ctx.translate(tip[0]+Math.sin(cycle*7+b.phase)*14,tip[1]+cycle*90);ctx.rotate(cycle*7+b.phase);ctx.fillStyle='#91b5cc';ctx.beginPath();ctx.ellipse(0,0,size*.55,size,0,0,Math.PI*2);ctx.fill();ctx.restore();
+     ctx.save();ctx.globalAlpha=Math.min(1,cycle*12)*Math.min(1,(1-cycle)*4)*.8;ctx.translate(tip[0]+Math.sin(cycle*7+b.phase)*14,tip[1]+cycle*90);ctx.rotate(cycle*7+b.phase);ctx.fillStyle=host.dataset.color==='red'?'#cf302d':'#91b5cc';ctx.beginPath();ctx.ellipse(0,0,size*.55,size,0,0,Math.PI*2);ctx.fill();ctx.restore();
     }}
    });
   }

@@ -1,9 +1,13 @@
 ---
 import { SITE } from '../data/site';
+import FloralAccent from './FloralAccent.astro';
 ---
 <div class="hero-introduction" aria-labelledby="hero-introduction-title">
- <h1 id="hero-introduction-title">{SITE.name}</h1>
- <p class="introduction-role">Data &amp; Business Analyst / Cairo</p>
+ <div class="english-name-garden"><h1 id="hero-introduction-title">{SITE.name}</h1><FloralAccent color="red" /></div>
+ <div class="intro-profile-row">
+  <section class="intro-profile" aria-label="Profile"><p class="profile-label">Profile</p><p>I’m a Data &amp; Business Analyst working across business analytics and operations.</p><p>Currently at Al-Amal Trade &amp; Distribution, alongside freelance dashboard and reporting automation projects.</p></section>
+  <figure class="cairo-signature"><svg viewBox="0 0 300 130" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 108h276M78 108V65h144v43M114 65c0-24 14-40 36-44 22 4 36 20 36 44M150 21V10M91 65V22h6v43m-3-43V8m109 57V22h6v43m-3-43V8M117 108V85q8-15 16 0v23m9 0V85q8-15 16 0v23m9 0V85q8-15 16 0v23M14 119q34-6 68 0t68 0 68 0 68 0"/></g></svg><figcaption>Cairo<span>Based by the Nile</span></figcaption></figure>
+ </div>
  <div class="introduction-note">
   <p class="introduction-copy torn-strip strip-first">I turn customer and operational data</p>
   <p class="introduction-copy torn-strip strip-second">into clearer decisions.</p>
@@ -24,6 +28,10 @@ h1{margin:0;font:400 clamp(70px,11vw,156px)/1.1 Astoria,system-ui,sans-serif;let
 @media(prefers-reduced-motion:reduce){.introduction-actions a,.introduction-actions svg{transition:none}}
 @media(max-width:700px){h1{font-size:clamp(56px,14vw,92px)}.introduction-role{font-size:14px}.introduction-note{padding:26px 24px}.introduction-copy{font-size:15px}.introduction-actions{gap:16px 24px}}
 @media(prefers-reduced-motion:reduce){.introduction-note{transform:none;opacity:1;visibility:visible!important;transition:none;will-change:auto}}
+</style>
+<style>
+.english-name-garden{position:relative;width:fit-content;max-width:100%;isolation:isolate}.english-name-garden h1{position:relative;z-index:1}.english-name-garden :global(.floral-accent){inset:-36px -12px auto;z-index:0;opacity:.9}.intro-profile-row{display:grid;grid-template-columns:minmax(0,310px) 200px;gap:65px;align-items:center;margin:35px auto 32px;text-align:left}.intro-profile p{font:400 13px/1.7 'Segoe UI',Arial,sans-serif;color:#625b51;margin:0 0 18px;max-width:35ch}.intro-profile .profile-label{font:10px/1.4 'Departure Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:#938a7b;margin-bottom:14px}.cairo-signature{margin:0;color:#846c49;text-align:center;transform:rotate(-3deg)}.cairo-signature svg{display:block;width:200px;height:95px}.cairo-signature figcaption{font:400 32px/1.2 Astoria,cursive}.cairo-signature figcaption span{display:block;margin-top:8px;font:11px/1.4 'Segoe UI',Arial,sans-serif;letter-spacing:.035em;color:#766c5e}
+@media(max-width:700px){.intro-profile-row{grid-template-columns:1fr;gap:12px;margin-top:28px;width:100%}.intro-profile{max-width:310px;margin:auto}.cairo-signature{justify-self:center}.cairo-signature svg{width:160px;height:75px}.english-name-garden :global(.floral-accent){inset:-48px -4px auto;opacity:.75}}
 </style>
 <style>
 .introduction-note:has(.torn-strip){gap:10px;padding:14px 0 8px;max-width:720px;background:none;box-shadow:none;transform:none}

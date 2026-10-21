@@ -1,7 +1,7 @@
 ---
-const {mode='heading'}=Astro.props;
+const {mode='heading',color='blue'}=Astro.props;
 ---
-<div class:list={['floral-accent',mode]} data-mode={mode} aria-hidden="true"><canvas></canvas></div>
+<div class:list={['floral-accent',mode]} data-mode={mode} data-color={color} aria-hidden="true"><canvas></canvas></div>
 <script>
  import { startFloralAccents } from '../scripts/floral-accents.js';
  startFloralAccents();
