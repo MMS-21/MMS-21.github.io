@@ -21,16 +21,22 @@ export function startNameGarden(){
   wake();
  }
  function draw(now){raf=0;if(!visible||document.hidden)return;if(now-last<32){raf=requestAnimationFrame(draw);return}last=now;if(!start)start=now;
-  const elapsed=reduced.matches?10000:now-start;ctx.clearRect(0,0,width,height);
+  const elapsed=reduced.matches?10000:(now-start)*.5;ctx.clearRect(0,0,width,height);
   for(const plant of plants){const {x,y,S}=plant,age=elapsed-plant.delay;
    for(const e of plant.els){
     if(e.t==='stem'){const fr=engine.eo((age-e.d0)/e.dur);if(fr<=0)continue;const P=e.pts.map(p=>[x+p[0]*S,y+p[1]*S]);engine.strokeRange(B,P,0,fr,engine.cc.blue,S*.022*(e.w||1));for(const th of e.thorns)if(fr>th.u)engine.thorn(B,P,th.u,th.s,S);}
     else if(e.t==='leaf'){const sc=engine.spr((age-e.d0)/1000,7,15);if(sc>0)engine.leaf(B,x+e.x*S,y+e.y*S,e.a,e.L*S*sc,e.bend);}
-    else if(e.t==='rose'&&age>=e.d0)engine.rose(B,x+e.x*S,y+e.y*S,e.R*S,e.rot,e,age-e.d0,null);
+    else if(e.t==='rose'&&age>=e.d0){
+     engine.rose(B,x+e.x*S,y+e.y*S,e.R*S,e.rot,e,age-e.d0,null);
+     if(!reduced.matches&&age-e.d0>1500&&e.id%3===0){
+      const seconds=(now-start)/1000,cycle=((seconds+e.ph1) % 6)/6;
+      ctx.save();ctx.globalAlpha=Math.min(1,cycle*12)*Math.min(1,(1-cycle)*5)*.8;ctx.translate(x+e.x*S+Math.sin(cycle*7+e.ph1)*14,y+e.y*S+cycle*85);ctx.rotate(cycle*6+e.rot);ctx.fillStyle=engine.cc.red;ctx.beginPath();ctx.moveTo(0,-3);ctx.bezierCurveTo(7,-5,6,5,0,6);ctx.bezierCurveTo(-4,4,-5,-2,0,-3);ctx.fill();ctx.restore();
+     }
+    }
    }
   }
   host.dataset.growth=elapsed<500?'starting':elapsed<3500?'growing':'complete';
-  if(!reduced.matches&&elapsed<4500)raf=requestAnimationFrame(draw);
+  if(!reduced.matches)raf=requestAnimationFrame(draw);
  }
  function wake(){if(!raf&&visible&&!document.hidden)raf=requestAnimationFrame(draw)}
  new IntersectionObserver(entries=>{const next=entries[0].isIntersecting;if(next&&!visible){start=0;last=0}visible=next;wake()},{threshold:.35}).observe(title);
