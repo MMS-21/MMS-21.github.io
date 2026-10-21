@@ -43,17 +43,6 @@ const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing
   settled=y>=introStart;
   const start=opening.offsetTop;
   const p=clamp((y-start)/Math.max(1,opening.offsetHeight));
-  const dock=smooth((y-(introStart-h*.42))/(h*.42)),mobile=w<=700;
-  const centeredX=w/2-68*(1.35-.2*smooth(p/.9));
-  const startY=h/2-225;
-  const middleY=48;
-  const float=smooth(p/.9);
-  const centerY=startY+(middleY-startY)*float;
-  const targetX=mobile?18:(w<=900?48:56)+32-136*.66/2,targetY=mobile?84:76;
-  const x=centeredX+(targetX-centeredX)*dock;
-  const top=centerY+(targetY-centerY)*dock;
-  const scale=1.35-.2*float-.16*dock;
-  portrait.style.transform=`translate3d(${x}px,${top}px,0) scale(${scale})`;
   document.body.dataset.opening=String(p<.28);
   if(controls)controls.inert=p<.28;
   if(nav)nav.inert=p<.28;
@@ -77,7 +66,7 @@ const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing
 .opening-welcome :global(.welcome-garden){width:100%;max-width:none;height:220px}
 .opening-welcome :global(.arabic-calligraphy){inset:25px 0 auto;font-size:clamp(30px,4.1vw,52px);text-align:center}
 .opening-welcome :global(canvas){height:260px}
-.hero-identity{position:fixed;top:0;left:0;z-index:40;width:136px;height:136px;transform-origin:top left;will-change:transform}
+.hero-identity{position:absolute;top:calc(50% - 225px);left:calc(50% - 91.8px);z-index:40;width:136px;height:136px;transform:scale(1.35);transform-origin:top left}
 .identity-art,.mascot-portrait{width:136px;height:136px}
 .stack-navigation{position:fixed;left:32px;top:20px;z-index:45;display:flex;gap:24px}
 .stack-navigation a{display:flex;align-items:center;min-height:44px;font:400 12px/20px Astoria,system-ui,sans-serif;letter-spacing:.02em;text-decoration:none;color:#514c45}
@@ -111,3 +100,4 @@ nav.stack-navigation{left:56px}@media(max-width:900px){nav.stack-navigation{left
 @media(max-width:1199px){.intro-chapter{padding:155px 72px 390px 130px;min-height:100svh}.intro-works{top:auto;bottom:90px;right:70px;transform:none}.intro-works :global(.works-letter){width:300px;min-height:230px;padding:28px}.intro-works :global(.letter-title){font-size:90px}}
 @media(max-width:700px){.intro-chapter{padding:160px 24px 390px}.intro-works{right:38px;bottom:95px}.intro-works :global(.works-letter){width:min(300px,calc(100vw - 76px))}}
 </style>
+<style>@media(min-width:701px){#hero-story.intro-chapter{padding-top:110px}#hero-story :global(.hero-introduction){position:relative;top:-20px}}</style>
