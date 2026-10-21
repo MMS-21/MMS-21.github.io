@@ -11,11 +11,11 @@ export function startNameGarden(){
   const font=getComputedStyle(title);ctx.font=`${font.fontWeight} ${font.fontSize} ${font.fontFamily}`;
   const text=title.textContent.trim(),total=ctx.measureText(text).width,scale=Math.min(72,Math.max(40,parseFloat(font.fontSize)*.58));
   let advance=0;plants=[];
-  [...text].forEach((ch,i)=>{const cw=ctx.measureText(ch).width;if(ch!==' '&&i%2===0){
-   const random=engine.rng(7919+i*977),params=engine.wordParams(7);params.w=cw/scale;params.roseP=.75;
+  [...text].forEach((ch,i)=>{const cw=ctx.measureText(ch).width;if(ch!==' '){
+   const random=engine.rng(7919+i*977),params=engine.wordParams(7);params.w=cw/scale;params.roseP=1;
    const els=[];let id=0;
-   engine.grow(random,els,()=>i*100+id++,params,{base:[0,0],dir:-Math.PI/2+(random()-.5)*.7,len:.65+random()*.45,d0:0,tip:i%4===0?'rose':'fan'});
-   if(i%4===0)engine.grow(random,els,()=>i*100+id++,params,{base:[0,-.1],dir:Math.PI/2+(random()-.5)*.8,len:.35+random()*.25,d0:180,depth:1,tip:'rose'});
+   engine.grow(random,els,()=>i*100+id++,params,{base:[0,0],dir:-Math.PI/2+(random()-.5)*.7,len:.65+random()*.45,d0:0,tip:'rose'});
+   if(i%2===0)engine.grow(random,els,()=>i*100+id++,params,{base:[0,-.1],dir:Math.PI/2+(random()-.5)*.8,len:.35+random()*.25,d0:180,depth:1,tip:'rose'});
    plants.push({x:tr.left-r.left+(tr.width-total)/2+advance+cw/2,y:tr.top-r.top+tr.height*.65,S:scale,els,delay:plants.length*95});
   }advance+=cw;});
   wake();

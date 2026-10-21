@@ -1,0 +1,24 @@
+---
+const stamps=[{src:'/img/stamps/cairo-citadel-1969.webp',name:'The Citadel'},{src:'/img/stamps/cairo-al-azhar-1969.webp',name:'Al-Azhar'},{src:'/img/stamps/cairo-bab-el-futuh-1969.webp',name:'Bab el-Futuh'}];
+---
+<figure class="cairo-stamps">
+ <button class="cairo-stamp-button" type="button" aria-label="Explore Cairo stamps: The Citadel, Al-Azhar and Bab el-Futuh">
+  {stamps.map((stamp,i)=><img src={stamp.src} alt={`Egypt 1969 Cairo millennium stamp: ${stamp.name}`} width="774" height="474" loading="lazy" decoding="async" data-active={i===0?'true':'false'} />)}
+ </button>
+ <figcaption>Cairo<span class="stamp-caption">The Citadel · 1969</span></figcaption>
+ <svg class="decay-defs" aria-hidden="true"><defs><filter id="cairo-paper-decay" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".065" numOctaves="3" seed="8" result="noise"/><feColorMatrix in="noise" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0"/><feComponentTransfer><feFuncA type="linear" slope="8" intercept="8"/></feComponentTransfer><feComposite in="SourceGraphic" operator="in"/></filter></defs></svg>
+</figure>
+<script>
+ const host=document.querySelector<HTMLElement>('.cairo-stamps')!;
+ const button=host.querySelector<HTMLButtonElement>('button')!,images=[...host.querySelectorAll<HTMLImageElement>('img')],caption=host.querySelector<HTMLElement>('.stamp-caption')!,alpha=host.querySelector('feFuncA')!;
+ const names=['The Citadel','Al-Azhar','Bab el-Futuh'],reduced=matchMedia('(prefers-reduced-motion: reduce)');let current=0,busy=false,hovered=false,focused=false,timer=0;
+ function schedule(){clearTimeout(timer);if(hovered||focused)timer=window.setTimeout(()=>void next(),1500)}
+ async function next(){if(busy)return;busy=true;const old=images[current],index=(current+1)%images.length,incoming=images[index];await incoming.decode().catch(()=>{});incoming.dataset.active='true';incoming.style.zIndex='1';old.style.zIndex='2';
+  if(!reduced.matches){old.style.filter='url(#cairo-paper-decay)';await new Promise<void>(resolve=>{const begin=performance.now();function frame(now:number){const p=Math.min(1,(now-begin)/850);alpha.setAttribute('intercept',String(8-16*p));if(p<1)requestAnimationFrame(frame);else resolve()}requestAnimationFrame(frame)})}
+  old.dataset.active='false';old.style.filter='';old.style.zIndex='';incoming.style.zIndex='';alpha.setAttribute('intercept','8');current=index;caption.textContent=`${names[current]} · 1969`;busy=false;schedule();
+ }
+ button.addEventListener('pointerenter',event=>{if(event.pointerType==='touch')return;hovered=true;void next()});button.addEventListener('pointerleave',()=>{hovered=false;clearTimeout(timer)});button.addEventListener('focus',()=>{focused=true;schedule()});button.addEventListener('blur',()=>{focused=false;clearTimeout(timer)});button.addEventListener('click',()=>void next());document.addEventListener('visibilitychange',()=>{if(document.hidden)clearTimeout(timer);else schedule()});
+</script>
+<style>
+.cairo-stamps{position:relative;margin:0;width:240px;text-align:center;color:#846c49;transform:rotate(-4deg)}.cairo-stamp-button{display:block;position:relative;width:100%;aspect-ratio:774/474;padding:0;border:0;background:none;cursor:pointer;filter:drop-shadow(3px 8px 7px #443b242b);transition:transform 250ms ease}.cairo-stamp-button img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0}.cairo-stamp-button img[data-active=true]{opacity:1}.cairo-stamp-button:hover{transform:rotate(3deg) translateY(-3px)}.cairo-stamp-button:focus-visible{outline:2px solid #426b7d;outline-offset:8px}.cairo-stamps figcaption{margin-top:18px;font:400 32px/1.2 Astoria,cursive}.stamp-caption{display:block;margin-top:8px;font:11px/1.4 'Segoe UI',Arial,sans-serif;color:#766c5e}.decay-defs{position:absolute;width:0;height:0;pointer-events:none}@media(max-width:700px){.cairo-stamps{width:210px;justify-self:center}}@media(prefers-reduced-motion:reduce){.cairo-stamp-button{transition:none}}
+</style>
