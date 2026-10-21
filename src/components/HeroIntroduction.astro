@@ -9,7 +9,11 @@ import CairoStamp from './CairoStamp.astro';
   <section class="intro-profile" aria-label="A little about me"><p>I’m curious about how things work, where people get stuck, and what the numbers can tell us about it.</p><p>I like making everyday work a little easier: untangling messy data, finding a useful pattern, or building a tool that saves someone a repetitive task. That’s what draws me to analytics and keeps me experimenting with AI.</p></section>
   <CairoStamp />
  </div>
- <div class="introduction-actions"><a href="/projects/"><span>Explore my work</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a><a href="/contact/"><span>Get in touch</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 18 13-13M6 5h12v12"/></svg></a></div>
+ <div class="introduction-actions">{[{href:'/projects/',label:'Explore my work',note:'Selected projects',mark:'01',arrow:'↗'},{href:'/contact/',label:'Get in touch',note:'A little hello',mark:'02',arrow:'↗'}].map((action,i)=><a class="action-stamp" href={action.href} style={`--stamp-turn:${i===0?-3:3}deg`}>
+  <span class="stamp-face"><small>{action.note}<span>{action.mark}</span></small><strong>{action.label}</strong><span class="stamp-footer">Moaaz Magdy <span>{action.arrow}</span></span></span>
+  <span class="stamp-face stamp-color" aria-hidden="true" style={`filter:url(#action-decay-${i})`}><small>{action.note}<span>{action.mark}</span></small><strong>{action.label}</strong><span class="stamp-footer">Moaaz Magdy <span>{action.arrow}</span></span></span>
+  <svg class="action-decay-defs" aria-hidden="true"><defs><filter id={`action-decay-${i}`} x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".055" numOctaves="3" seed={i+4} result="noise"/><feColorMatrix in="noise" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0"/><feComponentTransfer><feFuncA type="linear" slope="8" intercept="-8"/></feComponentTransfer><feComposite in="SourceGraphic" operator="in"/></filter></defs></svg>
+ </a>)}</div>
 </div>
 <style>
 .hero-introduction{width:100%;max-width:1000px;margin:auto;display:flex;flex-direction:column;align-items:center;text-align:center;color:#302f29}
@@ -25,6 +29,15 @@ h1{margin:0;font:400 clamp(70px,11vw,156px)/1.1 Astoria,system-ui,sans-serif;let
 @media(max-width:700px){h1{font-size:clamp(56px,14vw,92px)}.introduction-role{font-size:14px}.introduction-note{padding:26px 24px}.introduction-copy{font-size:15px}.introduction-actions{gap:16px 24px}}
 @media(prefers-reduced-motion:reduce){.introduction-note{transform:none;opacity:1;visibility:visible!important;transition:none;will-change:auto}}
 </style>
+<script>
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ document.querySelectorAll<HTMLElement>('.action-stamp').forEach(stamp=>{
+  const alpha=stamp.querySelector('feFuncA')!;let progress=0,target=0,frame=0,last=0,hover=false,focus=false;
+  function tick(now:number){const dt=Math.min(40,now-last||16);last=now;progress+=Math.sign(target-progress)*Math.min(Math.abs(target-progress),dt/1100);alpha.setAttribute('intercept',String(-8+16*progress));if(progress!==target)frame=requestAnimationFrame(tick);else frame=0}
+  function update(){target=hover||focus?1:0;if(reduced.matches){progress=target;alpha.setAttribute('intercept',String(-8+16*progress));return}if(!frame){last=0;frame=requestAnimationFrame(tick)}}
+  stamp.addEventListener('pointerenter',()=>{hover=true;update()});stamp.addEventListener('pointerleave',()=>{hover=false;update()});stamp.addEventListener('focus',()=>{focus=true;update()});stamp.addEventListener('blur',()=>{focus=false;update()});
+ });
+</script>
 <style>.hero-introduction .intro-profile p{font-family:'Cormorant Garamond',Georgia,serif;font-size:19px;line-height:1.55;font-weight:500;max-width:34ch}@media(max-width:700px){.hero-introduction .intro-profile p{font-size:18px}}</style>
 <style>
 .english-name-garden{position:relative;width:fit-content;max-width:100%;isolation:isolate}.english-name-garden h1{position:relative;z-index:1}.english-name-garden :global(.floral-accent){inset:-36px -12px auto;z-index:0;opacity:.9}.intro-profile-row{display:grid;grid-template-columns:minmax(0,310px) 200px;gap:65px;align-items:center;margin:35px auto 32px;text-align:left}.intro-profile p{font:400 13px/1.7 'Segoe UI',Arial,sans-serif;color:#625b51;margin:0 0 18px;max-width:35ch}.intro-profile .profile-label{font:10px/1.4 'Departure Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:#938a7b;margin-bottom:14px}.cairo-signature{margin:0;color:#846c49;text-align:center;transform:rotate(-3deg)}.cairo-signature svg{display:block;width:200px;height:95px}.cairo-signature figcaption{font:400 32px/1.2 Astoria,cursive}.cairo-signature figcaption span{display:block;margin-top:8px;font:11px/1.4 'Segoe UI',Arial,sans-serif;letter-spacing:.035em;color:#766c5e}
@@ -49,4 +62,23 @@ h1{margin:0;font:400 clamp(70px,11vw,156px)/1.1 Astoria,system-ui,sans-serif;let
 .paper-piece:nth-child(3){align-self:flex-end;margin-right:8px;transform:rotate(-1deg);background-color:#faf7ef}
 @media(min-width:1200px){h1{font-size:clamp(80px,8vw,125px)}}
 @media(max-width:700px){.paper-piece{padding:18px 22px}.paper-piece:nth-child(2){margin-left:0}.paper-piece:nth-child(3){margin-right:0}.introduction-role{font-size:13px;padding:12px 18px;max-width:100%}}
+</style>
+<style>
+.introduction-actions{gap:28px;margin-top:28px;padding:8px 0}
+.introduction-actions a.action-stamp{position:relative;display:block;width:212px;min-height:122px;padding:0;border:0;background:none;box-shadow:none;color:#355c65;transform:rotate(var(--stamp-turn));filter:drop-shadow(2px 5px 4px #443b2420);transition:transform .3s}
+.introduction-actions a.action-stamp:nth-child(2){color:#8d4940}
+.stamp-face{display:flex;flex-direction:column;justify-content:space-between;position:relative;min-height:122px;padding:17px 20px;background:#e4e9df url('/img/soft-paper.svg');mask:radial-gradient(circle at 4px 4px,transparent 3px,#000 3.4px) -4px -4px/8px 8px,linear-gradient(#000 0 0) 4px 4px/calc(100% - 8px) calc(100% - 8px) no-repeat}
+.action-stamp:nth-child(2) .stamp-face{background-color:#eee0cd}
+.stamp-face::after{content:'';position:absolute;inset:11px;border:1px solid currentColor;opacity:.35;pointer-events:none}
+.stamp-face small,.stamp-footer{display:flex;justify-content:space-between;align-items:center;font:9px/1.3 'Departure Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+.stamp-face strong{font:500 26px/1.2 'Cormorant Garamond',Georgia,serif;text-align:left;margin:10px 0}
+.stamp-footer{font-size:8px}.stamp-footer>span{font:22px/1 Georgia,serif}
+.introduction-actions .stamp-color{position:absolute;inset:0;background-color:#8c4841!important;color:#fff5df;pointer-events:none}
+.introduction-actions .action-stamp:nth-child(2) .stamp-color{background-color:#355d63!important}
+.introduction-actions a.action-stamp:hover,.introduction-actions a.action-stamp:focus-visible{transform:rotate(0deg) translateY(-3px);background:none;box-shadow:none;color:#355c65}
+.introduction-actions a.action-stamp:nth-child(2):hover{color:#8d4940}
+.introduction-actions a.action-stamp:focus-visible{outline:2px solid #426b7d;outline-offset:8px}
+.introduction-actions .action-decay-defs{position:absolute;width:0;height:0;overflow:hidden}
+@media(max-width:500px){.introduction-actions{gap:16px}.introduction-actions a.action-stamp{width:162px}.stamp-face{padding:17px 16px}.stamp-face strong{font-size:23px}.stamp-face small{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.introduction-actions a.action-stamp{transition:none}}
 </style>
