@@ -37,12 +37,14 @@ const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing
   frame=0;
   const h=innerHeight,w=document.documentElement.clientWidth,y=scrollY;
   const introStart=intro.offsetTop;
+  portrait.hidden=y>=introStart-1;
+  portrait.inert=portrait.hidden;
   if(y>=introStart&&settled)return;
   settled=y>=introStart;
   const start=opening.offsetTop;
   const p=clamp((y-start)/Math.max(1,opening.offsetHeight));
   const dock=smooth((y-(introStart-h*.42))/(h*.42)),mobile=w<=700;
-  const centeredX=w/2-68*(1-.18*smooth(p/.9));
+  const centeredX=w/2-68*(1.35-.2*smooth(p/.9));
   const startY=h/2-225;
   const middleY=48;
   const float=smooth(p/.9);
@@ -50,7 +52,7 @@ const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing
   const targetX=mobile?18:(w<=900?48:56)+32-136*.66/2,targetY=mobile?84:76;
   const x=centeredX+(targetX-centeredX)*dock;
   const top=centerY+(targetY-centerY)*dock;
-  const scale=1-.18*float-.16*dock;
+  const scale=1.35-.2*float-.16*dock;
   portrait.style.transform=`translate3d(${x}px,${top}px,0) scale(${scale})`;
   document.body.dataset.opening=String(p<.28);
   if(controls)controls.inert=p<.28;
@@ -67,7 +69,7 @@ const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing
 <style>
 @font-face{font-family:Astoria;src:url('/fonts/astoria-latin.woff2') format('woff2');font-weight:400;font-display:swap}
 .scroll-hero{position:relative;height:100svh;min-height:620px;overflow:clip;isolation:isolate}
-.scroll-hero::before,.scroll-hero::after{content:'';position:absolute;z-index:-1;width:300px;height:310px;pointer-events:none;background-image:url('/img/watercolor-flowers.webp');background-repeat:no-repeat;background-size:760px 760px;opacity:.15;filter:saturate(.72)}
+.scroll-hero::before,.scroll-hero::after{content:none}
 .scroll-hero::before{left:clamp(-70px,4vw,80px);top:35%;background-position:0 -45px;transform:rotate(-18deg)}
 .scroll-hero::after{right:clamp(-70px,4vw,80px);bottom:12%;background-position:-500px -395px;transform:rotate(15deg)}
 @media(max-width:700px){.scroll-hero::before,.scroll-hero::after{width:205px;height:215px;background-size:530px 530px}.scroll-hero::before{left:-65px;top:25%;background-position:0 -30px}.scroll-hero::after{right:-55px;bottom:15%;background-position:-350px -275px}}
