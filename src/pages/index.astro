@@ -30,6 +30,7 @@ import WelcomeTour from '../components/WelcomeTour.astro';
 <style is:global>
 body:has(.scroll-artwork){isolation:isolate}
 .scroll-artwork{position:fixed;inset:0;z-index:-1;pointer-events:none;background:url('/img/blossoms-birds-background.webp') center center/auto 100% no-repeat;opacity:.05}
+.scroll-artwork::after{content:'';position:absolute;inset:0;background:url('/img/mamluk-minarets-background.webp') right bottom/auto 92% no-repeat}
 .garden-credit{max-width:none;margin:0;padding:18px 24px 28px;text-align:center;color:#958f85;font:11px/1.6 'Segoe UI',Arial,sans-serif}.garden-credit a{color:inherit;text-underline-offset:3px}
 body[data-opening="true"] .scroll-artwork{opacity:0}
 body:has(.scroll-artwork) :is(.about-timeline,.contact-section,.timeline-stage,.desk-scene,.desk-stage,.intro-chapter){background:transparent}
