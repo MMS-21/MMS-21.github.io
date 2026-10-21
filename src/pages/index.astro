@@ -18,7 +18,6 @@ import WelcomeTour from '../components/WelcomeTour.astro';
   <FeaturedWork />
   <AboutTimeline />
   <ContactInvitation />
-  <p class="garden-credit">Flower engine adapted from <a href="https://type-garden.vercel.app/">Type Garden</a> by Akshat Agarwal.</p>
   <ScrollRail />
   <LuluPet />
   <WelcomeTour />
@@ -30,7 +29,6 @@ import WelcomeTour from '../components/WelcomeTour.astro';
 <style is:global>
 body:has(.scroll-artwork){isolation:isolate}
 .scroll-artwork{position:fixed;inset:0;z-index:-1;pointer-events:none;background:url('/img/mamluk-minarets-background.webp') right bottom/auto 92% no-repeat;opacity:.05}
-.garden-credit{max-width:none;margin:0;padding:18px 24px 28px;text-align:center;color:#958f85;font:11px/1.6 'Segoe UI',Arial,sans-serif}.garden-credit a{color:inherit;text-underline-offset:3px}
 body:has(.scroll-artwork) :is(.about-timeline,.contact-section,.timeline-stage,.desk-scene,.desk-stage,.intro-chapter){background:transparent}
 @media(max-width:700px){.scroll-artwork{background-size:auto 100%;background-position:center}}
 </style>
