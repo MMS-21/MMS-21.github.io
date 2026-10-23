@@ -31,7 +31,7 @@ import '../styles/viewport-sections.css';
 </style>
 <style is:global>
 body:has(.scroll-artwork){isolation:isolate}
-.scroll-artwork{position:fixed;inset:0;z-index:-1;pointer-events:none;background:url('/img/mamluk-minarets-background.webp') right bottom/auto 92% no-repeat;opacity:.05}
+.scroll-artwork{display:none}
 body:has(.scroll-artwork) :is(.about-timeline,.contact-section,.timeline-stage,.desk-scene,.desk-stage,.intro-chapter){background:transparent}
 @media(max-width:700px){.scroll-artwork{background-size:auto 100%;background-position:center}}
 </style>

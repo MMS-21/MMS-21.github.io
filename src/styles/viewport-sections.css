@@ -1,4 +1,4 @@
-html:has(.folding-backdrop){scroll-snap-type:y mandatory;scroll-padding-top:0}
+html:has(.folding-backdrop){scroll-snap-type:y proximity;scroll-padding-top:0}
 body:has(.folding-backdrop) main.flush-top{padding-top:0;padding-bottom:0}
 body:has(.folding-backdrop) :is(#pre-hero,#hero-story,#featured-work,#about,#connect){height:100svh!important;min-height:100svh!important;max-height:100svh;box-sizing:border-box;scroll-snap-align:start;scroll-margin-top:0!important;position:relative}
 body:has(.folding-backdrop) #hero-story{padding:100px 120px 70px!important;align-items:center}
