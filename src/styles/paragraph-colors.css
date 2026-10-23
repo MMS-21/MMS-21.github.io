@@ -1,0 +1,3 @@
+/* Keep paragraph copy consistently black across page and dialog styles. */
+html body p,
+html body p :is(span,em,strong,b,i,a){color:#000!important}

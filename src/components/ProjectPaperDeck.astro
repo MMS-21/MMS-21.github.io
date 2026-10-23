@@ -1,5 +1,6 @@
 ---
 import { projectPapers as papers } from '../data/project-papers';
+import ProjectWaves from './ProjectWaves';
 ---
   <section class="workbench" aria-label="Project papers">
    <div class="stack">
@@ -16,7 +17,7 @@ import { projectPapers as papers } from '../data/project-papers';
   <div class="collection-handle"><span aria-hidden="true"></span><button class="close-sheet">← Back to the workbench <small>Esc</small></button></div>
   <header class="collection-heading"><div class="collection-meta"><span>Selected projects</span><span>Collection / {String(papers.length).padStart(2,'0')}</span></div><h2 id="collection-title">Works.</h2><p>A collection of questions explored through data, and tools built to make everyday work easier.</p></header>
   <div class="collection-projects">{papers.map((paper,i)=><article class="collection-project">
-   <button class="collection-preview" style={`--project-background:url('/img/project-backgrounds/${i+1}.webp')`} data-collection-paper={i} aria-label={`Preview ${paper.title}`}><img src={paper.image} alt={paper.alt} width="900" height="580" loading="lazy" decoding="async"/><span class="collection-preview-label">Enlarge preview ↗</span></button>
+   <button class="collection-preview" data-collection-paper={i} aria-label={`Preview ${paper.title}`}><ProjectWaves seed={i+1} client:idle /><img src={paper.image} alt={paper.alt} width="900" height="580" loading="lazy" decoding="async"/><span class="collection-preview-label">Enlarge preview ↗</span></button>
    <div class="collection-caption"><div class="collection-project-meta"><span>Project {String(i+1).padStart(2,'0')}</span><div class="collection-tags">{paper.tools.split(' · ').map(tool=><span>{tool}</span>)}</div></div><div class="collection-description"><h3><a href={paper.url}>{paper.title}</a></h3><div><p>{paper.summary}</p><a class="collection-read" href={paper.url}>Explore the project <span aria-hidden="true">↗</span></a></div></div></div>
   </article>)}</div>
   <a class="collection-index" href="/projects/">Open the full project index ↗</a>
@@ -94,7 +95,7 @@ import { projectPapers as papers } from '../data/project-papers';
 </style>
 <style is:global>
 #works-collection .collection-project{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,1fr);gap:36px;align-items:center;border-bottom:1px solid #80756730;padding-bottom:52px}
-#works-collection .collection-preview{background-image:var(--project-background);background-size:cover;background-position:center;padding:36px;isolation:isolate}
+#works-collection .collection-preview{background-image:none;background-color:#e7e5da;padding:36px;isolation:isolate}
 #works-collection .collection-preview::before{content:'';position:absolute;inset:0;background:#f7f2e52b;z-index:-1}
 #works-collection .collection-preview img,#works-collection .collection-project:nth-child(2n) .collection-preview img{height:clamp(320px,34vw,540px);background:transparent;filter:drop-shadow(0 12px 14px #25201735)}
 #works-collection .collection-caption{padding-top:0}
