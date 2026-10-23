@@ -8,10 +8,13 @@ import ContactInvitation from '../components/ContactInvitation.astro';
 import FeaturedWork from '../components/FeaturedWork.astro';
 import LuluPet from '../components/LuluPet.astro';
 import WelcomeTour from '../components/WelcomeTour.astro';
+import FoldingBackdrop from '../components/FoldingBackdrop.astro';
+import '../styles/viewport-sections.css';
 
 ---
 
 <Base hideHeader hideFooter>
+  <FoldingBackdrop />
   <div class="scroll-artwork" aria-hidden="true"></div>
   <ProfileControls />
   <ScrollHero />

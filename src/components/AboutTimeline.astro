@@ -52,7 +52,7 @@ const milestones=[
     return;
    }
    timeline.dataset.mobileReady='false';
-   const animated=!reduced.matches;
+   const animated=false;
    const progress=animated?clamp((scrollY-top-settle)/range):0;
    track.style.transform=animated?`translate3d(${-progress*travel}px,0,0)`:'none';
    const position=animated?progress*Math.max(0,milestones[milestones.length-1].offsetLeft-140):windowEl.scrollLeft;
@@ -63,7 +63,7 @@ const milestones=[
    buttons[1].disabled=animated?active===milestones.length-1:windowEl.scrollLeft>=windowEl.scrollWidth-windowEl.clientWidth-2;
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
-  const measure=()=>{timeline.dataset.animated=String(!reduced.matches&&innerWidth>700);top=timeline.offsetTop;settle=innerHeight*.65;range=Math.max(1,timeline.offsetHeight-innerHeight-settle);track.style.paddingRight=innerWidth>700?'80px':'0px';travel=Math.max(0,track.scrollWidth-windowEl.clientWidth);schedule();};
+  const measure=()=>{timeline.dataset.animated='false';top=timeline.offsetTop;settle=0;range=1;track.style.paddingRight=innerWidth>700?'80px':'0px';travel=Math.max(0,track.scrollWidth-windowEl.clientWidth);schedule();};
   const advance=(direction:number)=>{
    if(timeline.dataset.animated==='true'){const next=Math.max(0,Math.min(milestones.length-1,active+direction));scrollTo({top:top+settle+range*(milestones[next].offsetLeft-140)/Math.max(1,milestones[milestones.length-1].offsetLeft-140),behavior:'smooth'});}
    else windowEl.scrollBy({left:direction*windowEl.clientWidth*.8,behavior:reduced.matches?'instant':'smooth'});
