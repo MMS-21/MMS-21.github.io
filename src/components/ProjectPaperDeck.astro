@@ -1,18 +1,9 @@
 ---
 import { projectPapers as papers } from '../data/project-papers';
 import ProjectWaves from './ProjectWaves';
+import ProjectFlipBook from './ProjectFlipBook';
 ---
-  <section class="workbench" aria-label="Project papers">
-   <div class="stack">
-    {papers.map((paper,i)=><article class:list={['project-paper','poster-paper','overlay-paper',{'customer-retention-paper':paper.url==='/projects/ecommerce-clv-churn/'}]} data-paper={i} style={`--angle:${i===0?-7:5}deg;z-index:${i===0?2:1}`}>
-     <button class="project-image" aria-label={`Enlarge ${paper.title}`}><img src={paper.image} alt={paper.alt} width="900" height="580" loading="lazy" decoding="async"/></button>
-     <div class="paper-copy"><h2><a href={paper.url}>{paper.title} <span aria-hidden="true">↗</span></a></h2></div>
-    </article>)}
-   </div>
-   <div class="stack-controls"><button id="expand-study">Take a closer look ↗</button><div><button class="switch-paper" aria-label="Show previous project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h13"/></svg></button><span class="count" aria-live="polite">1 / {papers.length}</span><button class="switch-paper" aria-label="Show next project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6M16 12H3"/></svg></button></div></div>
-  </section>
- <nav class="project-view-pill" aria-label="Project view mode"><button type="button" data-project-view="slide" aria-pressed="true">Slide</button><button type="button" data-project-view="index" aria-pressed="false">Index</button></nav>
- <div class="project-column-pill" role="group" aria-label="Project columns">{[1,2,3].map(n=><button type="button" data-project-columns={n} aria-label={`${n} column${n>1?'s':''}`} aria-pressed={n===2?'true':'false'}>{n}</button>)}</div>
+ <ProjectFlipBook client:only="react" />
  <dialog id="works-collection" aria-labelledby="collection-title">
   <div class="collection-handle"><span aria-hidden="true"></span><button class="close-sheet">← Back to the workbench <small>Esc</small></button></div>
   <header class="collection-heading"><div class="collection-meta"><span>Selected projects</span><span>Collection / {String(papers.length).padStart(2,'0')}</span></div><h2 id="collection-title">Works.</h2><p>A collection of questions explored through data, and tools built to make everyday work easier.</p></header>

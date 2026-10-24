@@ -29,8 +29,13 @@
     "@astrojs/react": "^7.0.1",
     "@astrojs/rss": "^4.0.19",
     "@paper-design/shaders-react": "^0.0.82",
+    "@tailwindcss/vite": "^4.3.3",
+    "clsx": "^2.1.1",
+    "motion": "^14.6.0",
     "page-mascot": "^0.1.0",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3"
   }
 }
