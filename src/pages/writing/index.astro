@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import WritingSketch from '../../components/WritingSketch.astro';
+import WritingWind from '../../components/WritingWind';
 import { getCollection } from 'astro:content';
 const posts=(await getCollection('blog')).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
 const [featured,...rest]=posts;
@@ -10,6 +11,7 @@ const category=(tags:string[])=>tags.includes('people-analytics')?'People analyt
 ---
 <Base title="Writing" description="Practical notes on building AI applications, working with data, and learning by making things." ogImage="/og-writing.png" hideFooter>
  <div class="writing-page">
+  <div class="writing-wind-layer" aria-hidden="true"><WritingWind client:only="react" /></div>
   <header class="notebook-opening"><div><h1>The working notebook.</h1><p>Ideas worth exploring. Things worth building.<br />Notes on AI, analysis, and what happens along the way.</p></div><a class="feed-link" href="/rss.xml">Follow via RSS ↗</a></header>
   {featured&&<section class="featured-story" aria-label="Latest article">
    <div class="story-copy"><h2><a href={`/writing/${featured.id}/`}>{featured.data.title}</a></h2><p class="story-meta">{category(featured.data.tags)} <span>·</span> {minutes(featured.body)} min read</p><p class="story-description">{featured.data.description}</p><a class="read-link" href={`/writing/${featured.id}/`}>Open the notebook <span aria-hidden="true">→</span></a><time datetime={featured.data.pubDate.toISOString()}>{date(featured.data.pubDate)}</time></div>
@@ -21,6 +23,10 @@ const category=(tags:string[])=>tags.includes('people-analytics')?'People analyt
 </Base>
 <style>
  .writing-page{max-width:1120px;margin:auto;padding:12px 40px 24px;color:#302d28}
+ .writing-page{position:relative;isolation:isolate}
+ .writing-wind-layer{position:absolute;inset:-45px -90px -35px;z-index:0;pointer-events:none;overflow:hidden;mask-image:linear-gradient(transparent,#000 8%,#000 90%,transparent)}
+ .writing-page>:is(header,section,aside){position:relative;z-index:1}
+ .writing-wind-layer :global(.writing-sand-flow){color:#9d773e;opacity:.9}
  .notebook-opening{display:flex;justify-content:space-between;align-items:end;gap:24px;padding-bottom:40px}
  h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;letter-spacing:-.02em}
  h1{font-size:clamp(3rem,5.3vw,4.6rem);line-height:1.02;margin:0 0 20px;text-wrap:balance}
