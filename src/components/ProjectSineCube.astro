@@ -1,0 +1,69 @@
+---
+import { projectPapers as papers } from '../data/project-papers';
+---
+<div class="sine-work" data-projects={JSON.stringify(papers)}>
+ <div class="cube-presentation">
+  <nav class="cube-rail" aria-label="Select featured project">{papers.map((p,i)=><button type="button" data-select={i} aria-label={p.title} aria-pressed={i===0}>{String(i+1).padStart(2,'0')}</button>)}</nav>
+  <svg class="sine-art" viewBox="-55 -350 410 560" aria-label="Animated stack of featured project posters" role="img">
+   <title>Selected work, an interactive stack of research posters</title>
+   {papers.map((p,i)=><g class="sine-plane" data-plane={i} style={`--phase:${i * -.36}s`}>
+    <g class="sine-breathe">
+     <polygon points="0,-210 181.87,-315 173.21,-320 -8.66,-215" fill="#d1c7b4" stroke="#8b7c62" stroke-width=".5"/>
+     <polygon points="0,0 0,-210 -8.66,-215 -8.66,-5" fill="#c0b297" stroke="#8b7c62" stroke-width=".5"/>
+     <g transform="matrix(1 -.57735 0 1 0 -210)">
+      <rect width="181.87" height="210" fill="#fffaf0" stroke="#9d907c" stroke-width=".6"/>
+      <image href={p.image} x="5" y="8" width="172" height="166" preserveAspectRatio="xMidYMid meet"/>
+      <text x="10" y="190" font-size="7" fill="#534c40">{String(i+1).padStart(2,'0')} / SELECTED WORK</text>
+      <text x="10" y="201" font-size="5" fill="#534c40">{p.tools}</text>
+     </g>
+    </g>
+   </g>)}
+  </svg>
+ </div>
+ <div class="cube-caption" aria-live="polite" aria-atomic="true"><p class="cube-tools">{papers[0].tools}</p><h3><a class="cube-title" href={papers[0].url}>{papers[0].title}</a></h3><a class="cube-read" href={papers[0].url}>Read the case study ↗</a></div>
+ <div class="cube-controls"><button type="button" data-prev aria-label="Previous project">←</button><span class="cube-count">01 / {String(papers.length).padStart(2,'0')}</span><button type="button" data-next aria-label="Next project">→</button></div>
+ <p class="cube-help">Click or swipe the posters to browse.</p>
+</div>
+<script>
+ const root=document.querySelector<HTMLElement>('.sine-work')!;
+ const papers=JSON.parse(root.dataset.projects!);
+ const svg=root.querySelector<SVGSVGElement>('svg')!;
+ const planes=Array.from(svg.querySelectorAll<SVGGElement>('[data-plane]'));
+ let selected=0;
+ function show(index:number){
+  selected=(index+papers.length)%papers.length;
+  const order=planes.map((_,k)=>(selected+k)%papers.length);
+  order.slice().reverse().forEach(id=>svg.append(planes[id]));
+  order.forEach((id,k)=>{const slot=planes.length-1-k;planes[id].style.transform=`translate(${slot*14}px,${slot*19}px)`;});
+  root.querySelectorAll<HTMLButtonElement>('[data-select]').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===selected)));
+  const p=papers[selected];
+  const title=root.querySelector<HTMLAnchorElement>('.cube-title')!;title.textContent=p.title;title.href=p.url;
+  root.querySelector<HTMLAnchorElement>('.cube-read')!.href=p.url;
+  root.querySelector('.cube-tools')!.textContent=p.tools;
+  root.querySelector('.cube-count')!.textContent=`${String(selected+1).padStart(2,'0')} / ${String(papers.length).padStart(2,'0')}`;
+ }
+ root.querySelectorAll<HTMLButtonElement>('[data-select]').forEach(b=>b.addEventListener('click',()=>show(Number(b.dataset.select))));
+ root.querySelector('[data-prev]')!.addEventListener('click',()=>show(selected-1));
+ root.querySelector('[data-next]')!.addEventListener('click',()=>show(selected+1));
+ let start:{x:number;y:number;id:number}|null=null;
+ svg.addEventListener('pointerdown',e=>{if(e.button===0)start={x:e.clientX,y:e.clientY,id:e.pointerId};});
+ window.addEventListener('pointerup',e=>{if(!start||start.id!==e.pointerId)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.abs(dy)>Math.max(40,Math.abs(dx)))return;const hit=(e.target as Element).closest('[data-plane]');if(Math.abs(dx)>35)show(selected+(dx<0?1:-1));else if(hit){const id=Number(hit.getAttribute('data-plane'));show(id===selected?selected+1:id);}});
+ window.addEventListener('pointercancel',()=>{start=null;});
+ root.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();show(selected+(e.key==='ArrowRight'?1:-1));}});
+ show(0);
+</script>
+<style>
+ .sine-work{position:relative;pointer-events:auto;max-width:800px;margin:0 auto;color:#302d28}
+ .cube-presentation{display:flex;align-items:center;justify-content:center;gap:24px}
+ .cube-rail{display:flex;flex-direction:column;gap:12px;flex:none}
+ .cube-rail button{border:0;background:transparent;color:#746954;font:12px/16px 'Manrope',sans-serif;padding:8px 12px;cursor:pointer;border-radius:4px}
+ .cube-rail button[aria-pressed=true]{color:#fffaf0;background:#426b7d}
+ .sine-art{display:block;width:min(100%,520px);height:auto;overflow:visible;touch-action:pan-y;cursor:grab;filter:drop-shadow(6px 18px 14px #493b2826)}
+ .sine-art:active{cursor:grabbing}.sine-plane{transition:transform 650ms cubic-bezier(.22,1,.36,1)}
+ .sine-breathe{animation:breathe 7.6s ease-in-out infinite;animation-delay:var(--phase);transform-box:fill-box;transform-origin:center}
+ @keyframes breathe{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(1.5px,-1.2px) rotate(.42deg)}50%{transform:translate(0,-2.5px)}75%{transform:translate(-1.5px,.8px) rotate(-.42deg)}}
+ .cube-caption{text-align:center;max-width:560px;min-height:148px;margin:16px auto 0}.cube-tools{font:12px/16px 'Manrope',sans-serif;color:#70634f;margin:0 0 12px}.cube-caption h3{font:500 30px/36px 'Cormorant Garamond',Georgia,serif;text-wrap:balance;margin:0 0 16px}.cube-title{color:inherit;text-decoration:none}.cube-read{font:600 14px/20px 'Manrope',sans-serif;color:#426b7d;text-underline-offset:4px}
+ .cube-controls{display:flex;justify-content:center;align-items:center;gap:24px;margin-top:16px}.cube-controls button{width:44px;height:44px;border:1px solid #a79a82;background:#fcf9f1;color:#4c4538;border-radius:4px;cursor:pointer}.cube-count,.cube-help{font:12px/16px 'Manrope',sans-serif;color:#70634f}.cube-help{text-align:center;margin:12px 0 0}.sine-work button:hover{background:#e6dfd0;color:#302d28}.sine-work button:active{transform:translateY(1px)}.sine-work :focus-visible{outline:2px solid #426b7d;outline-offset:4px}
+ @media(max-width:700px){.cube-presentation{gap:4px}.cube-rail{gap:4px}.cube-rail button{padding:8px}.sine-art{width:calc(100% - 44px)}.cube-caption h3{font-size:24px;line-height:32px}.cube-caption{min-height:160px}.sine-work{margin-top:-24px}}
+ @media(prefers-reduced-motion:reduce){.sine-breathe{animation:none}.sine-plane{transition:none}}
+</style>

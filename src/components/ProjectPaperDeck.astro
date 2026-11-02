@@ -1,9 +1,9 @@
 ---
 import { projectPapers as papers } from '../data/project-papers';
 import ProjectWaves from './ProjectWaves';
-import ProjectFlipBook from './ProjectFlipBook';
+import ProjectSineCube from './ProjectSineCube.astro';
 ---
- <ProjectFlipBook client:only="react" />
+ <ProjectSineCube />
  <dialog id="works-collection" aria-labelledby="collection-title">
   <div class="collection-handle"><span aria-hidden="true"></span><button class="close-sheet">← Back to the workbench <small>Esc</small></button></div>
   <header class="collection-heading"><div class="collection-meta"><span>Selected projects</span><span>Collection / {String(papers.length).padStart(2,'0')}</span></div><h2 id="collection-title">Works.</h2><p>A collection of questions explored through data, and tools built to make everyday work easier.</p></header>
