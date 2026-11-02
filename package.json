@@ -28,6 +28,7 @@
   "dependencies": {
     "@astrojs/react": "^7.0.1",
     "@astrojs/rss": "^4.0.19",
+    "@designcodeio/threeui": "^1.2.0",
     "@paper-design/shaders-react": "^0.0.82",
     "@tailwindcss/vite": "^4.3.3",
     "clsx": "^2.1.1",
