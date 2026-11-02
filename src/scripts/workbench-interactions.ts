@@ -20,7 +20,7 @@ const soundButton=document.querySelector<HTMLButtonElement>('#sound');
 function soundLabel(){if(!soundButton)return;soundButton.textContent=sound?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound))}soundLabel();
 soundButton?.addEventListener('click',()=>{sound=!sound;localStorage.setItem('workbench-sound',sound?'on':'off');soundLabel();if(sound)rustle()});
 const drawer=document.querySelector<HTMLDialogElement>('#case-drawer')!,resume=document.querySelector<HTMLDialogElement>('#resume-sheet')!,collection=document.querySelector<HTMLDialogElement>('#works-collection')!;
-function lock(){document.body.classList.toggle('sheet-open',[drawer,resume,collection].some(d=>d.open))}
+function lock(){document.body.classList.toggle('sheet-open',[drawer,resume,collection].some(d=>d?.open))}
 let request=0,caseTrigger:HTMLElement|undefined;
 async function openCase(index:number,trigger:HTMLElement){if(drawer.open)return;caseTrigger=trigger;const token=++request,paper=projectPapers[index];
  const origin=trigger.querySelector('img')?.getBoundingClientRect()??trigger.getBoundingClientRect(); const titleLink=document.querySelector<HTMLAnchorElement>('#drawer-link')!;titleLink.textContent=paper.title;titleLink.href=paper.url;
@@ -33,7 +33,7 @@ async function openCase(index:number,trigger:HTMLElement){if(drawer.open)return;
 document.addEventListener('project-preview',event=>{const {index,trigger}=(event as CustomEvent<{index:number;trigger:HTMLElement}>).detail;void openCase(index,trigger)});let collectionY=0,collectionBusy=false;
 function slide(y:number){collectionY=y;collection.style.transform=`translateY(${y}px)`;}
 const collectionTrigger=document.querySelector<HTMLButtonElement>('#collection-open')!;
-collectionTrigger.addEventListener('click',async()=>{if(collection.open)return;collection.showModal();collection.scrollTop=0;lock();rustle('open');collectionTrigger.setAttribute('aria-expanded','true');collectionBusy=true;slide(innerHeight);await spring([innerHeight],[0],v=>slide(v[0]),240,26);collectionBusy=false;});
+collectionTrigger?.addEventListener('click',async()=>{if(collection.open)return;collection.showModal();collection.scrollTop=0;lock();rustle('open');collectionTrigger.setAttribute('aria-expanded','true');collectionBusy=true;slide(innerHeight);await spring([innerHeight],[0],v=>slide(v[0]),240,26);collectionBusy=false;});
 async function closeCollection(){if(collectionBusy||!collection.open)return;collectionBusy=true;rustle('close');await spring([collectionY],[innerHeight],v=>slide(v[0]),240,28);collection.close();collectionBusy=false;collectionTrigger.setAttribute('aria-expanded','false');collectionTrigger.focus();}
 collection.querySelectorAll<HTMLElement>('[data-collection-paper]').forEach(button=>button.addEventListener('click',()=>void openCase(Number(button.dataset.collectionPaper),button)));
 let dragStart:number|undefined,dragLast=0,dragAt=0,dragVelocity=0;

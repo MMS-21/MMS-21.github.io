@@ -14,7 +14,7 @@ const designs = [
 ---
 <div class="sine-work" data-projects={JSON.stringify(papers)}>
  <div class="cube-presentation">
-  <svg class="sine-art" viewBox="-55 -350 410 560" aria-label="Animated stack of featured project posters" role="img">
+  <svg class="sine-art" viewBox="-55 -350 410 560" aria-label="Featured project posters. Drag to browse, click to preview, or use arrow keys." role="button" tabindex="0">
    <title>Selected work, an interactive stack of research posters</title>
    {papers.map((p,i)=><g class="sine-plane" data-plane={i} style={`--phase:${i * -.36}s`}>
     <g class="sine-breathe">
@@ -26,8 +26,7 @@ const designs = [
   </svg>
  </div>
  <div class="cube-caption" aria-live="polite" aria-atomic="true"><p class="cube-tools">{papers[0].tools}</p><h3><a class="cube-title" href={papers[0].url}>{papers[0].title}</a></h3><a class="cube-read" href={papers[0].url}>Read the case study ↗</a></div>
- <div class="cube-controls"><button type="button" data-prev aria-label="Previous project">←</button><span class="cube-count">01 / {String(papers.length).padStart(2,'0')}</span><button type="button" data-next aria-label="Next project">→</button></div>
- <p class="cube-help">Click or swipe the posters to browse.</p>
+ <p class="cube-help">Drag to browse · Click to preview</p>
 </div>
 <script>
  const root=document.querySelector<HTMLElement>('.sine-work')!;
@@ -48,17 +47,14 @@ const designs = [
   const title=root.querySelector<HTMLAnchorElement>('.cube-title')!;title.textContent=p.title;title.href=p.url;
   root.querySelector<HTMLAnchorElement>('.cube-read')!.href=p.url;
   root.querySelector('.cube-tools')!.textContent=p.tools;
-  root.querySelector('.cube-count')!.textContent=`${String(selected+1).padStart(2,'0')} / ${String(papers.length).padStart(2,'0')}`;
  }
- root.querySelectorAll<HTMLButtonElement>('[data-select]').forEach(b=>b.addEventListener('click',()=>show(Number(b.dataset.select))));
- root.querySelector('[data-prev]')!.addEventListener('click',()=>show(selected-1));
- root.querySelector('[data-next]')!.addEventListener('click',()=>show(selected+1));
+ function preview(index:number){document.dispatchEvent(new CustomEvent('project-preview',{detail:{index,trigger:svg}}));}
  let start:{x:number;y:number;id:number;plane:number;t:number}|null=null;
  svg.addEventListener('pointerdown',e=>{const hit=(e.target as Element).closest('[data-plane]');if(e.button===0&&hit){start={x:e.clientX,y:e.clientY,id:e.pointerId,plane:Number(hit.getAttribute('data-plane')),t:performance.now()};if(start.plane===selected)planes[selected].style.transition='none';}});
- window.addEventListener('pointermove',e=>{if(!start||start.id!==e.pointerId||start.plane!==selected)return;const dx=e.clientX-start.x,dy=e.clientY-start.y,scale=Math.max(.01,svg.getBoundingClientRect().width/410),x=160*Math.tanh(dx/scale/160),y=160*Math.tanh(dy/scale/160),slot=planes.length-1;planes[selected].style.transform=`translate(${slot*14+x}px,${slot*19+y}px) rotate(${x*.035}deg)`;});
- window.addEventListener('pointerup',e=>{if(!start||start.id!==e.pointerId)return;const d=start;start=null;const far=Math.hypot(e.clientX-d.x,e.clientY-d.y),speed=far/Math.max(1,performance.now()-d.t);if(d.plane!==selected){show(d.plane);return;}if(far<6||far>70||(speed>.6&&far>24))show(selected+1);else show(selected);});
+ window.addEventListener('pointermove',e=>{if(!start||start.id!==e.pointerId||start.plane!==selected)return;const dx=e.clientX-start.x,dy=e.clientY-start.y,scale=Math.max(.01,svg.getBoundingClientRect().width/410),x=160*Math.tanh(dx/scale/160),y=160*Math.tanh(dy/scale/160),slot=planes.length-1;planes[selected].style.transform=`translate(${slot*14+x}px,${slot*19+y}px)`;});
+ window.addEventListener('pointerup',e=>{if(!start||start.id!==e.pointerId)return;const d=start;start=null;const far=Math.hypot(e.clientX-d.x,e.clientY-d.y),speed=far/Math.max(1,performance.now()-d.t);if(far<6){show(d.plane);preview(d.plane);return;}if(d.plane===selected&&(far>70||(speed>.6&&far>24)))show(selected+1);else show(selected);});
  window.addEventListener('pointercancel',()=>{start=null;});
- root.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();show(selected+(e.key==='ArrowRight'?1:-1));}});
+ root.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();show(selected+(e.key==='ArrowRight'?1:-1));}else if(e.target===svg&&(e.key==='Enter'||e.key===' ')){e.preventDefault();preview(selected);}});
  show(0);
 </script>
 <style>
@@ -68,7 +64,7 @@ const designs = [
  .cube-rail button{border:0;background:transparent;color:#746954;font:12px/16px 'Manrope',sans-serif;padding:8px 12px;cursor:pointer;border-radius:4px}
  .cube-rail button[aria-pressed=true]{color:#fffaf0;background:#426b7d}
  .sine-art{display:block;width:min(100%,520px);height:auto;overflow:visible;touch-action:pan-y;cursor:grab;filter:drop-shadow(6px 18px 14px #493b2826)}
- .sine-art:active{cursor:grabbing}.sine-plane{transition:transform 650ms cubic-bezier(.22,1,.36,1)}
+ .sine-art:active{cursor:grabbing}.sine-plane{transform-box:view-box;transform-origin:0 0;transition:transform 650ms cubic-bezier(.22,1,.36,1)}
  .sine-breathe{animation:breathe 7.6s ease-in-out infinite;animation-delay:var(--phase);transform-box:fill-box;transform-origin:center}
  @keyframes breathe{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(1.5px,-1.2px) rotate(.42deg)}50%{transform:translate(0,-2.5px)}75%{transform:translate(-1.5px,.8px) rotate(-.42deg)}}
  .cube-caption{text-align:center;max-width:560px;min-height:148px;margin:16px auto 0}.cube-tools{font:12px/16px 'Manrope',sans-serif;color:#70634f;margin:0 0 12px}.cube-caption h3{font:500 30px/36px 'Cormorant Garamond',Georgia,serif;text-wrap:balance;margin:0 0 16px}.cube-title{color:inherit;text-decoration:none}.cube-read{font:600 14px/20px 'Manrope',sans-serif;color:#426b7d;text-underline-offset:4px}
