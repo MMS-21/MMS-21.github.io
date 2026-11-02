@@ -1,5 +1,16 @@
 ---
 import { projectPapers as papers } from '../data/project-papers';
+import { inner } from '../data/reference-posters.js';
+const designs = [
+ {posterTitle:['CUSTOMER','INTELLIGENCE'],art:'wave',accent:'#c1ed7f'},
+ {posterTitle:['RETENTION','ANALYSIS'],art:'bars',accent:'#a4a6fd'},
+ {posterTitle:['A/B','TESTING'],art:'scatter',accent:'#eb9db5'},
+ {posterTitle:['SQL','ANALYSIS'],art:'routes',accent:'#f5aa71'},
+ {posterTitle:['CLIMATE','SIGNALS'],art:'rings',accent:'#8fe3d7'},
+ {posterTitle:['ANALYTICS','AGENT'],art:'flow',accent:'#91c3ff'},
+ {posterTitle:['DOCUMENT','AUTHORSHIP'],art:'network',accent:'#d5bcf0'},
+ {posterTitle:['DASHBOARD','COLLECTION'],art:'heat',accent:'#f4cd9b'},
+];
 ---
 <div class="sine-work" data-projects={JSON.stringify(papers)}>
  <div class="cube-presentation">
@@ -7,19 +18,9 @@ import { projectPapers as papers } from '../data/project-papers';
    <title>Selected work, an interactive stack of research posters</title>
    {papers.map((p,i)=><g class="sine-plane" data-plane={i} style={`--phase:${i * -.36}s`}>
     <g class="sine-breathe">
-     <polygon points="0,-210 181.87,-315 173.21,-320 -8.66,-215" fill="#d1c7b4" stroke="#8b7c62" stroke-width=".5"/>
-     <polygon points="0,0 0,-210 -8.66,-215 -8.66,-5" fill="#c0b297" stroke="#8b7c62" stroke-width=".5"/>
-     <g transform="matrix(1 -.57735 0 1 0 -210)">
-      <rect x="4" y="4" width="174" height="202" rx="2" fill="#11171b" stroke="#697277" stroke-width=".7"/>
-      <rect x="4" y="4" width="174" height="3.5" fill={['#c1ed7f','#91c3ff','#f4cd9b','#eb9db5','#8fe3d7','#d5bcf0','#a2daca','#c1ed7f'][i]}/>
-      <text x="15" y="19" font-size="6.4" letter-spacing="1" font-family="monospace" fill="#dae0d8">FORM / STUDIES</text>
-      <text x="166" y="19" text-anchor="end" font-size="6.4" font-family="monospace" fill="#dae0d8">{String(i+1).padStart(2,'0')} / 08</text>
-      <foreignObject x="14" y="29" width="150" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="color:#f5f5ef;font:700 13px/1.05 Arial,sans-serif;text-transform:uppercase">{p.title}</div></foreignObject>
-      <image href={p.image} x="15" y="80" width="150" height="86" preserveAspectRatio="xMidYMid meet"/>
-      <line x1="15" y1="173" x2="166" y2="173" stroke="#56626a" stroke-width=".65"/>
-      <text x="15" y="184" font-size="6.1" letter-spacing=".75" font-family="monospace" fill="#c1ed7f">SELECTED WORK</text>
-      <text x="15" y="195" font-size="5.2" font-family="monospace" fill="#acb8ba">{p.tools}</text>
-     </g>
+     <polygon points="0,-210 181.87,-315 173.21,-320 -8.66,-215" fill="#cccccc"/>
+     <polygon points="0,0 0,-210 -8.66,-215 -8.66,-5" fill="#1a1a1a" stroke="#cccccc" stroke-width=".5"/>
+     <g transform="matrix(1 -.57735 0 1 0 -210)" set:html={inner({...designs[i], title:p.title, placeholder:false},i)} />
     </g>
    </g>)}
   </svg>
