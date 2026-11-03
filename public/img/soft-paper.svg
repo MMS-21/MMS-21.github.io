@@ -9,7 +9,7 @@
       <feDistantLight azimuth="225" elevation="55"/>
     </feDiffuseLighting>
   </filter>
-  <path fill="#f7f5f0" d="M0 0h512v512H0z"/>
+  <path fill="transparent" d="M0 0h512v512H0z"/>
   <path filter="url(#pulp)" opacity=".16" d="M0 0h512v512H0z"/>
   <path filter="url(#grain)" d="M0 0h512v512H0z"/>
 </svg>
