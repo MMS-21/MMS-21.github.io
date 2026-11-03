@@ -20,7 +20,8 @@
   "license": "MIT",
   "homepage": "https://mms-21.github.io",
   "devDependencies": {
-    "astro": "^7.3.5"
+    "astro": "^7.3.5",
+    "clayzo": "^0.3.20"
   },
   "allowScripts": {
     "esbuild@0.28.2": true
@@ -28,6 +29,8 @@
   "dependencies": {
     "@astrojs/react": "^7.0.1",
     "@astrojs/rss": "^4.0.19",
+    "@clayzo/animation": "^0.3.20",
+    "@clayzo/webgl-player": "^0.3.20",
     "@designcodeio/threeui": "^1.2.0",
     "@paper-design/shaders-react": "^0.0.82",
     "@tailwindcss/vite": "^4.3.3",
