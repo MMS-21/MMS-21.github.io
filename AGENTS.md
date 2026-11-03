@@ -4,4 +4,6 @@ The user wants committed portfolio changes published automatically. After comple
 
 Leave unrelated local files out of task commits.
 
+Publish routine requested changes automatically after validation. Ask the user before major redesigns, substantial scope expansions, destructive changes, or other major changes. This standing publication preference was explicitly confirmed on 2026-11-03.
+
 Use no em dashes in newly written user-facing copy or replies. Use "Confidential" exactly when identifying the withheld HR case-study organization. Exclude its Excel assessment and supplied task instructions from publication.
