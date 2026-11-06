@@ -1,0 +1,13 @@
+.project-tumble{pointer-events:auto;min-height:0;padding:0!important;max-width:900px!important;margin:0 auto;width:100%;color:#302d28}
+.tumble-caption{text-align:center;min-height:96px;padding:0 16px}
+.tumble-tools{font:400 12px/16px 'Manrope',sans-serif;color:#665b4c;margin:0 0 8px}
+.tumble-caption h3{font:500 24px/32px 'Cormorant Garamond',Georgia,serif;margin:0 0 8px;text-wrap:balance}
+.tumble-caption a{color:inherit;text-underline-offset:4px}
+.tumble-caption h3 a{text-decoration:none}
+.tumble-explore,.tumble-footer{font:400 12px/16px 'Manrope',sans-serif}
+.tumble-footer{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:16px;padding:16px 0 0;color:#665b4c}
+.tumble-footer button{border:0;background:transparent;color:#302d28;padding:8px 12px;font:inherit;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.project-tumble a:hover,.tumble-footer button:hover{color:#79613e}
+.project-tumble a:focus-visible,.tumble-footer button:focus-visible{outline:2px solid #79613e;outline-offset:4px}
+.tumble-footer button:active{transform:translateY(1px)}
+@media(max-width:700px){.tumble-caption h3{font-size:20px;line-height:28px}.tumble-footer{gap:4px;padding-top:8px}.tumble-caption{min-height:112px}}
