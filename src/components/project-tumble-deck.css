@@ -11,3 +11,8 @@
 .project-tumble a:focus-visible,.tumble-footer button:focus-visible{outline:2px solid #79613e;outline-offset:4px}
 .tumble-footer button:active{transform:translateY(1px)}
 @media(max-width:700px){.tumble-caption h3{font-size:20px;line-height:28px}.tumble-footer{gap:4px;padding-top:8px}.tumble-caption{min-height:112px}}
+
+/* Give the enlarged deck its own space instead of shrinking the workbench. */
+body:has(.scroll-artwork) #featured-work{height:auto!important;min-height:100svh!important;max-height:none}
+body:has(.scroll-artwork) #featured-work .desk-stage{height:auto;min-height:100svh;justify-content:flex-start}
+body:has(.scroll-artwork) .project-tumble{flex-shrink:0}
