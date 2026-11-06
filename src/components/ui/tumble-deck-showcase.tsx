@@ -154,11 +154,11 @@ export default function TumbleDeckShowcase({
     if (!root || !scene) return
     const fit = () => {
       const W0 = root.clientWidth
-      const H0 = root.clientHeight
-      const wFrac = 0.95
-      const h = Math.max(60, Math.min((W0 * wFrac) / aspect, H0 * 0.42, 620))
+      // Size the actual cards first; the interaction surface follows their bounds.
+      const h = Math.max(60, Math.min(W0 / (1.22 * aspect), 360))
       const w = h * aspect
-      const top = H0 / 2 - 0.62 * h
+      const top = 0.32 * h
+      root.style.height = `${1.9 * h}px`
       geo.current = { h, gap: 0.24 * h }
       scene.style.perspective = `${6 * h}px`
       scene.style.perspectiveOrigin = `50% ${top - 1.66 * h}px`
@@ -303,7 +303,7 @@ export default function TumbleDeckShowcase({
         rootRef.current?.focus({ preventScroll: true })
         if (!dragged.current) api.current.step(1)
       }}
-      className={["td-root relative w-full touch-pan-y overflow-hidden outline-none select-none", className]
+      className={["td-root touch-pan-y outline-none select-none", className]
         .filter(Boolean)
         .join(" ")}
       style={{ height, background, ...style }}

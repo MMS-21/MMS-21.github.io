@@ -9,8 +9,8 @@ export default function ProjectTumbleDeck() {
   const [active, setActive] = useState(0);
   const project = projectPapers[active];
   return (
-    <div className="project-tumble workbench">
-      <TumbleDeckShowcase cards={cards} height="clamp(437.5px, 75.25svh, 840px)" aspect={1.45} depth={5} background="transparent" onCardChange={setActive} ariaLabel="Selected projects" />
+    <div className="project-tumble">
+      <TumbleDeckShowcase cards={cards} height="auto" aspect={1.45} depth={5} background="transparent" onCardChange={setActive} ariaLabel="Selected projects" />
       <div className="tumble-caption" aria-live="polite" aria-atomic="true">
         <p className="tumble-tools">{project.tools}</p>
         <h3><a href={project.url}>{project.title}</a></h3>

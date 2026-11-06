@@ -52,7 +52,7 @@ const milestones=[
     return;
    }
    timeline.dataset.mobileReady='false';
-   const animated=false;
+   const animated=timeline.dataset.animated==='true';
    const progress=animated?clamp((scrollY-top-settle)/range):0;
    track.style.transform=animated?`translate3d(${-progress*travel}px,0,0)`:'none';
    const position=animated?progress*Math.max(0,milestones[milestones.length-1].offsetLeft-140):windowEl.scrollLeft;
@@ -63,7 +63,17 @@ const milestones=[
    buttons[1].disabled=animated?active===milestones.length-1:windowEl.scrollLeft>=windowEl.scrollWidth-windowEl.clientWidth-2;
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(render);};
-  const measure=()=>{timeline.dataset.animated='false';top=timeline.offsetTop;settle=0;range=1;track.style.paddingRight=innerWidth>700?'80px':'0px';travel=Math.max(0,track.scrollWidth-windowEl.clientWidth);schedule();};
+  const measure=()=>{
+   const animated=innerWidth>700&&!reduced.matches;
+   timeline.dataset.animated=String(animated);
+   track.style.paddingRight=innerWidth>700?'80px':'0px';
+   travel=Math.max(0,track.scrollWidth-windowEl.clientWidth);
+   range=Math.max(innerHeight*2,travel);
+   timeline.style.setProperty('--timeline-height',`${range+innerHeight}px`);
+   top=timeline.getBoundingClientRect().top+scrollY;settle=0;
+   if(animated)windowEl.scrollLeft=0;
+   schedule();
+  };
   const advance=(direction:number)=>{
    if(timeline.dataset.animated==='true'){const next=Math.max(0,Math.min(milestones.length-1,active+direction));scrollTo({top:top+settle+range*(milestones[next].offsetLeft-140)/Math.max(1,milestones[milestones.length-1].offsetLeft-140),behavior:'smooth'});}
    else windowEl.scrollBy({left:direction*windowEl.clientWidth*.8,behavior:reduced.matches?'instant':'smooth'});
@@ -136,3 +146,12 @@ const milestones=[
  @media(prefers-reduced-motion:reduce) { .milestone-copy,.above .milestone-copy { opacity:1; transform:none; transition:none; } .milestone-stem { transform:none; transition:none; } }
 </style>
 
+
+<style is:global>
+body:has(.scroll-artwork) #about[data-animated="true"]{height:var(--timeline-height)!important;max-height:none;overflow:visible}
+body:has(.scroll-artwork) #about[data-animated="true"] .timeline-stage{position:sticky;top:0;height:100svh}
+body:has(.scroll-artwork) #about[data-animated="true"] .timeline-window{overflow:hidden}
+body:has(.scroll-artwork) #about :is(h2,h3,p,a,span,button){font-family:'Zodiak',Georgia,serif!important;font-weight:400}
+body:has(.scroll-artwork) #about .milestone-copy>p:not(.milestone-date){line-height:1.7}
+@media(max-width:700px){body:has(.scroll-artwork) #about{height:auto!important;max-height:none;overflow:visible}body:has(.scroll-artwork) #about .timeline-stage{height:auto}}
+</style>
