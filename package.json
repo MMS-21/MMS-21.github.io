@@ -7,9 +7,10 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "npm run test:project-labs && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "test:project-labs": "node tools/check-project-labs.mjs"
   },
   "repository": {
     "type": "git",
