@@ -8,9 +8,25 @@ import ProjectPaperDeck from './ProjectPaperDeck.astro';
  </div>
   <ProjectPaperDeck />
   <h3 class="workbench-heading">Tools &amp; gadgets</h3>
-  <div class="tool-papers">
-   <article class="work-paper tool-paper"><div><h3><a href="/projects/analytics-agent/">From data to an inspectable report</a></h3><p>analytics-agent · Python tools and a report quality gate</p></div><a class="tool-link" href="/projects/analytics-agent/" aria-label="Explore analytics-agent">Explore →</a></article>
-   <article class="work-paper tool-paper"><div><h3><a href="/projects/ai-tell/">A closer look at document authorship</a></h3><p>ai-tell · A desktop application for authorship signals</p></div><a class="tool-link" href="/projects/ai-tell/" aria-label="Explore ai-tell">Explore →</a></article>
+  <div class="tool-papers" aria-label="Tools and gadgets">
+   <article class="work-paper tool-paper stamp-agent">
+    <div class="stamp-inner">
+     <div class="stamp-top"><span>ANALYTICS / 01</span><span>10 PT</span></div>
+     <img class="stamp-illustration" src="/img/analytics-agent-paper.svg" alt="" width="320" height="200" loading="lazy" decoding="async"/>
+     <h3><a href="/projects/analytics-agent/">From data to a checked report</a></h3>
+     <p>analytics-agent</p>
+     <a class="tool-link" href="/projects/analytics-agent/" aria-label="Explore analytics-agent">Open project ↗</a>
+    </div>
+   </article>
+   <article class="work-paper tool-paper stamp-aitell">
+    <div class="stamp-inner">
+     <div class="stamp-top"><span>DOCUMENT STUDIES / 02</span><span>20 PT</span></div>
+     <img class="stamp-illustration" src="/img/ai-tell-paper.svg" alt="" width="320" height="200" loading="lazy" decoding="async"/>
+     <h3><a href="/projects/ai-tell/">What can a document reveal?</a></h3>
+     <p>ai-tell</p>
+     <a class="tool-link" href="/projects/ai-tell/" aria-label="Explore ai-tell">Open project ↗</a>
+    </div>
+   </article>
   </div>
 
   <a class="scroll-cue" href="#about" aria-label="Continue to the path so far"><span>Scroll down</span><svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
@@ -133,4 +149,34 @@ import ProjectPaperDeck from './ProjectPaperDeck.astro';
 .tool-paper{padding:12px 16px}
 .scroll-cue{margin-top:16px}
 @media(max-width:700px){.tool-papers{gap:12px}.tool-paper{padding:12px 16px}.tool-paper h3{font-size:18px;line-height:24px}.tool-paper p{font-size:11px}.workbench-heading{margin-top:20px!important}.scroll-cue{margin-top:12px}}
+</style>
+
+<style is:global>
+/* Physical postage shape instead of a clipped rectangle with a dashed outline. */
+body:has(.scroll-artwork) #featured-work .tool-paper{
+  width:166px;min-height:218px;max-width:calc(100vw - 28px);
+  padding:10px;box-sizing:border-box;display:block;overflow:hidden;
+  clip-path:none;
+  -webkit-mask:url('/img/postage-edge-mask.svg') center/100% 100% no-repeat;
+  mask:url('/img/postage-edge-mask.svg') center/100% 100% no-repeat;
+  box-shadow:none;filter:drop-shadow(4px 8px 8px #51433329);
+  outline:none;background:#e6ebdf;
+}
+body:has(.scroll-artwork) #featured-work .tool-paper:nth-child(2){background:#e9dcd0}
+body:has(.scroll-artwork) #featured-work .tool-paper .stamp-inner{
+  height:198px;min-height:0;box-sizing:border-box;border:1px solid #85796689;
+  padding:9px 9px 10px;display:flex;flex-direction:column;align-items:center;
+  text-align:center;justify-content:flex-start;gap:3px;
+}
+body:has(.scroll-artwork) #featured-work .stamp-top{width:100%;display:flex;justify-content:space-between;gap:3px;text-align:left;font:600 7px/1.35 system-ui,sans-serif;letter-spacing:.08em;color:#5c655b}
+body:has(.scroll-artwork) #featured-work .stamp-aitell .stamp-top{color:#75594b}
+body:has(.scroll-artwork) #featured-work .stamp-illustration{display:block;width:94px;height:61px;max-width:100%;object-fit:contain;mix-blend-mode:multiply;margin:5px auto 2px}
+body:has(.scroll-artwork) #featured-work .tool-paper h3{font:500 16px/1.1 'Zodiak',Georgia,serif;margin:0;max-width:136px}
+body:has(.scroll-artwork) #featured-work .tool-paper h3 a{display:block}
+body:has(.scroll-artwork) #featured-work .tool-paper p{display:block;font:400 9px/1.4 system-ui,sans-serif;color:#62584c;margin:2px 0 0}
+body:has(.scroll-artwork) #featured-work .tool-paper .tool-link{display:block;font:500 10px/1.2 'Zodiak',Georgia,serif;margin:auto 0 0;text-decoration:underline;text-underline-offset:3px}
+body:has(.scroll-artwork) #featured-work .tool-paper:focus-within{filter:drop-shadow(0 0 3px #426b7d)}
+@media(max-width:950px){body:has(.scroll-artwork) #featured-work .tool-paper{width:144px;min-height:196px;padding:9px}body:has(.scroll-artwork) #featured-work .tool-paper .stamp-inner{height:178px;padding:7px}body:has(.scroll-artwork) #featured-work .stamp-illustration{height:44px;width:76px}body:has(.scroll-artwork) #featured-work .tool-paper h3{font-size:13px;line-height:1.14}}
+@media(max-width:700px){body:has(.scroll-artwork) #featured-work .tool-paper{width:132px;min-height:165px;padding:8px}body:has(.scroll-artwork) #featured-work .tool-paper .stamp-inner{height:149px;padding:6px}body:has(.scroll-artwork) #featured-work .stamp-illustration{height:34px;width:64px;margin:1px auto}body:has(.scroll-artwork) #featured-work .stamp-top{font-size:6px}body:has(.scroll-artwork) #featured-work .tool-paper h3{font-size:12px}body:has(.scroll-artwork) #featured-work .tool-paper p{font-size:8px}body:has(.scroll-artwork) #featured-work .tool-paper .tool-link{font-size:9px}}
+@media(prefers-reduced-motion:reduce){body:has(.scroll-artwork) #featured-work .tool-paper{animation:none;transition:none}}
 </style>
