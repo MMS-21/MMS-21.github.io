@@ -1,0 +1,5 @@
+region,revenue,units
+North,100,1
+South,50,2
+North,200,3
+South,,4
