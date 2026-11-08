@@ -16,10 +16,6 @@ export default function ProjectTumbleDeck() {
         <h3><a href={project.url}>{project.title}</a></h3>
         <a className="tumble-explore" href={project.url}>Explore the project ↗</a>
       </div>
-      <div className="tumble-footer">
-        <span>Click, drag or use arrow keys to browse</span>
-        <button type="button" onClick={() => document.querySelector<HTMLButtonElement>('#collection-open')?.click()}>View all projects ↗</button>
-      </div>
       <noscript><p>Browse the <a href="/projects/">full project index</a>.</p></noscript>
     </div>
   );
