@@ -3,61 +3,29 @@ const video = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07l
 const poster = 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4f690bd1-881a-4192-82f2-d714d34c8fb9.png';
 ---
 
-<footer class="site-footer scenic-footer" aria-label="Closing landscape" style={`--footer-poster:url('${poster}')`}>
-  <div class="footer-media" aria-hidden="true">
-    <video class="footer-bg" autoplay muted loop playsinline preload="auto" poster={poster} width="1920" height="1080" tabindex="-1" disablepictureinpicture>
-      <source src={video} type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
-    </video>
-  </div>
-</footer>
+<div class="contact-landscape footer-media" aria-hidden="true" style={`--landscape-poster:url('${poster}')`}>
+  <video class="footer-bg" autoplay muted loop playsinline preload="auto" poster={poster} width="1920" height="1080" tabindex="-1" disablepictureinpicture>
+    <source src={video} type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
+  </video>
+</div>
 
 <style>
-  .site-footer.scenic-footer {
-    --ink:#175a67;
-    --ink-soft:#2a707c;
-    --cream:#eae3de;
-    --max:1440px;
-    --fs-nav:clamp(.9rem,.55vw + .75rem,1.02rem);
-    position:relative;
-    isolation:isolate;
-    display:flex;
-    flex-direction:column;
-    min-height:100vh;
-    min-height:100svh;
-    margin:0;
-    border:0;
-    overflow:hidden;
-    overflow-wrap:break-word;
-    background:var(--cream);
-    color:var(--ink);
-    padding:clamp(2.25rem,4.5vh,4rem)
-      max(clamp(1.25rem,4vw,4.5rem),env(safe-area-inset-right))
-      max(clamp(1.5rem,3vh,2.75rem),env(safe-area-inset-bottom))
-      max(clamp(1.25rem,4vw,4.5rem),env(safe-area-inset-left));
-  }
-  .footer-media { position:absolute; inset:0; z-index:-2; pointer-events:none; }
-  .footer-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center bottom; pointer-events:none; animation:fade-in 1.35s ease both; }
-  @keyframes fade-in { from { opacity:0; } to { opacity:1; } }
-
-  @media(max-width:1100px) {
-    .footer-media::after { content:""; position:absolute; left:0; right:0; top:0; height:clamp(52px,16vw,120px); pointer-events:none; z-index:1; background:linear-gradient(to bottom,#eae3de 0%,rgba(234,227,222,.65) 38%,rgba(234,227,222,0) 100%); }
-  }
-  @media(max-width:720px) {
-    .site-footer.scenic-footer { height:auto; min-height:100svh; padding-right:0; padding-bottom:0; padding-left:0; overflow-x:hidden; overflow-y:visible; }
-    .footer-media { position:relative; inset:auto; order:1; flex-shrink:0; width:100%; height:auto; margin-top:auto; z-index:0; }
-    .footer-bg { position:relative; inset:auto; width:100%; height:auto; max-width:100%; object-fit:contain; object-position:center bottom; transform:none; display:block; }
-  }
-  @media(min-width:721px) and (max-width:1100px) {
-    .site-footer.scenic-footer { height:auto; min-height:100svh; padding-right:0; padding-bottom:0; padding-left:0; overflow-x:hidden; overflow-y:visible; }
-    .footer-media { position:relative; inset:auto; order:1; flex-shrink:0; width:100%; height:auto; margin-top:auto; z-index:0; }
-    .footer-bg { position:relative; inset:auto; width:100%; height:auto; max-width:100%; object-fit:contain; object-position:center bottom; transform:none; display:block; }
-  }
-  @media(prefers-reduced-motion:reduce) {
-    .footer-bg { display:none; animation:none; }
-    .site-footer.scenic-footer { background-color:var(--cream); background-image:var(--footer-poster); background-position:center bottom; background-size:cover; background-repeat:no-repeat; }
-    .footer-media::after { content:none; }
-  }
-  @media(prefers-reduced-motion:reduce) and (max-width:1100px) {
-    .site-footer.scenic-footer { background-size:100% auto; }
-  }
+.contact-landscape {
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  flex-shrink:0;
+  margin-top:clamp(-440px,-28vw,-120px);
+  pointer-events:none;
+  /* Whiten the source paper, then let the site's actual paper show through it.
+     The ink and every animated frame remain visible. */
+  filter:brightness(1.14);
+  mix-blend-mode:multiply;
+}
+.footer-bg { display:block; width:100%; height:100%; object-fit:contain; object-position:center bottom; }
+@media(max-width:700px) { .contact-landscape { margin-top:-32px; } }
+@media(prefers-reduced-motion:reduce) {
+ .footer-bg { display:none; }
+ .contact-landscape { background:var(--landscape-poster) center bottom/contain no-repeat; }
+}
 </style>
