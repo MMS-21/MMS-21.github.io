@@ -3,18 +3,18 @@ import SectionTitle from './SectionTitle.astro';
 import FloralAccent from './FloralAccent.astro';
 // Dates and experience are grounded in Moaaz's final résumé, supplied 7 October 2026.
 const milestones=[
- {date:'2017 — 2022',title:'Building a business foundation',place:'Sadat Academy for Management Sciences',body:'Studied International Business Management, learning how organisations operate and how decisions connect across teams.',highlight:false},
- {date:'Around 2018',title:'Giving back to my school community',place:'Volunteering',body:'Helped raise awareness of the health risks of smoking at my former high school.',highlight:true},
- {date:'2020 — 2021',title:'Learning where service meets accuracy',place:'QNB · Summer 2020 / Banque Misr · Summer 2021',body:'Customer service internships offered a first look at banking operations, customer requests, and the care required when handling financial information.',highlight:false},
- {date:'April 2022',title:'Taking the first step into data',place:'Egypt FWD · Udacity',body:'Completed the Data Analysis Challenger track.',highlight:true,url:'https://www.udacity.com/certificate/e/f7342794-c0eb-11ec-962d-83088c833500'},
- {date:'August 2022',title:'Building an analytical toolkit',place:'Google · Coursera',body:'Earned the Google Data Analytics Professional Certificate.',highlight:true,url:'https://www.credly.com/badges/6b1e0514-119d-40bb-9cba-1c76e12a9f17/public_url'},
- {date:'October 2022',title:'Going deeper into analysis',place:'Egypt FWD · Udacity',body:'Completed the Advanced Data Analysis Nanodegree.',highlight:true,url:'https://www.udacity.com/certificate/e/73c44122-2a41-11ed-a5cd-c77bfc64b77e'},
- {date:'2023 — 2024',title:'A chapter of service',place:'Military service',body:'Completed my military service before returning to professional work and further training.',highlight:false},
- {date:'December 2024 — present',title:'Making everyday data useful',place:'Al-Amal Trade & Distribution · Business Analyst',body:'Reconcile 1,000+ financial, inventory, and logistics records each month. Built 10+ recurring reports. Alongside this role, freelance work includes sales and HR dashboards and reporting automation.',highlight:false},
- {date:'18 March 2025',title:'Putting analysis into practice',place:'Sprints · Data Analytics and Visualization Bootcamp',body:'Completed the bootcamp after joining in late 2024.',highlight:true},
- {date:'November 2025 — August 2026',title:'Connecting business questions with analysis',place:'Digital Egypt Builders Initiative · Business Analytics',body:'Completed the Business Analytics Program, extending my business background through further analytical training.',highlight:false},
- {date:'September 2026 — present',title:'Exploring the skills behind a good career match',place:'Mattlob · Collaboration',body:'Collaborating on practical career-readiness activities, including role matching, CV review, and workplace skills.',highlight:false},
- {date:'30 September 2026',title:'Shipping a tool of my own',place:'ai-tell · First public release',body:'Released a desktop tool for exploring document authorship signals.',highlight:true,url:'https://github.com/MMS-21/ai-tell/releases/tag/v0.1.0'},
+ {date:'2017 — 2022',title:'Business foundation',place:'Sadat Academy for Management Sciences',body:'Studied International Business Management and how organisations make decisions.',highlight:false},
+ {date:'Around 2018',title:'School volunteering',place:'Volunteering',body:'Helped raise awareness of the health risks of smoking at my former high school.',highlight:true},
+ {date:'2020 — 2021',title:'Banking internships',place:'QNB · Summer 2020 / Banque Misr · Summer 2021',body:'Supported customer service and learned banking operations and financial documentation.',highlight:false},
+ {date:'April 2022',title:'First steps in data',place:'Egypt FWD · Udacity',body:'Completed the Data Analysis Challenger track.',highlight:true,url:'https://www.udacity.com/certificate/e/f7342794-c0eb-11ec-962d-83088c833500'},
+ {date:'August 2022',title:'Google Data Analytics',place:'Google · Coursera',body:'Earned the Google Data Analytics Professional Certificate.',highlight:true,url:'https://www.credly.com/badges/6b1e0514-119d-40bb-9cba-1c76e12a9f17/public_url'},
+ {date:'October 2022',title:'Advanced data analysis',place:'Egypt FWD · Udacity',body:'Completed the Advanced Data Analysis Nanodegree.',highlight:true,url:'https://www.udacity.com/certificate/e/73c44122-2a41-11ed-a5cd-c77bfc64b77e'},
+ {date:'2023 — 2024',title:'Military service',place:'Military service',body:'Completed my military service before returning to professional work and further training.',highlight:false},
+ {date:'December 2024 — present',title:'Business analyst',place:'Al-Amal Trade & Distribution · Business Analyst',body:'Reconcile 1,000+ records monthly and build recurring reports. Freelance work covers sales and HR dashboards.',highlight:false},
+ {date:'18 March 2025',title:'Analytics bootcamp',place:'Sprints · Data Analytics and Visualization Bootcamp',body:'Completed the bootcamp after joining in late 2024.',highlight:true},
+ {date:'November 2025 — August 2026',title:'Business analytics training',place:'Digital Egypt Builders Initiative · Business Analytics',body:'Completed the Business Analytics Program, connecting business questions with practical analysis.',highlight:false},
+ {date:'September 2026 — present',title:'Career readiness',place:'Mattlob · Collaboration',body:'Collaborating on role matching, CV review, and workplace skills.',highlight:false},
+ {date:'30 September 2026',title:'First public release',place:'ai-tell · First public release',body:'Released a desktop tool for exploring document authorship signals.',highlight:true,url:'https://github.com/MMS-21/ai-tell/releases/tag/v0.1.0'},
 ];
 ---
 <section class="about-timeline" id="about" aria-labelledby="about-heading" tabindex="-1">
@@ -67,6 +67,11 @@ const milestones=[
    const animated=innerWidth>700&&!reduced.matches;
    timeline.dataset.animated=String(animated);
    track.style.paddingRight=innerWidth>700?'80px':'0px';
+   // Fit both sides of the rail to real text metrics, including loaded fonts.
+   if(innerWidth>700){
+    const copyHeight=Math.max(...milestones.map(m=>m.querySelector<HTMLElement>('.milestone-copy')!.offsetHeight));
+    track.style.height=`${Math.max(360,2*(copyHeight+56))}px`;
+   }else track.style.removeProperty('height');
    travel=Math.max(0,track.scrollWidth-windowEl.clientWidth);
    range=Math.max(innerHeight*2,travel);
    timeline.style.setProperty('--timeline-height',`${range+innerHeight}px`);
@@ -112,7 +117,7 @@ const milestones=[
  [data-visible="true"] .milestone-copy { opacity:1; transform:none; }
  [data-visible="true"] .milestone-stem { transform:scaleY(1); }
  .milestone-date { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.16rem; color:#8c692d; margin:0 0 8px; }
- .milestone h3 { font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:2.05rem; line-height:1.1; margin:0 0 10px; }
+ .milestone h3 { font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:1.5rem; line-height:1.3333; margin:0 0 10px; }
  .milestone .milestone-place { font-size:.74rem; color:#57472f; font-weight:650; margin:0 0 9px; }
  .milestone-copy>p:not(.milestone-date):not(.milestone-place) { font-size:.88rem; color:#685b47; line-height:1.7; margin:0; }
  .highlight { width:250px; }
@@ -152,6 +157,11 @@ body:has(.scroll-artwork) #about[data-animated="true"]{height:var(--timeline-hei
 body:has(.scroll-artwork) #about[data-animated="true"] .timeline-stage{position:sticky;top:0;height:100svh}
 body:has(.scroll-artwork) #about[data-animated="true"] .timeline-window{overflow:hidden}
 body:has(.scroll-artwork) #about :is(h2,h3,p,a,span,button){font-family:'Zodiak',Georgia,serif!important;font-weight:400}
-body:has(.scroll-artwork) #about .milestone-copy>p:not(.milestone-date){line-height:1.7}
+body:has(.scroll-artwork) #about .milestone h3{font-size:1.5rem;line-height:1.3333;text-wrap:balance}
+body:has(.scroll-artwork) #about .milestone.highlight h3{font-size:1rem;line-height:1.5}
+body:has(.scroll-artwork) #about .milestone-copy>p:not(.milestone-date){font-size:.875rem;line-height:1.4286;text-wrap:pretty}
+body:has(.scroll-artwork) #about .timeline-stage{justify-content:flex-start}
+body:has(.scroll-artwork) #about .timeline-window{flex-shrink:0}
+@media(min-width:701px){body:has(.scroll-artwork) #about[data-animated="true"] .timeline-stage{overflow-y:auto}}
 @media(max-width:700px){body:has(.scroll-artwork) #about{height:auto!important;max-height:none;overflow:visible}body:has(.scroll-artwork) #about .timeline-stage{height:auto}}
 </style>
