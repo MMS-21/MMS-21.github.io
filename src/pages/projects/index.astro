@@ -74,3 +74,9 @@ const descriptions:Record<string,{title:string;kind:string;body:string;output:st
  @media(max-width:600px){.project-collection{margin:12px 12px 40px;padding:35px 24px}.collection-intro{min-height:250px;padding-right:70px}h1{font-size:44px}.sheet-stamp{width:51px}.collection-intro p{font-size:12px}.project-entry{grid-template-columns:1fr;gap:15px;padding:28px 0}.entry-type span{max-width:none}.entry-type p{margin-bottom:4px}h2{font-size:21px}.collection-close{font-size:11px;line-height:1.8}}
  @media(prefers-reduced-motion:reduce){.stamp-entrance{display:none!important}.project-collection.arrived,.stamp-frame{animation:none}.project-entry,.sheet-stamp{transition:none}.project-entry:hover{transform:none}}
 </style>
+
+<style>
+.entry-links a{min-height:32px;display:inline-flex;align-items:center;transition:translate .45s cubic-bezier(.32,.72,0,1)}
+.entry-links a:hover{translate:0 -3px}
+@media(prefers-reduced-motion:reduce){.entry-links a{transition:none}}
+</style>

@@ -1,0 +1,96 @@
+/* Refinements to the existing correspondence-from-Cairo design. */
+body:has(.scroll-artwork){--portfolio-ease:cubic-bezier(.32,.72,0,1)}
+body:has(.scroll-artwork) .opening-caption{position:absolute;top:calc(50% + 132px);left:24px;right:24px;text-align:center;z-index:2}
+body:has(.scroll-artwork) .opening-caption p{margin:0}
+body:has(.scroll-artwork) .opening-name{font:400 24px/32px 'Zodiak',Georgia,serif}
+body:has(.scroll-artwork) .opening-role{font:400 14px/20px Manrope,sans-serif;margin-top:8px;color:#625b51}
+body:has(.scroll-artwork) .opening-actions{display:flex;justify-content:center;align-items:center;gap:24px;margin-top:16px}
+body:has(.scroll-artwork) .opening-actions :is(a,button){display:inline-flex;align-items:center;gap:16px;min-height:44px;background:none;border:0;border-bottom:1px solid #8b7c64;padding:8px 0;color:#31596d;font:400 14px/20px Manrope,sans-serif;text-decoration:none;cursor:pointer;transition:translate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) .opening-actions :is(a,button):hover{translate:0 -4px}
+body:has(.scroll-artwork) .opening-actions span{transition:translate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) .opening-actions a:hover span{translate:3px -3px}
+body:has(.scroll-artwork) .opening-actions :focus-visible{outline:2px solid #31596d;outline-offset:5px}
+body:has(.scroll-artwork) .navigation-toggle small{position:absolute;left:68px;top:14px;font:400 14px/20px Manrope,sans-serif}
+body:has(.scroll-artwork) .stack-navigation a{transition:translate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) .stack-navigation a:hover{translate:8px 0}
+body:has(.scroll-artwork) .introduction-role{font:400 14px/20px Manrope,sans-serif;margin:16px 0 8px;color:#625b51}
+body:has(.scroll-artwork) #featured-work .work-section-opening{position:relative;height:auto;min-height:48px;margin:0 auto 40px!important;width:100%;max-width:660px;justify-content:space-between;align-items:center;pointer-events:auto}
+body:has(.scroll-artwork) #featured-work .work-section-label{position:static;width:auto;height:auto;clip-path:none;overflow:visible;white-space:normal;font:400 36px/40px 'Zodiak',Georgia,serif;letter-spacing:-.025em;margin:0}
+body:has(.scroll-artwork) .work-index-link{display:inline-flex;align-items:center;gap:16px;min-height:44px;font:400 14px/20px Manrope,sans-serif;color:#31596d;text-underline-offset:5px;transition:translate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) .work-index-link:hover{translate:4px -2px}
+body:has(.scroll-artwork) .work-index-link:focus-visible{outline:2px solid #31596d;outline-offset:5px}
+body:has(.scroll-artwork) .tumble-caption{padding-top:16px}
+body:has(.scroll-artwork) .tumble-explore{display:inline-flex;align-items:center;min-height:44px;font-size:14px;line-height:20px;transition:translate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) .tumble-caption h3 a{display:inline-block;transition:translate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) .tumble-caption a:hover{translate:0 -3px}
+body:has(.scroll-artwork) #featured-work .tool-papers{position:relative;inset:auto;display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:660px;width:100%;margin:40px auto 0;pointer-events:auto}
+body:has(.scroll-artwork) #featured-work .tool-paper,body:has(.scroll-artwork) #featured-work .tool-paper:nth-child(2){position:relative;inset:auto;top:auto;left:auto;right:auto;width:auto;min-height:0;rotate:0deg;animation:none;padding:24px;transition:translate .45s var(--portfolio-ease),rotate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) #featured-work .tool-paper:hover,body:has(.scroll-artwork) #featured-work .tool-paper:focus-within{translate:0 -8px;rotate:-2deg}
+body:has(.scroll-artwork) #featured-work .tool-paper:nth-child(2):hover{rotate:2deg}
+body:has(.scroll-artwork) #featured-work .tool-paper p{display:block}
+body:has(.scroll-artwork) #featured-work .tool-link{display:inline-flex;align-items:center;min-height:44px;font-size:14px;line-height:20px}
+body:has(.scroll-artwork) #featured-work .stamp-top{font-size:12px;line-height:16px}
+body:has(.scroll-artwork) .booking-link,body:has(.scroll-artwork) .back-introduction{transition:translate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) .booking-link:hover,body:has(.scroll-artwork) .back-introduction:hover{translate:0 -3px}
+body:has(.scroll-artwork) #connect{height:auto!important;min-height:100svh!important;max-height:none}
+@media(max-width:700px){
+ body:has(.scroll-artwork) .opening-caption{top:calc(50% + 104px)}
+ body:has(.scroll-artwork) .opening-actions{gap:24px}
+ body:has(.scroll-artwork) .opening-role{max-width:28ch;margin:8px auto 0}
+ body:has(.scroll-artwork) .opening-cue{display:none}
+ body:has(.scroll-artwork) #hero-story{height:auto!important;max-height:none;min-height:100svh!important;overflow:clip;padding:112px 24px 320px!important}
+ body:has(.scroll-artwork) #hero-story h1{font-size:60px;line-height:1}
+ body:has(.scroll-artwork) #hero-story .intro-profile-row{margin-top:24px}
+ body:has(.scroll-artwork) #hero-story .intro-profile p{font-size:16px;line-height:24px}
+ body:has(.scroll-artwork) #featured-work .desk-stage{padding:96px 24px 48px}
+ body:has(.scroll-artwork) #featured-work .work-section-opening{flex-direction:row;gap:16px;margin-bottom:24px!important}
+ body:has(.scroll-artwork) #featured-work .work-section-label{font-size:30px;line-height:36px}
+ body:has(.scroll-artwork) #featured-work .tool-papers{gap:16px;margin-top:32px}
+ body:has(.scroll-artwork) #featured-work .tool-paper,body:has(.scroll-artwork) #featured-work .tool-paper:nth-child(2){padding:16px}
+ body:has(.scroll-artwork) #featured-work .tool-paper h3{font-size:16px;line-height:24px}
+ body:has(.scroll-artwork) #featured-work .stamp-top{font-size:12px;line-height:16px;flex-wrap:wrap;gap:4px}
+ body:has(.scroll-artwork) #connect{padding:96px 24px!important}
+ body:has(.scroll-artwork) #connect h2{font-size:36px;line-height:40px}
+}
+@media(max-height:700px) and (min-width:701px){
+ body:has(.scroll-artwork) .scroll-hero{min-height:680px!important;height:680px!important;max-height:none}
+ body:has(.scroll-artwork) #hero-story{height:auto!important;max-height:none;min-height:700px!important;padding-top:112px!important;padding-bottom:112px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html:has(.scroll-artwork){scroll-behavior:auto!important}
+ body:has(.scroll-artwork) *,body:has(.scroll-artwork) *::before,body:has(.scroll-artwork) *::after{animation:none!important;transition:none!important}
+}
+body:has(.scroll-artwork) .profile-links :is(a,button){min-height:32px;display:inline-flex;align-items:center;font-size:14px;line-height:20px}
+body:has(.scroll-artwork) .profile-preferences button{min-height:32px}
+body:has(.scroll-artwork) .milestone-proof,body:has(.scroll-artwork) .timeline-footer>a{min-height:32px;display:inline-flex;align-items:center}
+body:has(.scroll-artwork) .stamp-place-link{min-height:32px;display:inline-flex;align-items:center;font-size:12px;line-height:16px}
+/* Keep the correspondence caption aligned despite legacy paragraph styles. */
+body:has(.scroll-artwork) .opening-caption{display:flex;flex-direction:column;align-items:center}
+body:has(.scroll-artwork) .opening-caption p{width:100%;max-width:none;text-align:center}
+body:has(.scroll-artwork) #featured-work .tool-papers{position:relative!important;inset:auto!important;display:grid!important;grid-template-columns:1fr 1fr;gap:32px!important;margin:40px auto 0!important}
+body:has(.scroll-artwork) #featured-work .tool-papers .tool-paper{position:relative!important;inset:auto!important;top:auto!important;left:auto!important;right:auto!important;width:auto!important;min-height:0!important;rotate:0deg!important;animation:none!important;transform:none!important;padding:24px!important}
+body:has(.scroll-artwork) #featured-work .tool-papers .tool-paper:hover,body:has(.scroll-artwork) #featured-work .tool-papers .tool-paper:focus-within{translate:0 -8px}
+@media(max-width:700px){body:has(.scroll-artwork) #featured-work .tool-papers{gap:16px!important}body:has(.scroll-artwork) #featured-work .tool-papers .tool-paper{padding:16px!important}}
+body:has(.scroll-artwork) .profile-links :is(a,button),body:has(.scroll-artwork) .stamps-toggle{transition:translate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) .profile-links :is(a,button):hover,body:has(.scroll-artwork) .stamps-toggle:hover{translate:0 -3px}
+body:has(.scroll-artwork) .section-stop{min-height:24px;box-sizing:border-box}
+body:has(.scroll-artwork) .tumble-instruction{text-align:center;margin:0;font:400 12px/16px Manrope,sans-serif;color:#625b51}
+body:has(.scroll-artwork) .tumble-summary{max-width:60ch;margin:16px auto 8px;text-align:center;font:400 16px/24px Manrope,sans-serif;color:#625b51}
+@media(max-width:700px){
+ body:has(.scroll-artwork) .milestone .floral-accent{width:32px;left:-46px;overflow:hidden;opacity:.4}
+ body:has(.scroll-artwork) .invitation-garden .floral-accent{top:-160px;opacity:.55}
+ body:has(.scroll-artwork) .lulu-stage{width:56px;height:60px}
+ body:has(.scroll-artwork) .lulu-hint{display:none}
+ body:has(.scroll-artwork) .companion-trigger{top:24px}
+}
+body:has(.scroll-artwork) .navigation-toggle{transition:translate .45s var(--portfolio-ease)}
+body:has(.scroll-artwork) .navigation-toggle:hover{translate:4px 0}
+@media(max-width:700px){
+ /* Reserve the rail's margin for the small companion, clear of timeline copy. */
+ body:has(.scroll-artwork) #about .timeline-track{padding-left:48px}
+ body:has(.scroll-artwork) #about .milestone:not(.highlight) .milestone-dot{left:-65px}
+ body:has(.scroll-artwork) #about .milestone.highlight .milestone-dot{left:-83px}
+ body:has(.scroll-artwork) #about .milestone .floral-accent{left:-70px}
+ body:has(.scroll-artwork) .lulu-stage{width:48px;height:52px}
+ body:has(.scroll-artwork) .lulu .companion-trigger{left:0!important;top:-28px;width:28px;height:28px;padding:4px}
+}

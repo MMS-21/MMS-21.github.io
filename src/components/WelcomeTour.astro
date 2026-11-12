@@ -6,14 +6,14 @@
 <section class="tour-card" data-tour-card hidden role="dialog" aria-modal="false" aria-labelledby="tour-title" aria-describedby="tour-description">
  <h2 id="tour-title">Welcome to my little corner.</h2>
  <p id="tour-description" aria-live="polite">A short walk through the site, at your own pace.</p>
- <a class="tour-action" data-tour-action hidden></a>
+ <a class="tour-action" data-tour-action hidden aria-label="Explore this tour stop"></a>
  <div class="tour-actions">
   <button type="button" class="tour-skip" data-tour-skip>I’ll explore</button>
   <button type="button" class="tour-back" data-tour-back hidden>Back</button>
   <button type="button" class="tour-next" data-tour-next>Show me around</button>
  </div>
  <span class="tour-progress" data-tour-progress>1 of 4</span>
- <button type="button" class="tour-sound" data-tour-sound aria-pressed="true" aria-label="Mute tour sound">Sound on</button>
+ <button type="button" class="tour-sound" data-tour-sound aria-pressed="false" aria-label="Sound off, enable tour sound">Sound off</button>
 </section>
 <script>
  import { startWelcomeTour } from '../scripts/welcome-tour';

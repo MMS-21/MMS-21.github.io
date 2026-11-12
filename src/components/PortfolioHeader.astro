@@ -40,3 +40,10 @@ const links=[{href:'/',label:'Home'},{href:'/projects/',label:'Projects'},{href:
 }
 @media(max-width:350px){.portfolio-header{padding-inline:16px;gap:4px 8px}.portfolio-name{font-size:19px}nav a{font-size:17px}}
 </style>
+
+<style>
+.header-stamps{transition:translate .45s cubic-bezier(.32,.72,0,1)}
+.header-stamps:hover,.header-stamps:focus-visible{translate:0 -3px}
+.portfolio-name{min-height:32px;display:inline-flex;align-items:center}
+@media(prefers-reduced-motion:reduce){.header-stamps{transition:none}}
+</style>

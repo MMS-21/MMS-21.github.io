@@ -8,12 +8,12 @@ import ProjectTumbleDeck from './ProjectTumbleDeck';
   <div class="collection-handle"><span aria-hidden="true"></span><button class="close-sheet">← Back to the workbench <small>Esc</small></button></div>
   <header class="collection-heading"><div class="collection-meta"><span>Selected projects</span><span>Collection / {String(papers.length).padStart(2,'0')}</span></div><h2 id="collection-title">Works.</h2><p>A collection of questions explored through data, and tools built to make everyday work easier.</p></header>
   <div class="collection-projects">{papers.map((paper,i)=><article class="collection-project">
-   <button class="collection-preview" data-collection-paper={i} aria-label={`Preview ${paper.title}`}><ProjectWaves seed={i+1} client:idle /><img src={paper.image} alt={paper.alt} width="900" height="580" loading="lazy" decoding="async"/><span class="collection-preview-label">Enlarge preview ↗</span></button>
+   <button class="collection-preview" data-collection-paper={i} aria-label={`Enlarge preview: ${paper.title}`}><ProjectWaves seed={i+1} client:idle /><img src={paper.image} alt={paper.alt} width="900" height="580" loading="lazy" decoding="async"/><span class="collection-preview-label">Enlarge preview ↗</span></button>
    <div class="collection-caption"><div class="collection-project-meta"><span>Project {String(i+1).padStart(2,'0')}</span><div class="collection-tags">{paper.tools.split(' · ').map(tool=><span>{tool}</span>)}</div></div><div class="collection-description"><h3><a href={paper.url}>{paper.title}</a></h3><div><p>{paper.summary}</p><a class="collection-read" href={paper.url}>Explore the project <span aria-hidden="true">↗</span></a></div></div></div>
   </article>)}</div>
   <a class="collection-index" href="/projects/">Open the full project index ↗</a>
  </dialog>
- <dialog id="case-drawer" aria-labelledby="drawer-title"><button class="close-sheet" aria-label="Close case study">← Go back <small>Esc</small></button><div class="drawer-heading"><h2 id="drawer-title"><a id="drawer-link"></a></h2></div><img id="drawer-chart" alt=""/><div id="drawer-content" aria-live="polite"></div></dialog>
+ <dialog id="case-drawer" aria-labelledby="drawer-title"><button class="close-sheet" aria-label="Go back, close case study">← Go back <small>Esc</small></button><div class="drawer-heading"><h2 id="drawer-title"><a id="drawer-link" aria-label="Open the selected project"></a></h2></div><img id="drawer-chart" alt="" width="900" height="580"/><div id="drawer-content" aria-live="polite"></div></dialog>
 
 <script>import '../scripts/workbench-interactions';</script>
 

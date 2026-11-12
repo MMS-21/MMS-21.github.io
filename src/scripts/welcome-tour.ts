@@ -6,11 +6,11 @@ export function startWelcomeTour() {
  const dust=document.querySelector<HTMLElement>('[data-tour-dust]')!;
  const soundButton=card.querySelector<HTMLButtonElement>('[data-tour-sound]')!;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- let soundOn=true;
- try{soundOn=localStorage.getItem('portfolio-tour-sound')!=='off'}catch{}
+ let soundOn=false;
+ try{soundOn=localStorage.getItem('portfolio-tour-sound')==='on'}catch{}
  let audio:AudioContext|null=null,burstPending=false,burstTimer=0;
  const tones=new Set<OscillatorNode>();
- function soundLabel(){soundButton.textContent=soundOn?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(soundOn));soundButton.setAttribute('aria-label',soundOn?'Mute tour sound':'Enable tour sound')}
+ function soundLabel(){soundButton.textContent=soundOn?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(soundOn));soundButton.setAttribute('aria-label',soundOn?'Sound on, mute tour sound':'Sound off, enable tour sound')}
  soundLabel();
  function primeSound(){
   if(!soundOn)return;
@@ -144,6 +144,6 @@ export function startWelcomeTour() {
  document.addEventListener('visibilitychange',()=>{if(document.hidden)silence()});
  addEventListener('pagehide',()=>{silence();void audio?.close().catch(()=>{})});
  addEventListener('resize',()=>{if(active){visit();notify(step===4);schedule()}});
- let show=true;try{show=localStorage.getItem(key)!=='1'}catch{}
- if(show)requestAnimationFrame(()=>{if(!document.hidden)render()});
+ // The tour is opt-in, so it never covers a first-time visitor's work.
+
 }
