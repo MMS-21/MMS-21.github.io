@@ -1,0 +1,91 @@
+<div id="loader" class="portfolio-loader" hidden aria-label="Opening the portfolio">
+  <img class="loader-art" src="/media/loader/dervish-parchment-poster.webp" alt="" width="1280" height="720" decoding="async" />
+  <video class="loader-art loader-motion" data-loader-motion data-src="/media/loader/dervish-parchment.mp4" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>
+  <div class="loader-status" role="status" aria-live="polite">
+    <span>Loading</span>
+    <span class="loader-track" aria-hidden="true"><span></span></span>
+  </div>
+  <button class="loader-skip" type="button">Skip intro <span aria-hidden="true">↗</span></button>
+</div>
+
+<script is:inline>
+  (() => {
+    const loader = document.getElementById('loader');
+    if (!loader) return;
+    const key = 'portfolio-loading-seen-v1';
+    const preview = new URLSearchParams(location.search).has('preview-loader');
+    let seen = false;
+    try { seen = sessionStorage.getItem(key) === '1'; } catch {}
+    // Deep links and repeat visits go straight to their destination.
+    if (!preview && (seen || location.hash)) { loader.remove(); return; }
+
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const main = loader.closest('main');
+    const video = loader.querySelector('video');
+    const skip = loader.querySelector('button');
+    const previousOverflow = document.documentElement.style.overflow;
+    const locked = [];
+    let closed = false;
+    let deadline;
+    loader.hidden = false;
+    document.documentElement.style.overflow = 'hidden';
+    main?.setAttribute('aria-busy', 'true');
+
+    function finish() {
+      if (closed) return;
+      closed = true;
+      clearTimeout(deadline);
+      try { sessionStorage.setItem(key, '1'); } catch {}
+      video.pause();
+      loader.dataset.state = 'leaving';
+      document.documentElement.style.overflow = previousOverflow;
+      main?.removeAttribute('aria-busy');
+      locked.forEach(element => { element.inert = false; });
+      if (loader.contains(document.activeElement) && main) { main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true }); }
+      document.removeEventListener('keydown', escape);
+      reduced.removeEventListener('change', motionPreference);
+      setTimeout(() => loader.remove(), reduced.matches ? 0 : 350);
+    }
+    function escape(event) { if (event.key === 'Escape') { event.preventDefault(); finish(); } }
+    function motionPreference() { if (reduced.matches) { video.pause(); video.removeAttribute('src'); video.load(); } }
+    skip.addEventListener('click', finish);
+    document.addEventListener('keydown', escape);
+    reduced.addEventListener('change', motionPreference);
+
+    // This watchdog lives in the inline bootstrap, independent of app hydration.
+    deadline = setTimeout(finish, 2200);
+    if (!reduced.matches) {
+      video.muted = true;
+      video.src = video.dataset.src;
+      video.play().catch(() => {}); // The still remains if autoplay is unavailable.
+    }
+    const domReady = document.readyState === 'loading'
+      ? new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }))
+      : Promise.resolve();
+    const ready = domReady.then(() => {
+      if (closed) return;
+      Array.from(main?.children || []).forEach(element => {
+        if (element !== loader && !element.inert) { element.inert = true; locked.push(element); }
+      });
+      return document.fonts?.ready;
+    });
+    const minimum = new Promise(resolve => setTimeout(resolve, reduced.matches ? 0 : 1100));
+    Promise.all([ready, minimum]).then(finish, finish);
+  })();
+</script>
+
+<style>
+  .portfolio-loader { position:fixed; inset:0; z-index:10000; overflow:hidden; background:#ede7d4; color:#413b31; opacity:1; transition:opacity 350ms cubic-bezier(.32,.72,0,1); }
+  .portfolio-loader[hidden] { display:none!important; }
+  .portfolio-loader[data-state="leaving"] { opacity:0; pointer-events:none; }
+  .loader-art { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; pointer-events:none; }
+  .loader-status { position:absolute; top:18%; left:50%; translate:-50% 0; display:flex; flex-direction:column; align-items:center; gap:16px; font:400 14px/20px Manrope,sans-serif; }
+  .loader-track { width:96px; height:1px; overflow:hidden; background:#413b3133; }
+  .loader-track span { display:block; width:40%; height:100%; background:#675d48; animation:loading-pass 1.2s cubic-bezier(.32,.72,0,1) infinite; }
+  .loader-skip { position:absolute; top:24px; right:32px; display:flex; align-items:center; gap:16px; min-height:44px; padding:8px 0; border:0; border-bottom:1px solid #8c8069; background:none; color:inherit; font:400 14px/20px Manrope,sans-serif; cursor:pointer; transition:translate 350ms cubic-bezier(.32,.72,0,1); }
+  .loader-skip:hover { translate:0 -3px; }
+  .loader-skip:focus-visible { outline:2px solid #675d48; outline-offset:5px; }
+  @keyframes loading-pass { from { transform:translateX(-100%); } to { transform:translateX(350%); } }
+  @media(max-width:700px) { .loader-art { object-position:50% 50%; } .loader-status { top:20%; } .loader-skip { top:16px; right:24px; } }
+  @media(prefers-reduced-motion:reduce) { .portfolio-loader,.loader-skip { transition:none; } .loader-motion { display:none; } .loader-track span { animation:none; width:100%; } }
+</style>
