@@ -1,16 +1,18 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { PROJECTS } from '../../data/site';
+import { DASHBOARDS, dashboardRepositoryUrl, dashboardImageUrl } from '../../data/dashboards';
 const featured=PROJECTS.find(p=>p.slug==='ecommerce-clv-churn')!;
+const dashboardProjects=DASHBOARDS.map(p=>({slug:p.slug,repo:dashboardRepositoryUrl(p)}));
+const projectIndex=[featured,...PROJECTS.filter(p=>p.slug!==featured.slug),...dashboardProjects];
 const descriptions:Record<string,{title:string;kind:string;body:string;output:string}>={
  'hr-attrition-analysis':{title:'Where should HR focus its retention efforts?',kind:'HR analytics · Case study',body:'Exploring employee attrition across roles, overtime, and experience, and turning the findings into a practical retention briefing.',output:'Power BI · DAX · SQL · Python'},
  'analytics-agent':{title:'From a dataset to a report you can inspect',kind:'AI tooling',body:'An analytics assistant that works through tools and checks its report before writing it.',output:'Python tool loop · Charts · Report validation'},
  'ai-tell':{title:'A closer look at document authorship',kind:'Desktop application',body:'A desktop tool that brings document metadata and writing signals together for closer inspection.',output:'Document analysis · Authorship signals · Desktop interface'},
  'ab-test':{title:'Is the difference worth trusting?',kind:'Statistical analysis',body:'An A/B testing project that makes hypotheses, confidence intervals, and statistical comparisons explicit.',output:'Hypothesis testing · Confidence intervals'},
- 'analytics-projects':{title:'Making the numbers easier to explore',kind:'Dashboard collection',body:'Power BI and Tableau work across retail, manufacturing, and housing datasets.',output:'Interactive dashboards · Visual analysis'},
  'sql-for-business-analytics':{title:'Finding answers in imperfect data',kind:'SQL analysis',body:'Querying, exploring, and cleaning data across the Chinook, COVID-19, and Nashville housing datasets.',output:'Data cleaning · Joins · Window functions'},
-  'co2-emissions':{title:'How do emissions compare across countries?',kind:'Data visualization',body:'Per capita and total CO2 emissions for 20 countries in 2020, with year-by-year trends from 2000 to 2020.',output:'Python · Our World in Data · Radial charts'},
  };
+for (const dashboard of DASHBOARDS) descriptions[dashboard.slug]={title:dashboard.title,kind:dashboard.format,body:dashboard.summary,output:dashboard.period};
 ---
 <Base title="Projects" description="Moaaz Magdy’s projects in data analysis, dashboards, and practical tools." hideFooter>
  <div class="stamp-entrance" aria-label="Opening project collection">
@@ -24,9 +26,9 @@ const descriptions:Record<string,{title:string;kind:string;body:string;output:st
    <img class="sheet-stamp" src="/img/project-stamp.webp" width="780" height="1010" alt="" aria-hidden="true" />
   </header>
   <section class="project-index" aria-label="Project collection">
-   {[featured,...PROJECTS.filter(p=>p.slug!==featured.slug)].map(p=>{const copy=p.slug===featured.slug?{title:'Which customers should we focus on?',kind:'Customer analytics',body:'Customer value and churn risk, turned into retention priorities.',output:'Python · Customer analytics'}:descriptions[p.slug];return <article class="project-entry">
+   {projectIndex.map(p=>{const copy=p.slug===featured.slug?{title:'Which customers should we focus on?',kind:'Customer analytics',body:'Customer value and churn risk, turned into retention priorities.',output:'Python · Customer analytics'}:descriptions[p.slug];const dashboard=DASHBOARDS.find(d=>d.slug===p.slug);return <article class="project-entry">
     <div class="entry-type"><p>{copy.kind}</p><span>{copy.output}</span></div>
-    <div class="entry-copy"><h2><a href={`/projects/${p.slug}/`}>{copy.title}</a></h2><p>{copy.body}</p><div class="entry-links"><a href={`/projects/${p.slug}/`}>Explore project ↗</a><a href={p.repo} target="_blank" rel="noopener noreferrer">Code ↗</a></div></div>
+    <div class="entry-copy"><h2><a href={`/projects/${p.slug}/`}>{copy.title}</a></h2><p>{copy.body}</p>{dashboard && <a class="entry-preview" href={`/projects/${p.slug}/`} aria-label={`View ${dashboard.title} project`}><img src={dashboardImageUrl(dashboard,dashboard.preview.path)} alt={dashboard.preview.alt} loading="lazy" decoding="async" /></a>}<div class="entry-links"><a href={`/projects/${p.slug}/`}>Explore project ↗</a><a href={p.repo} target="_blank" rel="noopener noreferrer">Code ↗</a></div></div>
    </article>})}
   </section>
   <footer class="collection-close"><a href="/contact/">Have a question about the work? Let’s talk ↗</a></footer>
@@ -58,6 +60,9 @@ const descriptions:Record<string,{title:string;kind:string;body:string;output:st
  h2{font:400 21px/1.5 'Zodiak',Georgia,serif;margin:0 0 10px;text-wrap:balance}
  a{color:inherit;text-underline-offset:5px}h2 a{text-decoration:none}
  .entry-copy>p{font:400 13px/1.8 'Zodiak',Georgia,serif;margin:0;color:#5c554a}
+ .entry-preview{display:block;width:min(100%,330px);margin-top:16px;padding:6px;background:#fffdf9;border:1px solid #c5bcae;border-radius:3px;text-decoration:none}
+ .entry-preview img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain}
+ .entry-preview:hover{border-color:#426b7d}
  .entry-links{display:flex;gap:24px;margin-top:18px;font:400 10px/1.6 system-ui,sans-serif}
  a:focus-visible,button:focus-visible{outline:2px solid #426b7d;outline-offset:6px}
  .collection-close{padding:55px 0 0;font-size:12px}
