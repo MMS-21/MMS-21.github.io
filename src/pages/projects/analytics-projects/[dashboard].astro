@@ -1,0 +1,154 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ProjectReadingLayout from '../../../components/ProjectReadingLayout.astro';
+import { DASHBOARDS, dashboardFileUrl, dashboardImageUrl, dashboardPageUrl, dashboardRepositoryUrl, type DashboardProject } from '../../../data/dashboards';
+
+interface Props {
+  dashboard: DashboardProject;
+  index: number;
+}
+
+export function getStaticPaths() {
+  return DASHBOARDS.map((dashboard, index) => ({
+    params: { dashboard: dashboard.slug },
+    props: { dashboard, index },
+  }));
+}
+
+const { dashboard, index } = Astro.props;
+const previous = DASHBOARDS[(index - 1 + DASHBOARDS.length) % DASHBOARDS.length];
+const next = DASHBOARDS[(index + 1) % DASHBOARDS.length];
+const sections = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'report-preview', label: 'Dashboard preview' },
+  { id: 'findings', label: 'Findings and context' },
+  ...(dashboard.gallery.length ? [{ id: 'visual-details', label: 'Additional views' }] : []),
+  { id: 'original-materials', label: 'Original materials' },
+];
+---
+
+<Base title={dashboard.title} description={dashboard.summary}>
+  <div class="wrap dashboard-paper">
+    <article class="prose dashboard-article">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="/projects/">Projects</a>
+        <span aria-hidden="true">/</span>
+        <a href="/projects/analytics-projects/">Analytics dashboards</a>
+      </nav>
+      <header class="project-heading">
+        <p class="eyebrow">{String(index + 1).padStart(2, '0')} / {String(DASHBOARDS.length).padStart(2, '0')} &nbsp; · &nbsp; {dashboard.format}</p>
+        <h1>{dashboard.title}</h1>
+        <p class="lede">{dashboard.summary}</p>
+        <div class="project-meta">
+          <span>{dashboard.period}</span>
+          <a href={dashboardRepositoryUrl(dashboard)} rel="noopener noreferrer" target="_blank">Original repository ↗</a>
+        </div>
+      </header>
+
+      <ProjectReadingLayout sections={sections}>
+        <section id="overview" aria-labelledby="overview-heading" class="project-section">
+          <h2 id="overview-heading">The question</h2>
+          <p>{dashboard.question}</p>
+        </section>
+
+        <section id="report-preview" aria-labelledby="preview-heading" class="project-section">
+          <div class="section-caption">
+            <h2 id="preview-heading">The visual report</h2>
+            <p>This is a screenshot of the original project, not a live dashboard embed.</p>
+          </div>
+          <figure class="hero-figure">
+            <a href={dashboardImageUrl(dashboard, dashboard.preview.path)} target="_blank" rel="noopener noreferrer" aria-label={'Open full-size preview of ' + dashboard.title}>
+              <img src={dashboardImageUrl(dashboard, dashboard.preview.path)} alt={dashboard.preview.alt} decoding="async" />
+            </a>
+            <figcaption>{dashboard.preview.title}. Select the image to open the full-resolution original.</figcaption>
+          </figure>
+        </section>
+
+        <section id="findings" aria-labelledby="findings-heading" class="project-section">
+          <h2 id="findings-heading">What the evidence shows</h2>
+          <ul class="findings">
+            {dashboard.findings.map((finding) => <li>{finding}</li>)}
+          </ul>
+          <p class="interpretation-note">These findings describe the archived project material. They do not establish a causal effect or a measured business improvement.</p>
+        </section>
+
+        {dashboard.gallery.length > 0 && (
+          <section id="visual-details" aria-labelledby="details-heading" class="project-section">
+            <h2 id="details-heading">A closer look</h2>
+            <div class="visual-grid">
+              {dashboard.gallery.map((visual) => (
+                <figure>
+                  <a href={dashboardImageUrl(dashboard, visual.path)} target="_blank" rel="noopener noreferrer" aria-label={'Open full-size ' + visual.title}>
+                    <img src={dashboardImageUrl(dashboard, visual.path)} alt={visual.alt} loading="lazy" decoding="async" />
+                  </a>
+                  <figcaption>{visual.title}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section id="original-materials" aria-labelledby="materials-heading" class="project-section">
+          <h2 id="materials-heading">Original materials</h2>
+          <p>View the documented source, workbook, or report in GitHub. Some formats require their original desktop software for interactive filters.</p>
+          <ul class="source-links">
+            {dashboard.files.map((file) => (
+              <li><a href={dashboardFileUrl(dashboard, file.path)} target="_blank" rel="noopener noreferrer">{file.label} ↗</a></li>
+            ))}
+            <li><a href={dashboardRepositoryUrl(dashboard)} target="_blank" rel="noopener noreferrer">Browse the full project folder ↗</a></li>
+          </ul>
+        </section>
+
+        <nav class="project-pagination" aria-label="Browse dashboards">
+          <a href={dashboardPageUrl(previous)}><span>← Previous project</span><strong>{previous.title}</strong></a>
+          <a href={dashboardPageUrl(next)}><span>Next project →</span><strong>{next.title}</strong></a>
+        </nav>
+        <p class="back-link"><a href="/projects/analytics-projects/">← All analytics dashboards</a></p>
+      </ProjectReadingLayout>
+    </article>
+  </div>
+</Base>
+
+<style>
+  :global(body:has(.dashboard-paper)) { background: #faf8f3 url('/img/paper-fibers.svg'); }
+  .dashboard-paper { max-width: 1120px; margin: 2.5rem auto 5rem; padding: clamp(1.3rem, 4vw, 4rem); background: #f5f1e7 url('/img/paper-fibers.svg'); border: 1px solid #d9d0c1; box-shadow: 0 22px 65px #4035250a; color: #302f29; --border: #c7bba6; --fg: #302f29; --muted: #665c4d; }
+  .dashboard-article { max-width: none; font-family: 'Zodiak', Georgia, serif; line-height: 1.8; }
+  .breadcrumbs { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 2.5rem; font: 600 .78rem/1.5 'Manrope', sans-serif; color: var(--muted); }
+  .breadcrumbs a { color: inherit; }
+  .project-heading { max-width: 53rem; margin-bottom: 2rem; }
+  .project-heading .eyebrow { font: 700 .73rem/1.5 'Manrope', sans-serif; letter-spacing: .09em; color: var(--muted); text-transform: uppercase; }
+  .project-heading h1 { margin: .8rem 0 1rem; font: 400 clamp(2.3rem, 5vw, 4.2rem)/1.12 'Zodiak', Georgia, serif; letter-spacing: -.04em; text-wrap: balance; }
+  .lede { max-width: 46rem; font-size: 1.15rem; line-height: 1.65; }
+  .project-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 1.1rem; margin: 1.3rem 0 2rem; font: 600 .8rem/1.5 'Manrope', sans-serif; color: var(--muted); }
+  .project-meta a { color: #245a70; }
+  .project-section { margin: 2.4rem 0 3.2rem; scroll-margin-top: 2rem; }
+  .project-section h2 { font: 400 clamp(1.5rem, 2.4vw, 1.9rem)/1.35 'Zodiak', Georgia, serif; }
+  .section-caption { margin-bottom: .9rem; }
+  .section-caption h2 { margin-bottom: .2rem; }
+  .section-caption p, .interpretation-note { font-size: .9rem; color: var(--muted); }
+  .hero-figure { margin: 1rem 0; }
+  .hero-figure a, .visual-grid a { display: block; background: #fff; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+  .hero-figure img { display: block; width: 100%; height: auto; max-height: 680px; object-fit: contain; }
+  figcaption { margin-top: .65rem; color: var(--muted); font: 400 .83rem/1.6 'Manrope', sans-serif; }
+  .findings { padding-left: 1.45rem; }
+  .findings li { margin: .8rem 0; padding-left: .2rem; }
+  .visual-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+  .visual-grid figure { min-width: 0; margin: 0; }
+  .visual-grid img { display: block; width: 100%; height: 200px; object-fit: contain; }
+  .source-links { padding-left: 1.25rem; }
+  .source-links li { margin: .55rem 0; }
+  .source-links a, .back-link a { color: #245a70; }
+  .project-pagination { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+  .project-pagination a { display: flex; flex-direction: column; gap: .25rem; padding: 1rem; border: 1px solid var(--border); border-radius: 5px; text-decoration: none; color: inherit; }
+  .project-pagination a:last-child { text-align: right; }
+  .project-pagination span { font: 500 .75rem/1.5 'Manrope', sans-serif; color: var(--muted); }
+  .project-pagination strong { font: 500 1rem/1.4 'Zodiak', Georgia, serif; }
+  .project-pagination a:hover { border-color: #245a70; }
+  .back-link { margin-top: 1.5rem; font: 600 .85rem/1.6 'Manrope', sans-serif; }
+  @media (max-width: 620px) {
+    .dashboard-paper { margin-top: 1rem; }
+    .visual-grid { grid-template-columns: 1fr; }
+    .project-pagination { gap: .5rem; }
+    .project-pagination a { padding: .65rem; }
+  }
+</style>
