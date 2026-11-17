@@ -1,18 +1,21 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { PROJECTS } from '../../data/site';
+import { DASHBOARDS } from '../../data/dashboards';
+import DashboardCaseStudy from '../../components/DashboardCaseStudy.astro';
 import RetentionMatrix from '../../components/RetentionMatrix.astro';
 import ProjectLab from '../../components/ProjectLab.astro';
 import ProjectReadingLayout from '../../components/ProjectReadingLayout.astro';
-import DashboardDirectory from '../../components/DashboardDirectory.astro';
 
 export function getStaticPaths() {
-  return PROJECTS.filter(p=>p.slug!=='hr-attrition-analysis').map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+  return [
+    ...PROJECTS.filter(p=>p.slug!=='hr-attrition-analysis').map((p) => ({ params: { slug: p.slug }, props: { project: p } })),
+    ...DASHBOARDS.map((dashboard,index) => ({params:{slug:dashboard.slug},props:{dashboard,index}})),
+  ];
 }
 
-const { project } = Astro.props;
-const isEcommerce = project.slug === 'ecommerce-clv-churn';
-const isDashboardCollection = project.slug === 'analytics-projects';
+const { project, dashboard, index } = Astro.props;
+const isEcommerce = project?.slug === 'ecommerce-clv-churn';
 const storySections = isEcommerce ? [
   { id: 'decision-heading', label: 'Who to contact first' },
   { id: 'approach', label: 'How I approached the decision' },
@@ -21,10 +24,6 @@ const storySections = isEcommerce ? [
   { id: 'future-absence', label: 'Predicting a future absence' },
   { id: 'retention-heading', label: 'From a segment to a decision' },
   { id: 'recommendations-heading', label: 'Recommended next steps' },
-] : isDashboardCollection ? [
-  { id: 'dashboard-question', label: 'Why these dashboards?' },
-  { id: 'dashboard-library', label: 'Browse each dashboard' },
-  { id: 'dashboard-lessons', label: 'What these reports demonstrate' },
 ] : [
   { id: 'problem', label: 'The problem' },
   { id: 'approach', label: 'Approach' },
@@ -36,11 +35,14 @@ const sections = [...storySections,
 ];
 ---
 
+{dashboard ? (
+  <DashboardCaseStudy dashboard={dashboard} index={index} />
+) : (
 <Base title={project.name} description={project.tagline}>
   <div class:list={['wrap', 'case-study-paper', { 'ecommerce-paper': isEcommerce }]}>
     <article class="prose project-prose">
       <p class="eyebrow"><a href="/projects/">Projects</a></p>
-      <h1>{isEcommerce ? 'Prioritizing customer retention with value and churn risk' : isDashboardCollection ? 'Sales gaps, housing prices, and patient waits' : project.name}</h1>
+      <h1>{isEcommerce ? 'Prioritizing customer retention with value and churn risk' : project.name}</h1>
       <p class="lede">{project.tagline}</p>
 
       <ul class="tag-row" style="margin: 1.25rem 0 2rem;">
@@ -64,15 +66,6 @@ const sections = [...storySections,
           <h2 id="project-deliverables">What the project delivers</h2>
           <p>Segment summaries, customer-level value estimates, and retention target lists that make prioritization inspectable. The outputs help a team decide which customer groups deserve attention and provide customer lists for planning outreach.</p>
           <p class="delivery-links"><a href={`${project.repo}/blob/main/reports/at_risk_high_value_customers.csv`}>Inspect the high-value win-back list →</a></p>
-        </section>
-      ) : isDashboardCollection ? (
-        <section class="case-story" aria-labelledby="dashboard-question">
-          <h2 id="dashboard-question">A useful report starts with the right comparison.</h2>
-          <p>Sales totals, house prices, hospital waiting times, and emissions become more informative when they are compared across meaningful groups and periods. These projects use Power BI, Tableau, Excel, and custom visuals to explore those differences.</p>
-          <p>Each dashboard now has its own page with an original visual preview, the question behind the analysis, documented findings, and links to available source material. The visual previews are static unless a live dashboard is explicitly provided.</p>
-          <DashboardDirectory />
-          <h2 id="dashboard-lessons">What the reports demonstrate</h2>
-          <p>The reports are descriptive case studies rather than evidence of a measured commercial or operational improvement. Comparisons can identify where to investigate next, but any staffing, pricing, or expansion decision needs context and further validation.</p>
         </section>
       ) : (
         <>
@@ -162,6 +155,7 @@ const sections = [...storySections,
     </article>
   </div>
 </Base>
+)}
 
 <style>
   .project-prose { max-width: none; }
