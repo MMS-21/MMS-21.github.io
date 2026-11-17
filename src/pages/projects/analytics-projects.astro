@@ -1,0 +1,14 @@
+---
+const destination='/projects/';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex,follow" />
+    <link rel="canonical" href={new URL(destination, Astro.site)} />
+    <meta http-equiv="refresh" content={`0;url=${destination}`} />
+    <title>Projects moved</title>
+  </head>
+  <body><p>Dashboards are now listed as independent projects. <a href={destination}>Browse projects</a>.</p></body>
+</html>

@@ -43,7 +43,7 @@ export function dashboardImageUrl(project: DashboardProject, path: string): stri
 }
 
 export function dashboardPageUrl(project: DashboardProject): string {
-  return '/projects/analytics-projects/' + project.slug + '/';
+  return '/projects/' + project.slug + '/';
 }
 
 // Each entry maps to a folder and an actual image in the public analytics repository.
@@ -226,7 +226,7 @@ export const DASHBOARDS: DashboardProject[] = [
     ],
   },
   {
-    slug: 'co2-per-capita-2020',
+    slug: 'co2-emissions',
     title: 'CO₂ Emissions per Capita',
     format: 'Data infographic',
     period: '2000–2020',
