@@ -2,6 +2,8 @@
 import Base from '../../layouts/Base.astro';
 import { PROJECTS } from '../../data/site';
 import RetentionMatrix from '../../components/RetentionMatrix.astro';
+import ProjectLab from '../../components/ProjectLab.astro';
+import ProjectReadingLayout from '../../components/ProjectReadingLayout.astro';
 
 export function getStaticPaths() {
   return PROJECTS.filter(p=>p.slug!=='hr-attrition-analysis').map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
@@ -10,11 +12,35 @@ export function getStaticPaths() {
 const { project } = Astro.props;
 const isEcommerce = project.slug === 'ecommerce-clv-churn';
 const isDashboardCollection = project.slug === 'analytics-projects';
+const storySections = isEcommerce ? [
+  { id: 'decision-heading', label: 'Who to contact first' },
+  { id: 'approach', label: 'How I approached the decision' },
+  { id: 'project-deliverables', label: 'What the project delivers' },
+  { id: 'evidence-heading', label: 'Where customer value concentrates' },
+  { id: 'future-absence', label: 'Predicting a future absence' },
+  { id: 'retention-heading', label: 'From a segment to a decision' },
+  { id: 'recommendations-heading', label: 'Recommended next steps' },
+] : isDashboardCollection ? [
+  { id: 'dashboard-question', label: 'The questions behind the reports' },
+  { id: 'melodymart', label: 'MelodyMart' },
+  { id: 'plant-co', label: 'Plant Co.' },
+  { id: 'king-county', label: 'King County housing' },
+  { id: 'healthcare-dashboards', label: 'Healthcare dashboards' },
+  { id: 'dashboard-lessons', label: 'What the dashboards demonstrate' },
+] : [
+  { id: 'problem', label: 'The problem' },
+  { id: 'approach', label: 'Approach' },
+  { id: 'result', label: 'Result' },
+];
+const sections = [...storySections,
+  { id: 'interactive-lab', label: 'Interactive supporting materials' },
+  { id: 'source', label: 'Source' },
+];
 ---
 
 <Base title={project.name} description={project.tagline}>
-  <div class:list={['wrap', { 'ecommerce-paper': isEcommerce }]}>
-    <article class="prose">
+  <div class:list={['wrap', 'case-study-paper', { 'ecommerce-paper': isEcommerce }]}>
+    <article class="prose project-prose">
       <p class="eyebrow"><a href="/projects/">Projects</a></p>
       <h1>{isEcommerce ? 'Prioritizing customer retention with value and churn risk' : isDashboardCollection ? 'Sales gaps, housing prices, and patient waits' : project.name}</h1>
       <p class="lede">{project.tagline}</p>
@@ -23,20 +49,21 @@ const isDashboardCollection = project.slug === 'analytics-projects';
         {project.stack.map((s) => <li class="tag">{s}</li>)}
       </ul>
 
+      <ProjectReadingLayout sections={sections}>
       {isEcommerce ? (
         <section class="case-story" aria-labelledby="decision-heading">
           <h2 id="decision-heading">Who should a retention team contact first?</h2>
           <p>A limited retention budget forces a choice: protect active high-value customers, win back valuable customers who have gone quiet, or re-engage a wider low-value group. Customer counts and past spending alone cannot resolve that choice.</p>
           <p>This project brings customer behavior, estimated future value, and churn risk into one analysis to support that prioritization.</p>
 
-          <h2>How I approached the decision</h2>
+          <h2 id="approach">How I approached the decision</h2>
           <ul>
             <li><strong>Understand the customer base.</strong> Use RFM segmentation to distinguish recent, frequent buyers from customers whose activity is fading.</li>
             <li><strong>Estimate future value.</strong> Use BG/NBD and Gamma-Gamma models to estimate purchase frequency and monetary value, rather than treating historical spend as future potential.</li>
             <li><strong>Evaluate future inactivity.</strong> Build churn features before a cutoff and evaluate against purchases in the following 365 days, correcting the original target-leakage issue.</li>
           </ul>
 
-          <h2>What the project delivers</h2>
+          <h2 id="project-deliverables">What the project delivers</h2>
           <p>Segment summaries, customer-level value estimates, and retention target lists that make prioritization inspectable. The outputs help a team decide which customer groups deserve attention and provide customer lists for planning outreach.</p>
           <p class="delivery-links"><a href={`${project.repo}/blob/main/reports/at_risk_high_value_customers.csv`}>Inspect the high-value win-back list →</a></p>
         </section>
@@ -46,36 +73,36 @@ const isDashboardCollection = project.slug === 'analytics-projects';
           <p>A fall in sales, an expensive house, or a long hospital wait only becomes useful information when it is compared with something else. Which country is pulling sales down? Does a property's condition explain part of its price? Is a hospital department slow, or simply handling more patients?</p>
           <p>These Power BI and Tableau projects explore those questions across retail, manufacturing, housing, and healthcare. The goal is not to fit every metric onto one screen. It is to give someone a useful place to start investigating.</p>
 
-          <h2>MelodyMart: a music store is more than its top-selling genre.</h2>
+          <h2 id="melodymart">MelodyMart: a music store is more than its top-selling genre.</h2>
           <p>The 2007 to 2011 report compares revenue, units sold, genres, cities, and average price per unit. Rock leads the genre breakdown. Chile and Poland appear as smaller markets worth investigating, but their lower sales do not, by themselves, justify expansion or a marketing budget.</p>
           <p><a href="https://github.com/MMS-21/Analytics-Projects/tree/main/MelodyMart%20Performance%20Analysis">See the MelodyMart report and screenshot</a></p>
 
-          <h2>Plant Co.: is the sales gap about geography, product mix, or margin?</h2>
+          <h2 id="plant-co">Plant Co.: is the sales gap about geography, product mix, or margin?</h2>
           <p>The Power BI report compares year-to-date sales with the same period in the previous year, then lets readers switch among sales, quantity, and gross profit. That distinction matters: selling more units does not necessarily mean earning more profit. The project notes an overall year-to-date sales decline, while Portugal and the Philippines stand out more positively in the country breakdown.</p>
           <p>The archived report lists a gross profit percentage of 39.62%. I treat that as a figure from the report's selected context, not proof of a lasting improvement. The DAX measures, waterfall, country view, and account profitability scatter plot make the comparison inspectable.</p>
           <p><a href="https://github.com/MMS-21/Analytics-Projects/tree/main/Power%20BI%20Dashboard%20Plant%20Co.%20Performance%202022%20-%20204">Explore the Plant Co. Power BI files and visuals</a></p>
 
-          <h2>King County: what sits behind the average house price?</h2>
+          <h2 id="king-county">King County: what sits behind the average house price?</h2>
           <p>The Tableau workbook examines July 2014 home sales in King County, Washington. Prices cluster broadly between $200,000 and $800,000 in the documented view, but the distribution is only part of the picture. Filters for floor area, lot size, and year built sit alongside charts for bedrooms, bathrooms, views, and condition.</p>
           <p>A county-wide average would hide those differences. This dashboard makes it possible to ask whether a high price accompanies a larger home, a better view, or a different property condition. Those relationships are descriptive, not evidence that any one attribute caused a particular sale price.</p>
           <p><a href="https://github.com/MMS-21/Analytics-Projects/tree/main/KING%20COUNTY%2C%20WASHINGTON%20HOUSE%20SALES%20DASHBOARD">Inspect the Tableau workbook and housing screenshots</a></p>
 
-          <h2>Healthcare: busy is not the same as inefficient.</h2>
+          <h2 id="healthcare-dashboards">Healthcare: busy is not the same as inefficient.</h2>
           <p>The hospital operations report records approximately 4,250 total surgery hours for Orthopedics and highlights departments where patients exceed waiting-time targets. The separate satisfaction view reports a score of 5.3 for Renal and 4.9 for Orthopedics. These differences help direct attention, but total surgery hours cannot establish the efficiency of an individual procedure, and satisfaction scores alone cannot explain why patients feel differently.</p>
           <p>Before proposing staffing or scheduling changes, I would check patient volume, case complexity, average wait by department, and whether the satisfaction measures use comparable groups.</p>
           <p><a href="https://github.com/MMS-21/Analytics-Projects/tree/main/Hospital%20Operational%20Efficiency">Hospital operations evidence</a> · <a href="https://github.com/MMS-21/Analytics-Projects/tree/main/Patient%20Satisfaction%20Analysis">Patient satisfaction evidence</a></p>
 
-          <h2>What these dashboards demonstrate</h2>
+          <h2 id="dashboard-lessons">What these dashboards demonstrate</h2>
           <p>The strongest part of a report is often the comparison it makes possible. Plant Co. needs matching year-to-date periods rather than two unrelated totals. King County needs a price distribution and property-level filters rather than one average. Hospital operations need rates and context alongside large aggregate numbers.</p>
           <p>These are descriptive case studies with source files and screenshots, not claims that a dashboard increased sales, raised satisfaction, or shortened waiting times. Where an authenticated or public live embed is unavailable, I link to the original report material rather than presenting a screenshot as an interactive dashboard.</p>
         </section>
       ) : (
         <>
-          <h2>The problem</h2>
+          <h2 id="problem">The problem</h2>
           <p>{project.problem}</p>
-          <h2>Approach</h2>
+          <h2 id="approach">Approach</h2>
           <ul>{project.approach.map((a) => <li>{a}</li>)}</ul>
-          <h2>Result</h2>
+          <h2 id="result">Result</h2>
           <p>{project.result}</p>
         </>
       )}
@@ -91,7 +118,7 @@ const isDashboardCollection = project.slug === 'analytics-projects';
             </a>
             <figcaption>Historical revenue share, not predicted CLV. Named customers only; returns are excluded rather than netted. <a href="/data/ecommerce/segment-summary.csv" download>Download chart data (CSV)</a>.</figcaption>
           </figure>
-          <h2>Predicting a future absence</h2>
+          <h2 id="future-absence">Predicting a future absence</h2>
           <p>Random Forest has the highest ROC-AUC (0.796); Logistic Regression has the highest recall (0.830). The comparison makes the tradeoff visible: ranking risk and catching churners are different goals.</p>
           <figure>
             <a class="figure-link" href="/img/ecommerce/churn-models.svg" aria-label="Open corrected churn model comparison at full size">
@@ -143,10 +170,9 @@ const isDashboardCollection = project.slug === 'analytics-projects';
         </section>
       )}
 
-      <h2>Explore the interactive lab</h2>
-      <p>Try the project-specific data exploration, calculators or demonstrations in the <a href={`/project-labs/${project.slug}/`}>interactive supporting materials</a>. Supporting examples are labelled as verified or illustrative.</p>
+      <ProjectLab project={project} embedded />
 
-      <h2>Source</h2>
+      <h2 id="source">Source</h2>
       <p>
         <a href={project.repo} rel="noopener">{project.repo.replace('https://github.com/', 'github.com/')}</a>
       </p>
@@ -154,11 +180,13 @@ const isDashboardCollection = project.slug === 'analytics-projects';
       <p class="cta-row">
         <a class="btn" href="/projects/">← All projects</a>
       </p>
+      </ProjectReadingLayout>
     </article>
   </div>
 </Base>
 
 <style>
+  .project-prose { max-width: none; }
   .case-story { margin-top: 1.75rem; }
   .case-story h2:first-child { margin-top: 0; }
   .case-story li { margin-bottom: .85rem; }

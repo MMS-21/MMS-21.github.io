@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const root=document.querySelector('[data-lab]');if(!root)return;
-const id=x=>document.getElementById(x);
+const id=x=>root.querySelector('#'+x);
 const fmt=(x,d=1)=>Number.isFinite(x)?Number(x).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d}):'Unavailable';
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const stat=(label,value)=>'<div class="stat"><small>'+escape(label)+'</small><strong>'+escape(value)+'</strong></div>';
