@@ -4,6 +4,7 @@ import { PROJECTS } from '../../data/site';
 import RetentionMatrix from '../../components/RetentionMatrix.astro';
 import ProjectLab from '../../components/ProjectLab.astro';
 import ProjectReadingLayout from '../../components/ProjectReadingLayout.astro';
+import DashboardDirectory from '../../components/DashboardDirectory.astro';
 
 export function getStaticPaths() {
   return PROJECTS.filter(p=>p.slug!=='hr-attrition-analysis').map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
@@ -21,12 +22,9 @@ const storySections = isEcommerce ? [
   { id: 'retention-heading', label: 'From a segment to a decision' },
   { id: 'recommendations-heading', label: 'Recommended next steps' },
 ] : isDashboardCollection ? [
-  { id: 'dashboard-question', label: 'The questions behind the reports' },
-  { id: 'melodymart', label: 'MelodyMart' },
-  { id: 'plant-co', label: 'Plant Co.' },
-  { id: 'king-county', label: 'King County housing' },
-  { id: 'healthcare-dashboards', label: 'Healthcare dashboards' },
-  { id: 'dashboard-lessons', label: 'What the dashboards demonstrate' },
+  { id: 'dashboard-question', label: 'Why these dashboards?' },
+  { id: 'dashboard-library', label: 'Browse each dashboard' },
+  { id: 'dashboard-lessons', label: 'What these reports demonstrate' },
 ] : [
   { id: 'problem', label: 'The problem' },
   { id: 'approach', label: 'Approach' },
@@ -69,32 +67,12 @@ const sections = [...storySections,
         </section>
       ) : isDashboardCollection ? (
         <section class="case-story" aria-labelledby="dashboard-question">
-          <h2 id="dashboard-question">A single number rarely tells the whole story.</h2>
-          <p>A fall in sales, an expensive house, or a long hospital wait only becomes useful information when it is compared with something else. Which country is pulling sales down? Does a property's condition explain part of its price? Is a hospital department slow, or simply handling more patients?</p>
-          <p>These Power BI and Tableau projects explore those questions across retail, manufacturing, housing, and healthcare. The goal is not to fit every metric onto one screen. It is to give someone a useful place to start investigating.</p>
-
-          <h2 id="melodymart">MelodyMart: a music store is more than its top-selling genre.</h2>
-          <p>The 2007 to 2011 report compares revenue, units sold, genres, cities, and average price per unit. Rock leads the genre breakdown. Chile and Poland appear as smaller markets worth investigating, but their lower sales do not, by themselves, justify expansion or a marketing budget.</p>
-          <p><a href="https://github.com/MMS-21/Analytics-Projects/tree/main/MelodyMart%20Performance%20Analysis">See the MelodyMart report and screenshot</a></p>
-
-          <h2 id="plant-co">Plant Co.: is the sales gap about geography, product mix, or margin?</h2>
-          <p>The Power BI report compares year-to-date sales with the same period in the previous year, then lets readers switch among sales, quantity, and gross profit. That distinction matters: selling more units does not necessarily mean earning more profit. The project notes an overall year-to-date sales decline, while Portugal and the Philippines stand out more positively in the country breakdown.</p>
-          <p>The archived report lists a gross profit percentage of 39.62%. I treat that as a figure from the report's selected context, not proof of a lasting improvement. The DAX measures, waterfall, country view, and account profitability scatter plot make the comparison inspectable.</p>
-          <p><a href="https://github.com/MMS-21/Analytics-Projects/tree/main/Power%20BI%20Dashboard%20Plant%20Co.%20Performance%202022%20-%20204">Explore the Plant Co. Power BI files and visuals</a></p>
-
-          <h2 id="king-county">King County: what sits behind the average house price?</h2>
-          <p>The Tableau workbook examines July 2014 home sales in King County, Washington. Prices cluster broadly between $200,000 and $800,000 in the documented view, but the distribution is only part of the picture. Filters for floor area, lot size, and year built sit alongside charts for bedrooms, bathrooms, views, and condition.</p>
-          <p>A county-wide average would hide those differences. This dashboard makes it possible to ask whether a high price accompanies a larger home, a better view, or a different property condition. Those relationships are descriptive, not evidence that any one attribute caused a particular sale price.</p>
-          <p><a href="https://github.com/MMS-21/Analytics-Projects/tree/main/KING%20COUNTY%2C%20WASHINGTON%20HOUSE%20SALES%20DASHBOARD">Inspect the Tableau workbook and housing screenshots</a></p>
-
-          <h2 id="healthcare-dashboards">Healthcare: busy is not the same as inefficient.</h2>
-          <p>The hospital operations report records approximately 4,250 total surgery hours for Orthopedics and highlights departments where patients exceed waiting-time targets. The separate satisfaction view reports a score of 5.3 for Renal and 4.9 for Orthopedics. These differences help direct attention, but total surgery hours cannot establish the efficiency of an individual procedure, and satisfaction scores alone cannot explain why patients feel differently.</p>
-          <p>Before proposing staffing or scheduling changes, I would check patient volume, case complexity, average wait by department, and whether the satisfaction measures use comparable groups.</p>
-          <p><a href="https://github.com/MMS-21/Analytics-Projects/tree/main/Hospital%20Operational%20Efficiency">Hospital operations evidence</a> · <a href="https://github.com/MMS-21/Analytics-Projects/tree/main/Patient%20Satisfaction%20Analysis">Patient satisfaction evidence</a></p>
-
-          <h2 id="dashboard-lessons">What these dashboards demonstrate</h2>
-          <p>The strongest part of a report is often the comparison it makes possible. Plant Co. needs matching year-to-date periods rather than two unrelated totals. King County needs a price distribution and property-level filters rather than one average. Hospital operations need rates and context alongside large aggregate numbers.</p>
-          <p>These are descriptive case studies with source files and screenshots, not claims that a dashboard increased sales, raised satisfaction, or shortened waiting times. Where an authenticated or public live embed is unavailable, I link to the original report material rather than presenting a screenshot as an interactive dashboard.</p>
+          <h2 id="dashboard-question">A useful report starts with the right comparison.</h2>
+          <p>Sales totals, house prices, hospital waiting times, and emissions become more informative when they are compared across meaningful groups and periods. These projects use Power BI, Tableau, Excel, and custom visuals to explore those differences.</p>
+          <p>Each dashboard now has its own page with an original visual preview, the question behind the analysis, documented findings, and links to available source material. The visual previews are static unless a live dashboard is explicitly provided.</p>
+          <DashboardDirectory />
+          <h2 id="dashboard-lessons">What the reports demonstrate</h2>
+          <p>The reports are descriptive case studies rather than evidence of a measured commercial or operational improvement. Comparisons can identify where to investigate next, but any staffing, pricing, or expansion decision needs context and further validation.</p>
         </section>
       ) : (
         <>
