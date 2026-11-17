@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 288">
+  <defs>
+    <linearGradient id="fade" x1="0" x2="0" y1="187" y2="214" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white"/>
+      <stop offset=".52" stop-color="white" stop-opacity=".48"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="hem" x="76" y="167" width="136" height="52" maskUnits="userSpaceOnUse">
+      <path d="M76 167h136v52H76z" fill="url(#fade)"/>
+    </mask>
+  </defs>
+  <g mask="url(#hem)" stroke="#141113" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M129 172h30v21l-15 9-15-9z" fill="#fff6ee" stroke="none"/>
+    <path d="M86 214c0-11 7-21 15-25-2-5 2-11 7-13 7-3 14-1 20 3v9l16 10 16-10v-9c6-4 13-6 20-3 5 2 9 8 7 13 8 4 15 14 15 25z" fill="#f5e7ce" stroke="none"/>
+    <path d="M86 215c0-12 7-21 15-25-2-5 2-11 7-14 7-3 14-1 20 3v9m32 0v-9c6-4 13-6 20-3 5 3 9 9 7 14 8 4 15 13 15 25" fill="none"/>
+    <path d="m112 183 32 15 32-15M101 190c7 0 12 2 21 7m65-7c-7 0-12 2-21 7" fill="none"/>
+    <path d="M128 199v17m32-17v17" stroke="#141b30" stroke-width="4.5"/>
+  </g>
+</svg>
