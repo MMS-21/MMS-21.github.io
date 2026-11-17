@@ -1,7 +1,12 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import ProjectReadingLayout from '../../../components/ProjectReadingLayout.astro';
-import { DASHBOARDS, dashboardFileUrl, dashboardImageUrl, dashboardPageUrl, dashboardRepositoryUrl } from '../../../data/dashboards';
+import { DASHBOARDS, dashboardFileUrl, dashboardImageUrl, dashboardPageUrl, dashboardRepositoryUrl, type DashboardProject } from '../../../data/dashboards';
+
+interface Props {
+  dashboard: DashboardProject;
+  index: number;
+}
 
 export function getStaticPaths() {
   return DASHBOARDS.map((dashboard, index) => ({
