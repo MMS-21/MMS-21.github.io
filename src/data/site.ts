@@ -127,21 +127,6 @@ export const PROJECTS: Project[] = [
     featured: false,
   },
   {
-    slug: 'analytics-projects',
-    name: 'Analytics-Projects',
-    tagline: 'How sales, margins, housing prices, and patient experiences change when you look beyond the average',
-    problem: 'A country-wide sales total can hide a weak product category. An average house price hides property differences. An overall waiting-time figure hides department-level pressures. Each question needs the right comparison.',
-    approach: [
-      'Compared Plant Co. year-to-date results with prior-year periods, using Power BI measures for sales, quantity, and gross profit.',
-      'Examined MelodyMart revenue across genres and cities, and used Tableau to explore King County housing prices by property characteristics.',
-      'Reviewed hospital operations and patient satisfaction by department, keeping descriptive findings separate from explanations that still need testing.',
-    ],
-    result: 'A set of report files and documented visuals that make differences visible across countries, categories, properties, and departments, without claiming that the dashboards caused measurable improvements.',
-    stack: ['Power BI', 'Tableau', 'SQL', 'Python'],
-    repo: 'https://github.com/MMS-21/Analytics-Projects',
-    featured: false,
-  },
-  {
     slug: 'sql-for-business-analytics',
     name: 'SQL-for-Business-Analytics',
     tagline: 'SQL against Chinook, COVID-19, and Nashville housing',
@@ -154,21 +139,6 @@ export const PROJECTS: Project[] = [
     result: 'Query fluency on data that does not arrive clean and tidy.',
     stack: ['SQL', 'SQLite', 'PostgreSQL'],
     repo: 'https://github.com/MMS-21/SQL-for-Business-Analytics',
-    featured: false,
-  },
-  {
-    slug: 'co2-emissions',
-    name: 'CO2 Emissions per Capita',
-    tagline: 'Per capita and total CO2 emissions for 20 countries in 2020',
-    problem: 'Total emissions alone do not show which countries have the highest per capita carbon footprint, or how that has changed over time.',
-    approach: [
-      'Gathered CO2 emissions data from Our World in Data and the World Bank for 20 countries with populations over 5 million.',
-      'Built radial charts where spoke length encodes per capita emissions and circle size encodes total national emissions.',
-      'Positioned countries by GDP and population to reveal the relationship between economic output, population size, and emissions.',
-    ],
-    result: 'An infographic comparing 20 countries on per capita and total CO2 emissions, with year-by-year trends from 2000 to 2020.',
-    stack: ['Python', 'Data visualization', 'Our World in Data'],
-    repo: 'https://github.com/MMS-21/Analytics-Projects/tree/main/CO2%20Emissions%20per%20capita%20For%202020',
     featured: false,
   },
   ];
