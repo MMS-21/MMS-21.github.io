@@ -1,0 +1,68 @@
+---
+import { DASHBOARDS, dashboardImageUrl, dashboardPageUrl } from '../data/dashboards';
+---
+
+<section class="dashboard-directory" id="dashboard-library" aria-labelledby="dashboard-library-heading">
+  <div class="directory-heading">
+    <div>
+      <p class="directory-eyebrow">Explore the collection</p>
+      <h2 id="dashboard-library-heading">One project, one page.</h2>
+    </div>
+    <p class="directory-intro">Seven dashboards and two data visualizations, each with its own preview, context, and original sources.</p>
+  </div>
+  <div class="dashboard-grid">
+    {DASHBOARDS.map((dashboard) => (
+      <a class="dashboard-card" href={dashboardPageUrl(dashboard)} aria-label={'Explore ' + dashboard.title}>
+        <span class="dashboard-image">
+          <img
+            src={dashboardImageUrl(dashboard, dashboard.preview.path)}
+            alt={dashboard.preview.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+        <span class="dashboard-copy">
+          <span class="dashboard-meta">{dashboard.format} <span aria-hidden="true">·</span> {dashboard.period}</span>
+          <strong>{dashboard.title}</strong>
+          <span class="dashboard-summary">{dashboard.summary}</span>
+          <span class="dashboard-link">Explore project <span aria-hidden="true">↗</span></span>
+        </span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .dashboard-directory { margin: 2.25rem 0 3rem; scroll-margin-top: 2rem; }
+  .directory-heading { display: flex; gap: 2rem; justify-content: space-between; align-items: end; margin-bottom: 1.35rem; }
+  .directory-heading h2 { margin: .35rem 0 0; font-size: clamp(1.65rem, 3vw, 2.25rem); letter-spacing: -.03em; }
+  .directory-eyebrow { margin: 0; color: var(--muted); font: 600 .75rem/1.5 'Manrope', sans-serif; letter-spacing: .13em; text-transform: uppercase; }
+  .directory-intro { max-width: 25rem; margin: 0; color: var(--muted); font-size: .91rem; line-height: 1.7; }
+  .dashboard-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .dashboard-card { display: flex; flex-direction: column; min-width: 0; overflow: hidden; text-decoration: none; color: inherit; border: 1px solid var(--border); border-radius: 8px; background: #fffdf8; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+  .dashboard-card:hover { transform: translateY(-3px); border-color: #8d8b7a; box-shadow: 0 12px 24px #463b2b12; }
+  .dashboard-card:focus-visible { outline: 3px solid #32728b; outline-offset: 3px; }
+  .dashboard-image { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: #eeeae0; border-bottom: 1px solid var(--border); }
+  .dashboard-image img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .dashboard-copy { display: flex; flex: 1; flex-direction: column; align-items: flex-start; gap: .6rem; padding: 1.1rem; }
+  .dashboard-meta { color: var(--muted); font-size: .72rem; line-height: 1.5; }
+  .dashboard-copy strong { font-size: 1.05rem; font-weight: 650; line-height: 1.35; color: var(--fg); }
+  .dashboard-summary { color: var(--muted); font-size: .83rem; line-height: 1.6; }
+  .dashboard-link { margin-top: auto; padding-top: .45rem; font: 650 .78rem/1.5 'Manrope', sans-serif; color: #245a70; }
+  @media (max-width: 840px) {
+    .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .directory-heading { align-items: start; flex-direction: column; gap: .65rem; }
+  }
+  @media (max-width: 540px) {
+    .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+    .dashboard-card { flex-direction: row; }
+    .dashboard-image { width: 37%; flex: none; aspect-ratio: auto; border-bottom: 0; border-right: 1px solid var(--border); }
+    .dashboard-copy { padding: .85rem; gap: .35rem; }
+    .dashboard-copy strong { font-size: .95rem; }
+    .dashboard-summary { font-size: .78rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dashboard-card { transition: none; }
+    .dashboard-card:hover { transform: none; }
+  }
+</style>
