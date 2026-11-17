@@ -10,7 +10,7 @@ The homepage uses the `page-mascot` React component through Astro, with click/ta
 
 ## Cream hoodie edition
 
-The two `moaaz-hoodie-*.webp` atlases in `public/mascots` retain the complete cream hoodie portraits. The site serves the corresponding `moaaz-head-*.webp` atlases above a single fixed `moaaz-hoodie-body.svg`. Its lower edge fades to transparency so the page texture shows through. Each atlas uses 288px square cells with a shared portrait baseline. Directions use the same 3×3 order as the original; the 4×4 reactions are in this row-major order:
+The two `moaaz-hoodie-*.webp` atlases in `public/mascots` retain the complete cream hoodie portraits. The site serves the corresponding `moaaz-head-*.webp` atlases above a single fixed `moaaz-hoodie-body.svg`. Its lower edge fades to transparency so the page texture shows through. Each atlas uses 288px square cells with a shared portrait baseline. The upper-left and upper-right frames are aligned at the neck to the same fixed collar, without scaling the heads or moving the shoulders. Directions use the same 3×3 order as the original; the 4×4 reactions are in this row-major order:
 
 1. Calm, cheerful, laughing, affectionate
 2. Surprised, starstruck, bashful, skeptical

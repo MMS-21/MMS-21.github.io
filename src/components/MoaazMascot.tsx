@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 
-const directions = '/mascots/moaaz-head-directions.webp';
+const directions = '/mascots/moaaz-head-directions.webp?v=neck-aligned';
 const reactions = '/mascots/moaaz-head-reactions.webp';
 const hoodie = '/mascots/moaaz-hoodie-body.svg';
 const center = 4;
