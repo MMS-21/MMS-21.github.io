@@ -2,7 +2,7 @@
 import HeroIntroduction from './HeroIntroduction.astro';
 import WelcomeGarden from './WelcomeGarden.astro';
 import WorksLetter from './WorksLetter.astro';
-import { Mascot } from 'page-mascot';
+import { MoaazMascot } from './MoaazMascot';
 const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing'},{href:'/about/',label:'About'},{href:'/contact/',label:'Contact'}];
 ---
 <a class="skip-intro" href="#featured-work">Skip introduction</a>
@@ -13,7 +13,7 @@ const NAV=[{href:'/projects/',label:'Projects'},{href:'/writing/',label:'Writing
 <section class="scroll-hero" id="pre-hero" tabindex="-1" aria-label="Introduction" data-animated="false">
  <div class="mobile-welcome opening-welcome"><WelcomeGarden arabic hideFollow /></div>
  <a class="opening-cue" href="#hero-story">Scroll down<svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a>
- <div class="hero-identity"><div class="identity-art"><div class="mascot-portrait"><Mascot client:load directions="/mascots/moaaz-directions.webp" reactions="/mascots/moaaz-reactions.webp" size={136} label="Moaaz avatar" /></div></div></div>
+ <div class="hero-identity"><div class="identity-art"><div class="mascot-portrait"><MoaazMascot client:load size={136} label="Moaaz avatar" /></div></div></div>
 </section>
 <section class="intro-chapter" id="hero-story" tabindex="-1" aria-label="About Moaaz"><HeroIntroduction /><div class="intro-works"><WorksLetter /></div><a class="intro-scroll" href="#featured-work">Scroll down<svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg></a></section>
 <script>
