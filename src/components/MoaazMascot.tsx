@@ -3,19 +3,17 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 
-const directions = '/mascots/moaaz-head-directions.webp?v=neck-aligned';
-const reactions = '/mascots/moaaz-head-reactions.webp';
-const hoodie = '/mascots/moaaz-hoodie-body.svg';
+const directions = '/mascots/moaaz-rebuilt-directions.webp';
+const reactions = '/mascots/moaaz-rebuilt-reactions.webp';
 const center = 4;
 const clockwise = [5, 8, 7, 6, 3, 0, 1, 2];
 const sectorSize = (Math.PI * 2) / clockwise.length;
 const deadZone = 70;
 const hysteresis = 0.12;
 
-const surprised = 4;
-const dizzy = 9;
-// Indexes into the 4-by-4 art, starting with the familiar playful reactions.
-const reactionCycle = [3, 5, 15, 1, 2, 6, 7, 8, 10, 11, 12, 13, 14, 0, 4, 9];
+const surprised = 2;
+const dizzy = 7;
+const reactionCycle = [5, 8, 1, 4, 3, 6, 0, surprised, dizzy];
 function sprite(url: string, index: number, grid: number, visible: boolean): CSSProperties {
   const step = 100 / (grid - 1);
   return {
@@ -111,10 +109,8 @@ export function MoaazMascot({ size = 140, label = 'Moaaz avatar' }: {
         padding: 0, border: 0, background: 'transparent', appearance: 'none',
         cursor: 'pointer', userSelect: 'none' }}>
       <span aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        <span data-mascot-clothing style={{ position: 'absolute', inset: 0,
-          background: `url(${hoodie}) center / 100% 100% no-repeat` }} />
         <span style={sprite(directions, direction, 3, reaction === null)} />
-        <span style={sprite(reactions, reaction ?? 0, 4, reaction !== null)} />
+        <span style={sprite(reactions, reaction ?? 0, 3, reaction !== null)} />
       </span>
     </button>
   );
