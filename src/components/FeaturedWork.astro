@@ -1,105 +1,58 @@
 ---
-import ProjectPaperDeck from './ProjectPaperDeck.astro';
+import { projectPapers } from '../data/project-papers';
+const labels = ['Customer intelligence','Employee retention','A/B testing','SQL analysis','CO₂ emissions','Analytics agent','Document authorship','Dashboards'];
+const colors = ['#d7dfd1','#e3d5c0','#d1dee1','#e1d2c8','#d7dfcd','#d3dce1','#e4dac6','#d9d2de'];
+const projects = projectPapers.map((project, i) => ({...project, label: labels[i], paper: colors[i]}));
+const first = projects[0];
 ---
-
-<section class="desk-scene" id="featured-work" tabindex="-1" aria-labelledby="featured-heading">
-  <div class="desk-stage">
-    <div class="work-section-opening">
-      <h2 id="featured-heading" class="work-section-label">Selected work</h2>
-      <a class="work-index-link" href="/projects/">All projects <span aria-hidden="true">↗</span></a>
-    </div>
-    <ProjectPaperDeck />
-    <a class="scroll-cue" href="#about" aria-label="Scroll down to the path so far">
-      <span>Scroll down</span>
-      <svg viewBox="0 0 40 48" fill="none" aria-hidden="true"><path d="M15 5c16 8 12 20 5 35m-7-9 7 10 10-6"/></svg>
-    </a>
-  </div>
+<section class="torn-work" id="featured-work" tabindex="-1" aria-labelledby="featured-heading">
+<header class="work-opening"><h2 id="featured-heading">Selected work.</h2><a href="/projects/">All projects ↗</a></header>
+<div class="sequence"><div class="sticky"><div class="layout">
+<ol class="project-list" aria-label="Choose a project">{projects.map((project,i)=><li><button type="button" aria-current={i===0?'true':'false'}>{project.label}</button></li>)}</ol>
+<select class="mobile-select" aria-label="Choose a project">{projects.map((project,i)=><option value={i}>{project.label}</option>)}</select>
+<div class="collage"><div class="backing" aria-hidden="true"></div>
+<button class="art-preview" type="button" aria-label={`Enlarge preview: ${first.title}`} aria-haspopup="dialog" aria-controls="torn-art-dialog"><div class="sheet"><img src={first.image} alt={first.alt} loading="lazy" decoding="async" width="900" height="580" /></div></button>
+<aside class="note"><p>{first.label}</p><div class="tools">{first.tools}</div><a href={first.url}>Explore project ↗</a></aside></div>
+<div class="description"><h2>{first.title}</h2><p>{first.summary}</p><div class="steps" aria-hidden="true">{projects.map((_,i)=><span class:list={{active:i===0}} />)}</div></div>
+</div></div></div>
+<footer class="ending"><a href="/projects/">Explore the complete collection ↗</a></footer>
+<dialog class="art-dialog" id="torn-art-dialog" aria-labelledby="torn-dialog-title"><div class="dialog-bar"><h3 id="torn-dialog-title"></h3><button class="dialog-close" type="button">Close preview</button></div><img class="dialog-art" alt="" /><a class="dialog-link">Explore project ↗</a></dialog>
+<script type="application/json" id="torn-project-data" set:html={JSON.stringify(projects).replace(/</g, '\u003c')} />
 </section>
+<script>import '../scripts/torn-projects.js';</script>
 
 <style>
-  .desk-scene {
-    position: relative;
-    color: #302d28;
-    pointer-events: none;
-  }
 
-  .desk-stage {
-    position: relative;
-    isolation: isolate;
-    box-sizing: border-box;
-    max-width: 1280px;
-    margin-inline: auto;
-    padding: 100px 100px 48px 160px;
-  }
+@font-face{font-family:ProjectSerif;src:url('/fonts/cormorant-garamond-latin.woff2')}
+*{box-sizing:border-box}.torn-work{position:relative;color:#302d28;font:15px/1.65 Manrope,system-ui,sans-serif;}
 
-  .work-section-opening {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    min-height: 48px;
-    max-width: 660px;
-    margin: 0 auto 40px;
-    pointer-events: auto;
-  }
+a{color:inherit;text-underline-offset:5px}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid #426b7d;outline-offset:6px}
+.sequence{height:590vh}.sticky{position:sticky;top:0;min-height:100svh;display:flex;align-items:center;padding:65px clamp(24px,5vw,80px) 90px}.layout{width:100%;max-width:1280px;margin:auto;display:grid;grid-template-columns:minmax(190px,1fr) minmax(260px,1.18fr) minmax(230px,.9fr);gap:clamp(34px,5vw,78px);align-items:center}
+.project-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:15px}.project-list button{display:block;border:0;background:none;padding:3px 0;color:#8a8275;text-align:left;font:400 clamp(21px,2.1vw,29px)/1.12 ProjectSerif,Georgia,serif;transition:color .35s,translate .35s}.project-list button[aria-current=true]{color:#302d28;translate:8px 0}.project-list button:hover{color:#302d28}
+.collage{position:relative;aspect-ratio:4/5;width:100%;max-width:370px;margin:auto;filter:drop-shadow(4px 12px 14px #44352513)}.backing{position:absolute;inset:18% -10% -5% 8%;background:#d7dfd1;transform:rotate(3deg);transition:background .6s}.sheet{position:absolute;inset:0;background:#f9f6ec;overflow:hidden;display:grid;align-items:center;padding:22px 9px 32px;}.sheet img{display:block;width:100%;height:100%;max-height:100%;object-fit:contain;}.sheet.reveal{animation:paperReveal .8s cubic-bezier(.42,0,0,1)}
+.note{position:absolute;z-index:2;bottom:-48px;left:-10%;right:7%;padding:19px 22px 20px;background:#fffdf6;box-shadow:1px 5px 12px #372f2012;transform:rotate(-2deg);border:1px solid #c6baa335}.note p{margin:0;font:22px/1.15 ProjectSerif,Georgia,serif}.note .tools{font:12px/1.6 system-ui,sans-serif;margin:10px 0 15px;color:#655f52}.note a{font-size:12px}.description h2{font:400 clamp(27px,2.6vw,36px)/1.14 ProjectSerif,Georgia,serif;margin:0 0 20px;letter-spacing:-.015em}.description p{margin:0;color:#625b50;font-size:14px;line-height:1.8}.description.arrive{animation:copyReveal .6s ease}.steps{display:flex;gap:5px;margin-top:25px}.steps span{height:2px;flex:1;background:#d5ccbc}.steps .active{background:#6b7660}.mobile-select{display:none}.ending{padding:40px 24px 75px;text-align:center}.ending a{font:30px ProjectSerif,serif}.ending p{color:#746b5c;font-size:13px}
+@keyframes paperReveal{from{clip-path:inset(100% 0 0 0);opacity:.4}to{clip-path:inset(0);opacity:1}}@keyframes copyReveal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){.layout{grid-template-columns:180px minmax(240px,1fr);gap:36px}.description{grid-column:1/-1;max-width:650px;margin-top:38px}.description h2{font-size:28px;margin-bottom:10px}.description p{font-size:13px}.collage{max-width:290px}.sticky{padding:50px 30px 45px}.layout{max-width:700px}.project-list{gap:12px}.project-list button{font-size:24px}.opening{padding-top:25px}}
+@media(max-width:560px){.top{padding:20px}.signature{font-size:24px}.opening{padding:25px 24px 10px}.opening h1{font-size:48px}.opening p{font-size:13px}.sequence{height:auto}.sticky{position:relative;min-height:0;padding:25px 32px 55px}.layout{display:flex;flex-direction:column;gap:28px}.project-list{display:none}.mobile-select{display:block;width:100%;font:16px system-ui,sans-serif;padding:12px;background:#fffaf0;border:1px solid #bfb5a4;color:#302d28;border-radius:0}.collage{max-width:260px;width:85%}.note{bottom:-40px;left:-12%;right:0;padding:16px}.description{margin-top:36px}.description h2{font-size:29px}.description p{font-size:14px}.ending{padding-top:15px}.steps{margin-top:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 
-  .work-section-label {
-    margin: 0;
-    font: 400 36px/40px 'Zodiak', Georgia, serif;
-    letter-spacing: -.025em;
-  }
+.work-opening{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:100px clamp(24px,6vw,90px) 0;max-width:1280px;margin:auto}
+.work-opening h2{font:400 clamp(36px,4vw,58px)/1.1 ProjectSerif,Georgia,serif;margin:0}
+.work-opening a{font-size:14px}
+.collage{filter:drop-shadow(5px 18px 15px #493b2528);perspective:1000px}
+.art-preview{position:absolute;inset:0;display:block;padding:0;border:0;background:transparent;filter:drop-shadow(3px 7px 5px #493b2526);transform:rotate(-1deg);transition:transform .45s cubic-bezier(.22,1,.36,1),filter .45s;cursor:zoom-in}
+.art-preview:hover,.art-preview:focus-visible{transform:translateY(-7px) rotate(-2deg) rotateY(-3deg);filter:drop-shadow(7px 20px 13px #493b2538)}
+.art-preview .sheet{width:100%;height:100%;}
+.sheet img{filter:drop-shadow(2px 7px 5px #372d202b)}
+.note{pointer-events:none;box-shadow:3px 12px 20px #493b2524,0 1px 3px #493b2514}
+.note a{pointer-events:auto}
+.art-dialog{width:min(1100px,calc(100vw - 32px));max-height:calc(100svh - 32px);padding:24px;border:1px solid #b6aa92;background:#faf7ed;color:#302d28;box-shadow:12px 30px 70px #30251540;overflow:auto}
+.art-dialog::backdrop{background:#211c13a8;backdrop-filter:blur(5px)}
+.dialog-bar{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:18px}
+.dialog-bar h3{font:28px/1.2 ProjectSerif,Georgia,serif;margin:0}
+.dialog-close{padding:10px 14px;border:1px solid #b6aa92;background:transparent;min-height:44px;color:inherit}
+.dialog-art{display:block;width:100%;height:auto;max-height:72svh;object-fit:contain}
+.dialog-link{display:inline-block;margin-top:18px;font-size:14px}
+@media(max-width:560px){.work-opening{padding:75px 24px 24px}.work-opening h2{font-size:36px}.art-dialog{padding:16px}.dialog-bar h3{font-size:24px}}
 
-  .work-index-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-    min-height: 44px;
-    color: #31596d;
-    font: 400 14px/20px Manrope, sans-serif;
-    text-underline-offset: 5px;
-    white-space: nowrap;
-    transition: translate .45s var(--portfolio-ease);
-  }
-
-  .work-index-link:hover { translate: 4px -2px; }
-
-  .scroll-cue {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    width: fit-content;
-    margin: 16px auto 0;
-    color: #79613e;
-    font: 1.1rem 'Cormorant Garamond', Georgia, serif;
-    text-decoration: none;
-    pointer-events: auto;
-  }
-
-  .scroll-cue svg {
-    width: 22px;
-    height: 32px;
-    stroke: currentColor;
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .work-index-link:focus-visible,
-  .scroll-cue:focus-visible {
-    outline: 2px solid #31596d;
-    outline-offset: 5px;
-  }
-
-  @media (max-width: 950px) {
-    .desk-stage { padding-inline: clamp(96px, 17vw, 160px) clamp(48px, 10vw, 100px); }
-  }
-
-  @media (max-width: 700px) {
-    .desk-stage { padding: 96px 24px 48px; }
-    .work-section-opening { gap: 12px; margin-bottom: 24px; }
-    .work-section-label { font-size: clamp(26px, 7.5vw, 30px); line-height: 36px; }
-    .work-index-link { gap: 8px; }
-    .scroll-cue { margin-top: 12px; }
-  }
 </style>
