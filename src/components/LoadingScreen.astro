@@ -1,91 +1,159 @@
-<div id="loader" class="portfolio-loader" hidden aria-label="Opening the portfolio">
-  <img class="loader-art" src="/media/loader/dancer-spin-poster.webp" alt="" width="1664" height="936" decoding="async" />
-  <video class="loader-art loader-motion" data-loader-motion data-src="/media/loader/dancer-spin.mp4" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>
-  <div class="loader-status" role="status" aria-live="polite">
-    <span>Loading</span>
-    <span class="loader-track" aria-hidden="true"><span></span></span>
-  </div>
-  <button class="loader-skip" type="button">Skip intro <span aria-hidden="true">↗</span></button>
+<div id="portfolio-intro" hidden aria-label="Opening portfolio">
+  <canvas width="720" height="720" aria-hidden="true"></canvas>
+  <output class="intro-percent" role="progressbar" aria-label="Opening portfolio" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">0%</output>
+  <button class="intro-skip" type="button">Skip intro</button>
 </div>
-
 <script is:inline>
-  (() => {
-    const loader = document.getElementById('loader');
-    if (!loader) return;
-    const key = 'portfolio-loading-seen-v2';
-    const preview = new URLSearchParams(location.search).has('preview-loader');
-    let seen = false;
-    try { seen = sessionStorage.getItem(key) === '1'; } catch {}
-    // Deep links and repeat visits go straight to their destination.
-    if (!preview && (seen || location.hash)) { loader.remove(); return; }
-
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const main = loader.closest('main');
-    const video = loader.querySelector('video');
-    const skip = loader.querySelector('button');
-    const previousOverflow = document.documentElement.style.overflow;
-    const locked = [];
-    let closed = false;
-    let deadline;
-    loader.hidden = false;
-    document.documentElement.style.overflow = 'hidden';
-    main?.setAttribute('aria-busy', 'true');
-
-    function finish() {
-      if (closed) return;
-      closed = true;
-      clearTimeout(deadline);
-      try { sessionStorage.setItem(key, '1'); } catch {}
-      video.pause();
-      loader.dataset.state = 'leaving';
-      document.documentElement.style.overflow = previousOverflow;
-      main?.removeAttribute('aria-busy');
-      locked.forEach(element => { element.inert = false; });
-      if (loader.contains(document.activeElement) && main) { main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true }); }
-      document.removeEventListener('keydown', escape);
-      reduced.removeEventListener('change', motionPreference);
-      setTimeout(() => loader.remove(), reduced.matches ? 0 : 350);
-    }
-    function escape(event) { if (event.key === 'Escape') { event.preventDefault(); finish(); } }
-    function motionPreference() { if (reduced.matches) { video.pause(); video.removeAttribute('src'); video.load(); } }
-    skip.addEventListener('click', finish);
-    document.addEventListener('keydown', escape);
-    reduced.addEventListener('change', motionPreference);
-
-    // This watchdog lives in the inline bootstrap, independent of app hydration.
-    deadline = setTimeout(finish, 2200);
-    if (!reduced.matches) {
-      video.muted = true;
-      video.src = video.dataset.src;
-      video.play().catch(() => {}); // The still remains if autoplay is unavailable.
-    }
-    const domReady = document.readyState === 'loading'
-      ? new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }))
-      : Promise.resolve();
-    const ready = domReady.then(() => {
-      if (closed) return;
-      Array.from(main?.children || []).forEach(element => {
-        if (element !== loader && !element.inert) { element.inert = true; locked.push(element); }
-      });
-      return document.fonts?.ready;
+(() => {
+  const root = document.getElementById('portfolio-intro');
+  if (!root) return;
+  const preview = new URLSearchParams(location.search).has('preview-loader');
+  const key = 'portfolio-ascii-intro-v1';
+  let seen = false;
+  try { seen = sessionStorage.getItem(key) === '1'; } catch {}
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  if ((!preview && (seen || location.hash)) || reduced.matches) { root.remove(); return; }
+  const canvas = root.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) { root.remove(); return; }
+  const percent = root.querySelector('output');
+  const source = document.createElement('canvas');
+  const layer = document.createElement('canvas');
+  source.width = source.height = layer.width = layer.height = 720;
+  const art = source.getContext('2d');
+  const fill = layer.getContext('2d');
+  const image = new Image();
+  const main = root.closest('main');
+  const previousOverflow = document.documentElement.style.overflow;
+  const locked = [];
+  let progress = 0, completedAt = null, loaded = false;
+  let closed = false, entering = false, raf, lastTime = 0;
+  let done = 0;
+  const total = 4;
+  root.hidden = false;
+  document.documentElement.style.overflow = 'hidden';
+  main?.setAttribute('aria-busy', 'true');
+  function lockContent() {
+    Array.from(main?.children || []).forEach(element => {
+      if (element !== root && !element.inert) { element.inert = true; locked.push(element); }
     });
-    const minimum = new Promise(resolve => setTimeout(resolve, reduced.matches ? 0 : 1100));
-    Promise.all([ready, minimum]).then(finish, finish);
-  })();
-</script>
+  }
+  function finish() {
+    if (closed) return;
+    closed = true;
+    cancelAnimationFrame(raf);
+    clearTimeout(watchdog);
+    try { sessionStorage.setItem(key, '1'); } catch {}
+    document.documentElement.style.overflow = previousOverflow;
+    main?.removeAttribute('aria-busy');
+    locked.forEach(element => { element.inert = false; });
+    if (root.contains(document.activeElement) && main) {
+      main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true });
+    }
+    document.removeEventListener('keydown', escape);
+    reduced.removeEventListener('change', preferenceChange);
+    root.remove();
+  }
+  function escape(event) { if (event.key === 'Escape') finish(); }
+  function preferenceChange() { if (reduced.matches) finish(); }
+  function enterPortfolio() {
+    if (entering || closed) return;
+    entering = true;
+    root.classList.add('is-entering');
+    setTimeout(finish, 1400);
+  }
+  const watchdog = setTimeout(finish, 10000);
+  root.querySelector('button').addEventListener('click', finish);
+  document.addEventListener('keydown', escape);
+  reduced.addEventListener('change', preferenceChange);
+  const domReady = document.readyState === 'loading'
+    ? new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }))
+    : Promise.resolve();
+  function readyTask(promise) { promise.then(() => { done++; }, finish); }
+  readyTask(domReady.then(lockContent));
+  readyTask(document.fonts.ready);
+  readyTask(domReady.then(() => Promise.all(Array.from(document.images)
+    .filter(img => img.loading !== 'lazy').map(img => img.decode().catch(() => {})))));
+  image.onload = () => { loaded = true; done++; };
+  image.onerror = finish;
+  image.src = '/media/loader/ascii-portrait.gif';
+  function draw(time){
+    if(!loaded)return;
+    if(!reduced.matches || !source.dataset.painted){
+      art.clearRect(0,0,720,720);
+      art.filter='saturate(2.2) contrast(1.3)';
+      art.drawImage(image,0,0,image.naturalWidth,image.naturalHeight,34,34,652,642);
+      art.filter='none';
+      source.dataset.painted='true';
+    }
+    ctx.clearRect(0,0,720,720);
+    ctx.globalAlpha=.2;
+    ctx.drawImage(source,0,0);
+    ctx.globalCompositeOperation='source-in';
+    ctx.fillStyle='#111318';ctx.globalAlpha=1;ctx.fillRect(0,0,720,720);
+    ctx.globalCompositeOperation='source-over';
+    if(progress<=0)return;
+    if(progress>=100){
+      ctx.clearRect(0,0,720,720);ctx.drawImage(source,0,0);
+      const elapsed=completedAt===null?2:performance.now()/1000-completedAt;
+      if(elapsed>=1.45)enterPortfolio();
+      if(elapsed>=0 && elapsed<1.25 && !reduced.matches){
+        const sweep=-250+(elapsed/1.25)*1250;
+        fill.clearRect(0,0,720,720);
+        fill.save();fill.translate(sweep,360);fill.rotate(.32);
+        const shine=fill.createLinearGradient(-75,0,75,0);
+        shine.addColorStop(0,'rgba(100,210,255,0)');
+        shine.addColorStop(.35,'rgba(145,230,255,.3)');
+        shine.addColorStop(.5,'rgba(255,255,255,1)');
+        shine.addColorStop(.65,'rgba(145,230,255,.3)');
+        shine.addColorStop(1,'rgba(100,210,255,0)');
+        fill.fillStyle=shine;fill.fillRect(-75,-650,150,1300);fill.restore();
+        fill.globalCompositeOperation='destination-in';fill.drawImage(source,0,0);
+        fill.globalCompositeOperation='source-over';
+        ctx.save();ctx.globalCompositeOperation='lighter';ctx.drawImage(layer,0,0);ctx.restore();
+      }
+      return;
+    }
+    const scan=686-progress/100*658;
+    ctx.save();ctx.beginPath();ctx.rect(0,scan,720,720-scan);ctx.clip();
+    ctx.globalAlpha=1;ctx.drawImage(source,0,0);ctx.restore();
+    fill.clearRect(0,0,720,720);
+    fill.drawImage(source,0,0);
+    fill.globalCompositeOperation='source-in';fill.fillStyle='#009ee8';fill.fillRect(0,0,720,720);
+    fill.globalCompositeOperation='source-over';
+    ctx.save();ctx.beginPath();ctx.rect(0,scan-3,720,6);ctx.clip();
+    ctx.drawImage(layer,0,0);ctx.restore();
+    // The illuminated scan edge uses the portrait alpha, including its side boundaries.
+  }
 
+  function frame(now) {
+    if (closed) return;
+    const dt = lastTime ? Math.min((now - lastTime) / 1000, .1) : 0;
+    lastTime = now;
+    const target = done / total * 100;
+    if (progress < target) {
+      progress = Math.min(target, progress + dt * 45);
+      if (progress >= 100 && completedAt === null) completedAt = now / 1000;
+      percent.textContent = Math.floor(progress) + '%';
+      percent.setAttribute('aria-valuenow', Math.floor(progress));
+    }
+    draw(now / 1000);
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+})();
+</script>
 <style>
-  .portfolio-loader { position:fixed; inset:0; z-index:10000; overflow:hidden; background:#2580fa; color:#fff0d2; opacity:1; transition:opacity 350ms cubic-bezier(.32,.72,0,1); }
-  .portfolio-loader[hidden] { display:none!important; }
-  .portfolio-loader[data-state="leaving"] { opacity:0; pointer-events:none; }
-  .loader-art { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; pointer-events:none; }
-  .loader-status { position:absolute; top:18%; left:50%; translate:-50% 0; display:flex; flex-direction:column; align-items:center; gap:16px; font:400 14px/20px Manrope,sans-serif; }
-  .loader-track { width:96px; height:1px; overflow:hidden; background:#fff0d255; }
-  .loader-track span { display:block; width:40%; height:100%; background:#fff0d2; animation:loading-pass 1.2s cubic-bezier(.32,.72,0,1) infinite; }
-  .loader-skip { position:absolute; top:24px; right:32px; display:flex; align-items:center; gap:16px; min-height:44px; padding:8px 0; border:0; border-bottom:1px solid #fff0d288; background:none; color:inherit; font:400 14px/20px Manrope,sans-serif; cursor:pointer; transition:translate 350ms cubic-bezier(.32,.72,0,1); }
-  .loader-skip:hover { translate:0 -3px; }
-  .loader-skip:focus-visible { outline:2px solid #fff0d2; outline-offset:5px; }
-  @keyframes loading-pass { from { transform:translateX(-100%); } to { transform:translateX(350%); } }
-  @media(max-width:700px) { .loader-art { object-position:50% 50%; } .loader-status { top:20%; } .loader-skip { top:16px; right:24px; } }
-  @media(prefers-reduced-motion:reduce) { .portfolio-loader,.loader-skip { transition:none; } .loader-motion { display:none; } .loader-track span { animation:none; width:100%; } }
+  @font-face { font-family:'Intro Astoria'; src:url('/fonts/astoria-latin.woff2') format('woff2'); font-display:swap; }
+  #portfolio-intro { position:fixed; inset:0; z-index:10000; background:#fff; color:#302d28; display:grid; place-items:center; overflow:hidden; transition:opacity 1s ease .15s; }
+  #portfolio-intro[hidden] { display:none!important; }
+  canvas { width:170px; height:170px; display:block; transform-origin:50% 48%; transition:transform 1.35s cubic-bezier(.65,0,.2,1),opacity .9s ease .15s; }
+  .intro-percent { position:absolute; right:max(40px,env(safe-area-inset-right)); bottom:max(24px,env(safe-area-inset-bottom)); font:italic 400 clamp(64px,7vw,100px)/1.15 'Intro Astoria',Georgia,serif; letter-spacing:-.03em; }
+  .intro-skip { position:absolute; top:24px; right:32px; border:0; background:transparent; color:#625b51; padding:10px; min-height:44px; font:14px/1.5 system-ui,sans-serif; cursor:pointer; }
+  .intro-skip:focus-visible { outline:2px solid #168bdb; outline-offset:3px; }
+  #portfolio-intro.is-entering { opacity:0; pointer-events:none; }
+  .is-entering canvas { transform:scale(12); opacity:0; }
+  .is-entering .intro-percent,.is-entering .intro-skip { opacity:0; transition:opacity .3s; }
+  @media(max-width:600px) { canvas { width:150px;height:150px; } .intro-percent { right:24px;bottom:24px; } .intro-skip { right:14px;top:14px; } }
+  @media(prefers-reduced-motion:reduce) { #portfolio-intro,canvas { transition:none; } }
 </style>
