@@ -16,7 +16,7 @@ const links=[{href:'/',label:'Home'},{href:'/projects/',label:'Projects'},{href:
  .portfolio-header{position:relative;height:100px;color:#292522;z-index:40}
  .header-mascot{position:fixed;top:12px;left:18px;width:130px;height:58px;display:flex;align-items:center;justify-content:center}
  .portfolio-name{position:fixed;top:69px;left:18px;width:130px;font-family:"Astoria",system-ui,sans-serif;font-size:1.25rem;font-weight:400;color:inherit;text-decoration:none;text-align:center;line-height:1.1}
- .header-stamps{position:fixed;top:100px;left:55px;background:none;border:0;padding:6px;color:#514c45;font:18px "Lulu Handwriting",cursive;cursor:pointer}
+ .header-stamps{position:fixed;top:100px;left:18px;width:130px;text-align:center;background:none;border:0;padding:6px;color:#514c45;font:18px "Lulu Handwriting",cursive;cursor:pointer}
  nav{display:flex;justify-content:center;gap:clamp(24px,4vw,64px);padding:28px 24px 12px;margin-left:160px}
  nav a{position:relative;display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.65rem;font-weight:500;text-decoration:none;color:#342b20;padding:10px 8px 16px}
  nav a svg{position:absolute;left:5%;bottom:5px;width:90%;height:9px;stroke:#79613e;stroke-width:1.5;stroke-linecap:round;opacity:0;transition:opacity 250ms}
@@ -44,6 +44,7 @@ const links=[{href:'/',label:'Home'},{href:'/projects/',label:'Projects'},{href:
 <style>
 .header-stamps{transition:translate .45s cubic-bezier(.32,.72,0,1)}
 .header-stamps:hover,.header-stamps:focus-visible{translate:0 -3px}
-.portfolio-name{min-height:32px;display:inline-flex;align-items:center}
+.portfolio-name{min-height:32px;display:inline-flex;align-items:center;justify-content:center}
+@media(max-width:700px){.portfolio-name{justify-content:flex-start}.header-stamps{width:auto}}
 @media(prefers-reduced-motion:reduce){.header-stamps{transition:none}}
 </style>
